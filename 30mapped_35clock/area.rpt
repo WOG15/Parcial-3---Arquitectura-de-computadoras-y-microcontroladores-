@@ -1,0 +1,30 @@
+ 
+****************************************
+Report : area
+Design : alu_sync_top
+Version: X-2025.06-SP5-5
+Date   : Sun Oct 25 15:45:10 2026
+****************************************
+
+Library(s) Used:
+
+    M31LLSC750GL150MS_25CTT1P8_ctyp_nldm (File: /home/worellana/parcial_3/technology/m31/nldm_db/M31LLSC750GL150MS_25CTT1P8_ctyp_nldm.db)
+
+Number of ports:                           58
+Number of nets:                          1262
+Number of cells:                         1225
+Number of combinational cells:           1137
+Number of sequential cells:                88
+Number of macros/black boxes:               0
+Number of buf/inv:                        189
+Number of references:                      46
+
+Combinational area:              14473.267160
+Buf/Inv area:                     1225.728001
+Noncombinational area:            2806.272034
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                 17279.539194
+Total area:                 undefined
+1

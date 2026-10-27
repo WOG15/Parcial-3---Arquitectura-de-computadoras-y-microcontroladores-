@@ -1,0 +1,64 @@
+****************************************
+Report : report_pin_placement
+Design : alu_sync_top
+Version: Y-2026.03-SP2
+Date   : Mon Oct 26 19:46:44 2026
+****************************************
+block alu_sync_top pin clk layer METAL2 side 2 offset 93.36
+block alu_sync_top pin reset layer METAL2 side 2 offset 94.32
+block alu_sync_top pin A[15] layer METAL2 side 2 offset 104.4
+block alu_sync_top pin A[14] layer METAL2 side 2 offset 102
+block alu_sync_top pin A[13] layer METAL2 side 2 offset 153.84
+block alu_sync_top pin A[12] layer METAL2 side 2 offset 160.08
+block alu_sync_top pin A[11] layer METAL2 side 2 offset 88.56
+block alu_sync_top pin A[10] layer METAL2 side 2 offset 86.64
+block alu_sync_top pin A[9] layer METAL2 side 2 offset 59.76
+block alu_sync_top pin A[8] layer METAL2 side 2 offset 58.8
+block alu_sync_top pin A[7] layer METAL2 side 2 offset 46.8
+block alu_sync_top pin A[6] layer METAL2 side 2 offset 40.08
+block alu_sync_top pin A[5] layer METAL3 side 1 offset 132
+block alu_sync_top pin A[4] layer METAL3 side 1 offset 130.2
+block alu_sync_top pin A[3] layer METAL3 side 1 offset 123.9
+block alu_sync_top pin A[2] layer METAL3 side 1 offset 125.7
+block alu_sync_top pin A[1] layer METAL3 side 1 offset 153.6
+block alu_sync_top pin A[0] layer METAL2 side 2 offset 24.24
+block alu_sync_top pin B[15] layer METAL2 side 2 offset 103.44
+block alu_sync_top pin B[14] layer METAL2 side 2 offset 128.88
+block alu_sync_top pin B[13] layer METAL2 side 2 offset 152.88
+block alu_sync_top pin B[12] layer METAL2 side 2 offset 157.2
+block alu_sync_top pin B[11] layer METAL2 side 2 offset 90.48
+block alu_sync_top pin B[10] layer METAL2 side 2 offset 91.44
+block alu_sync_top pin B[9] layer METAL2 side 2 offset 53.04
+block alu_sync_top pin B[8] layer METAL2 side 2 offset 54.96
+block alu_sync_top pin B[7] layer METAL3 side 1 offset 122.1
+block alu_sync_top pin B[6] layer METAL2 side 2 offset 43.92
+block alu_sync_top pin B[5] layer METAL3 side 1 offset 141.9
+block alu_sync_top pin B[4] layer METAL3 side 1 offset 128.4
+block alu_sync_top pin B[3] layer METAL3 side 1 offset 147.3
+block alu_sync_top pin B[2] layer METAL3 side 1 offset 145.5
+block alu_sync_top pin B[1] layer METAL3 side 1 offset 138.3
+block alu_sync_top pin B[0] layer METAL3 side 1 offset 151.8
+block alu_sync_top pin ALUControl[2] layer METAL2 side 2 offset 54
+block alu_sync_top pin ALUControl[1] layer METAL2 side 2 offset 64.56
+block alu_sync_top pin ALUControl[0] layer METAL2 side 2 offset 95.28
+block alu_sync_top pin Result[15] layer METAL3 side 3 offset 17.82
+block alu_sync_top pin Result[14] layer METAL2 side 2 offset 92.4
+block alu_sync_top pin Result[13] layer METAL3 side 3 offset 24.12
+block alu_sync_top pin Result[12] layer METAL2 side 2 offset 156.24
+block alu_sync_top pin Result[11] layer METAL2 side 2 offset 118.32
+block alu_sync_top pin Result[10] layer METAL2 side 2 offset 83.76
+block alu_sync_top pin Result[9] layer METAL2 side 2 offset 84.72
+block alu_sync_top pin Result[8] layer METAL2 side 2 offset 85.68
+block alu_sync_top pin Result[7] layer METAL2 side 2 offset 76.08
+block alu_sync_top pin Result[6] layer METAL2 side 2 offset 71.76
+block alu_sync_top pin Result[5] layer METAL2 side 2 offset 41.52
+block alu_sync_top pin Result[4] layer METAL2 side 2 offset 56.88
+block alu_sync_top pin Result[3] layer METAL2 side 2 offset 39.12
+block alu_sync_top pin Result[2] layer METAL2 side 2 offset 44.88
+block alu_sync_top pin Result[1] layer METAL2 side 2 offset 42.96
+block alu_sync_top pin Result[0] layer METAL2 side 2 offset 72.72
+block alu_sync_top pin NZCV[3] layer METAL3 side 3 offset 27.72
+block alu_sync_top pin NZCV[2] layer METAL3 side 3 offset 34.92
+block alu_sync_top pin NZCV[1] layer METAL2 side 2 offset 142.8
+block alu_sync_top pin NZCV[0] layer METAL2 side 2 offset 150
+block alu_sync_top pin MulOverflow layer METAL3 side 3 offset 51.12

@@ -1,0 +1,28 @@
+[1/2] Validar sintaxis ITF
+
+                                  StarRC (TM)
+
+              Version X-2025.06-SP3-2 for linux64 - Aug 28, 2026 
+
+                    Copyright (c) 1999 - 2026 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+      Inc.  This software may only be used in accordance with the terms and
+  conditions of a written license agreement with Synopsys, Inc.  All other use,
+   reproduction, or distribution of this software is strictly prohibited.  By
+   installing, accessing, using, or executing this software, you agree that it
+  will reside on, operate within, and have access to the computers and networks
+    where such software is used ("Host System"), and that Synopsys may access
+     components and data of the Host System as necessary for it to function
+ properly, to authenticate and validate license keys, to verify that it is used
+ only in conformity with the applicable license restrictions, and to communicate
+                 error messages and associated data to Synopsys.
+
+
+ExecName: grdgenxo
+Version: X-2025.06-SP3-2
+Built on: Aug 28 2026 01:58:09
+Start Time: Mon Oct 26 19:20:35 2026
+
+Host ............ synopsys-unis
+
+ERROR: Incorrect command line option: -input. Try "grdgenxo -usage" for help. (GRD-0011)

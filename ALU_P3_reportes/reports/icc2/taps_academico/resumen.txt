@@ -1,0 +1,7 @@
+Checkpoint origen: alu_pg_malla_legalizada
+Checkpoint nuevo: alu_pg_con_taps
+Biblioteca TAP: m31_3m1t_11k/TAP01TAS7
+Distancia academica (no certificada): 20.0 um
+Cantidad de celdas TAP: 486
+Verificados: check_legality, check_pg_drc, check_pg_connectivity
+Pendiente: inspeccionar pg_missing_vias.rpt y terminales externos PG

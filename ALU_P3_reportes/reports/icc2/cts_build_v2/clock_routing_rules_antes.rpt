@@ -1,0 +1,7 @@
+****************************************
+ Report : clock routing rules
+ Design : alu_sync_top
+ Date   : Mon Oct 26 20:07:52 2026
+****************************************
+   Clock: clk (mode functional); Net Type: all;      Rule: default rule; Min Layer: METAL2; Max Layer: METAL3
+

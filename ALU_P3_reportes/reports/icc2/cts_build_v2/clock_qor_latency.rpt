@@ -1,0 +1,59 @@
+Warning: Use -per_clock_root option along with -type latency option to split the reporting of a clock to per clock root, so that the clock trees associated with different root pins are reported separately
+ Info: Initializing timer in CLOCK_SYN_REPORT_MODE
+Information: The value of option cts.compile.enable_cell_relocation has been overridden to "leaf_only" to support latency-driven placement. (CTS-973)
+****************************************
+Report : clock qor
+        -type latency
+Design : alu_sync_top
+Version: Y-2026.03-SP2
+Date   : Mon Oct 26 20:08:10 2026
+****************************************
+
+Attributes
+===========
+M Master Clock
+G Generated Clock
+& Internal Generated Clock
+U User Defined Skew Group
+D Default Skew Group
+* Generated Clock Balanced Separately
+
+==================================================
+==== Latency Reporting for Corner m31_initial ====
+==================================================
+
+============================================ Summary Table for Corner m31_initial ============================================
+Clock /                               Attrs     Sinks    Target    Global    Target       Max       Min    Median   Latency
+Skew Group                                                 Skew      Skew   Latency   Latency   Latency   Latency   Std Dev
+------------------------------------------------------------------------------------------------------------------------------
+### Mode: functional, Scenario: functional_initial
+clk                                     M,D        56      5.25      0.00      1.50      0.00      0.00      0.00      0.00
+------------------------------------------------------------------------------------------------------------------------------
+All Clocks                                         56        --      0.00        --      0.00      0.00        --        --
+
+
+  & = Offset derived from max_clock_tree_path / min_clock_tree_path
+  r = latency reported is for a rising edge triggered event at the sink
+  f = latency reported is for a falling edge triggered event at the sink
+
+
+Showing 5 largest and 5 smallest datapoints per clock / skew group (L=largest, S=smallest)
+======================================== Details Table for Corner m31_initial ========================================
+Clock /                                Sink                             Launch     Capture        Late       Early
+Skew Group                             Name                            Latency     Latency      Offset      Offset
+----------------------------------------------------------------------------------------------------------------------
+### Mode: functional, Scenario: functional_initial
+clk
+                                   L   A_reg_reg[3]/CK                    0.00 r      0.00 r        --          --
+                                   L   A_reg_reg[2]/CK                    0.00 r      0.00 r        --          --
+                                   L   A_reg_reg[4]/CK                    0.00 r      0.00 r        --          --
+                                   L   B_reg_reg[3]/CK                    0.00 r      0.00 r        --          --
+                                   L   A_reg_reg[5]/CK                    0.00 r      0.00 r        --          --
+                                   S   A_reg_reg[14]/CK                   0.00 r      0.00 r        --          --
+                                   S   B_reg_reg[10]/CK                   0.00 r      0.00 r        --          --
+                                   S   ALUControl_reg_reg[0]/CK           0.00 r      0.00 r        --          --
+                                   S   Result_reg[14]/CK                  0.00 r      0.00 r        --          --
+                                   S   A_reg_reg[10]/CK                   0.00 r      0.00 r        --          --
+
+
+1

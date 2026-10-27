@@ -1,0 +1,331 @@
+****************************************
+Report : timing
+        -path_type full
+        -delay_type min
+        -max_paths 10
+        -report_by design
+Design : alu_sync_top
+Version: Y-2026.03-SP2
+Date   : Mon Oct 26 19:55:11 2026
+****************************************
+
+  Startpoint: reset (input port clocked by clk)
+  Endpoint: Result_reg[4] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: **in2reg_default**
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  input external delay                             2.00      2.00 r
+  reset (in)                                       0.00      2.00 r
+  U1188/O (NOR2B1X1TAS7)                           0.13      2.14 f
+  Result_reg[4]/D (DFFQX1TAS7)                     0.00      2.14 f
+  data arrival time                                          2.14
+
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  Result_reg[4]/CK (DFFQX1TAS7)                    0.00      0.00 r
+  clock uncertainty                                0.50      0.50
+  library hold time                               -0.62     -0.12
+  data required time                                        -0.12
+  ------------------------------------------------------------------------
+  data required time                                        -0.12
+  data arrival time                                         -2.14
+  ------------------------------------------------------------------------
+  slack (MET)                                                2.25
+
+
+
+  Startpoint: reset (input port clocked by clk)
+  Endpoint: ALUControl_reg_reg[2] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: **in2reg_default**
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  input external delay                             2.00      2.00 r
+  reset (in)                                       0.00      2.00 r
+  U1191/O (NOR2B1X1TAS7)                           0.13      2.13 f
+  ALUControl_reg_reg[2]/D (DFFQX1TAS7)             0.00      2.13 f
+  data arrival time                                          2.13
+
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  ALUControl_reg_reg[2]/CK (DFFQX1TAS7)            0.00      0.00 r
+  clock uncertainty                                0.50      0.50
+  library hold time                               -0.62     -0.12
+  data required time                                        -0.12
+  ------------------------------------------------------------------------
+  data required time                                        -0.12
+  data arrival time                                         -2.13
+  ------------------------------------------------------------------------
+  slack (MET)                                                2.25
+
+
+
+  Startpoint: reset (input port clocked by clk)
+  Endpoint: Result_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: **in2reg_default**
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  input external delay                             2.00      2.00 r
+  reset (in)                                       0.00      2.00 r
+  U1184/O (NOR2B1X1TAS7)                           0.14      2.14 f
+  Result_reg[0]/D (DFFQX1TAS7)                     0.00      2.14 f
+  data arrival time                                          2.14
+
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  Result_reg[0]/CK (DFFQX1TAS7)                    0.00      0.00 r
+  clock uncertainty                                0.50      0.50
+  library hold time                               -0.62     -0.12
+  data required time                                        -0.12
+  ------------------------------------------------------------------------
+  data required time                                        -0.12
+  data arrival time                                         -2.14
+  ------------------------------------------------------------------------
+  slack (MET)                                                2.25
+
+
+
+  Startpoint: reset (input port clocked by clk)
+  Endpoint: B_reg_reg[4] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: **in2reg_default**
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  input external delay                             2.00      2.00 r
+  reset (in)                                       0.00      2.00 r
+  U1070/O (NOR2B1X1TAS7)                           0.13      2.13 f
+  B_reg_reg[4]/D (DFFQX2TAS7)                      0.00      2.13 f
+  data arrival time                                          2.13
+
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  B_reg_reg[4]/CK (DFFQX2TAS7)                     0.00      0.00 r
+  clock uncertainty                                0.50      0.50
+  library hold time                               -0.62     -0.12
+  data required time                                        -0.12
+  ------------------------------------------------------------------------
+  data required time                                        -0.12
+  data arrival time                                         -2.13
+  ------------------------------------------------------------------------
+  slack (MET)                                                2.26
+
+
+
+  Startpoint: reset (input port clocked by clk)
+  Endpoint: B_reg_reg[6] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: **in2reg_default**
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  input external delay                             2.00      2.00 r
+  reset (in)                                       0.00      2.00 r
+  U1066/O (NOR2B1X1TAS7)                           0.14      2.14 f
+  B_reg_reg[6]/D (DFFQX2TAS7)                      0.00      2.14 f
+  data arrival time                                          2.14
+
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  B_reg_reg[6]/CK (DFFQX2TAS7)                     0.00      0.00 r
+  clock uncertainty                                0.50      0.50
+  library hold time                               -0.63     -0.13
+  data required time                                        -0.13
+  ------------------------------------------------------------------------
+  data required time                                        -0.13
+  data arrival time                                         -2.14
+  ------------------------------------------------------------------------
+  slack (MET)                                                2.27
+
+
+
+  Startpoint: reset (input port clocked by clk)
+  Endpoint: Result_reg[3] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: **in2reg_default**
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  input external delay                             2.00      2.00 r
+  reset (in)                                       0.00      2.00 r
+  U1187/O (NOR2B1X1TAS7)                           0.14      2.14 f
+  Result_reg[3]/D (DFFQX1TAS7)                     0.00      2.14 f
+  data arrival time                                          2.14
+
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  Result_reg[3]/CK (DFFQX1TAS7)                    0.00      0.00 r
+  clock uncertainty                                0.50      0.50
+  library hold time                               -0.62     -0.12
+  data required time                                        -0.12
+  ------------------------------------------------------------------------
+  data required time                                        -0.12
+  data arrival time                                         -2.14
+  ------------------------------------------------------------------------
+  slack (MET)                                                2.27
+
+
+
+  Startpoint: reset (input port clocked by clk)
+  Endpoint: A_reg_reg[1] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: **in2reg_default**
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  input external delay                             2.00      2.00 r
+  reset (in)                                       0.00      2.00 r
+  U1053/O (NOR2B1X1TAS7)                           0.14      2.14 f
+  A_reg_reg[1]/D (DFFQX4TAS7)                      0.00      2.14 f
+  data arrival time                                          2.14
+
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  A_reg_reg[1]/CK (DFFQX4TAS7)                     0.00      0.00 r
+  clock uncertainty                                0.50      0.50
+  library hold time                               -0.63     -0.13
+  data required time                                        -0.13
+  ------------------------------------------------------------------------
+  data required time                                        -0.13
+  data arrival time                                         -2.14
+  ------------------------------------------------------------------------
+  slack (MET)                                                2.27
+
+
+
+  Startpoint: reset (input port clocked by clk)
+  Endpoint: B_reg_reg[3] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: **in2reg_default**
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  input external delay                             2.00      2.00 r
+  reset (in)                                       0.00      2.00 r
+  U1059/O (NOR2B1X1TAS7)                           0.14      2.14 f
+  B_reg_reg[3]/D (DFFQX4TAS7)                      0.00      2.14 f
+  data arrival time                                          2.14
+
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  B_reg_reg[3]/CK (DFFQX4TAS7)                     0.00      0.00 r
+  clock uncertainty                                0.50      0.50
+  library hold time                               -0.63     -0.13
+  data required time                                        -0.13
+  ------------------------------------------------------------------------
+  data required time                                        -0.13
+  data arrival time                                         -2.14
+  ------------------------------------------------------------------------
+  slack (MET)                                                2.27
+
+
+
+  Startpoint: reset (input port clocked by clk)
+  Endpoint: A_reg_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: **in2reg_default**
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  input external delay                             2.00      2.00 r
+  reset (in)                                       0.00      2.00 r
+  U1058/O (NOR2B1X1TAS7)                           0.14      2.15 f
+  A_reg_reg[0]/D (DFFQX4TAS7)                      0.00      2.15 f
+  data arrival time                                          2.15
+
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  A_reg_reg[0]/CK (DFFQX4TAS7)                     0.00      0.00 r
+  clock uncertainty                                0.50      0.50
+  library hold time                               -0.64     -0.13
+  data required time                                        -0.13
+  ------------------------------------------------------------------------
+  data required time                                        -0.13
+  data arrival time                                         -2.15
+  ------------------------------------------------------------------------
+  slack (MET)                                                2.28
+
+
+
+  Startpoint: reset (input port clocked by clk)
+  Endpoint: B_reg_reg[2] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: **in2reg_default**
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  input external delay                             2.00      2.00 r
+  reset (in)                                       0.00      2.00 r
+  U1055/O (NOR2B1X1TAS7)                           0.15      2.15 f
+  B_reg_reg[2]/D (DFFQX4TAS7)                      0.00      2.15 f
+  data arrival time                                          2.15
+
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.00      0.00
+  B_reg_reg[2]/CK (DFFQX4TAS7)                     0.00      0.00 r
+  clock uncertainty                                0.50      0.50
+  library hold time                               -0.64     -0.13
+  data required time                                        -0.13
+  ------------------------------------------------------------------------
+  data required time                                        -0.13
+  data arrival time                                         -2.15
+  ------------------------------------------------------------------------
+  slack (MET)                                                2.28
+
+
+1

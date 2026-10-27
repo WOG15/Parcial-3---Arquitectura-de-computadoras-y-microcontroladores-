@@ -1,0 +1,225 @@
+
+
+
+                              IC Compiler II (TM)
+
+                Version Y-2026.03-SP2 for linux64 - Sep 01, 2026
+                           Base build date 6/22/2026.
+
+                    Copyright (c) 1988 - 2026 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+      Inc.  This software may only be used in accordance with the terms and
+  conditions of a written license agreement with Synopsys, Inc.  All other use,
+   reproduction, or distribution of this software is strictly prohibited.  By
+   installing, accessing, using, or executing this software, you agree that it
+  will reside on, operate within, and have access to the computers and networks
+    where such software is used ("Host System"), and that Synopsys may access
+     components and data of the Host System as necessary for it to function
+ properly, to authenticate and validate license keys, to verify that it is used
+ only in conformity with the applicable license restrictions, and to communicate
+                 error messages and associated data to Synopsys.
+
+ 
+Invocation: /usr/synopsys/icc2/Y-2026.03-SP2/linux64/nwtn/bin/icc2_exec
+Execution time: Sun Oct 25 18:10:56 2026
+Host: synopsys-unis (1 x 2699.876 MHz Intel(R) Xeon(R) D-2123IT CPU @ 2.20GHz)
+Working directory: /home/worellana/parcial_3
+
+# ============================================================================
+# ICC2 / ALU+ M31: floorplan inicial (etapa 1, sin PG ni routing)
+# Uso: desde ~/parcial_3:
+#   icc2_shell -f scripts/icc2/floorplan_alu_m31_etapa1.tcl \
+#     |& tee reports/icc2/floorplan_etapa1.log
+#
+# Presupone que initial_alu_m31.tcl se ejecuto y guardo el bloque alu_imported.
+# NO volver a ejecutar setup_alu_m31.tcl ni initial_alu_m31.tcl.
+# NO configura capa/track de SKY130, TLUPlus, UPF, taps, VDD/VSS ni power grid.
+# ============================================================================
+set PROJECT_ROOT [file normalize [pwd]]
+/home/worellana/parcial_3
+set DESIGN_LIB [file join $PROJECT_ROOT outputs icc2 alu_import_35ns alu_m31.nlib]
+/home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib
+set REPORT_DIR [file join $PROJECT_ROOT reports icc2 floorplan_etapa1]
+/home/worellana/parcial_3/reports/icc2/floorplan_etapa1
+set INPUT_BLOCK alu_imported
+alu_imported
+set OUTPUT_BLOCK alu_floorplan_etapa1
+alu_floorplan_etapa1
+if {![file exists $DESIGN_LIB]} {
+    error "No se encuentra la biblioteca de ICC2: $DESIGN_LIB"
+}
+file mkdir $REPORT_DIR
+# Recuperar el trabajo guardado en la importacion.
+open_lib $DESIGN_LIB
+Information: Loading library file '/home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib' (FILE-007)
+Information: Loading library file '/home/worellana/parcial_3/technology/m31/ndm/m31_3m1t_11k.ndm' (FILE-007)
+{alu_m31.nlib}
+open_block $INPUT_BLOCK
+Information: User units loaded from library 'm31_3m1t_11k' (LNK-040)
+Opening block 'alu_m31.nlib:alu_imported.design' in edit mode
+{alu_m31.nlib:alu_imported.design}
+set CLK [get_clocks clk -quiet]
+Using libraries: alu_m31.nlib m31_3m1t_11k
+Visiting block alu_m31.nlib:alu_imported.design
+Design 'alu_sync_top' was successfully linked.
+{clk}
+if {[sizeof_collection $CLK] == 0} {
+    error "El bloque importado no contiene el reloj clk; verifica alu_imported y SDC"
+}
+set UNBOUND [get_cells -hierarchical -filter "is_unbound == true" -quiet]
+if {[sizeof_collection $UNBOUND] > 0} {
+    error "Hay [sizeof_collection $UNBOUND] instancias sin vincular; abortando floorplan"
+}
+# Dejar constancia de la tecnologia y el reloj, para no asumir nombres de capa.
+redirect -file [file join $REPORT_DIR capas_disponibles.rpt] {
+    puts "Capas reportadas por la biblioteca M31:"
+    puts [get_object_name [get_layers *]]
+}
+redirect -file [file join $REPORT_DIR clocks.rpt] {
+    report_clocks
+}
+redirect -file [file join $REPORT_DIR netlist_check.rpt] {
+    check_netlist
+}
+# Geometria inicial: conservadora y rectangular (no es un floorplan final).
+# La herramienta ajusta el contorno segun area de celdas y sitios fisicos.
+initialize_floorplan \
+    -core_utilization 0.55 \
+    -shape R \
+    -orientation N \
+    -side_ratio {1 1} \
+    -core_offset {6}
+Warning: The routing directions for layer 'METAL1 METAL2 METAL3 ' are missing. Auto deriving 'horizontal' routing direction for layer 'METAL1'. (DPUI-924)
+Warning: The routing directions for layer 'METAL1 METAL2 METAL3 ' are missing. Auto deriving 'vertical' routing direction for layer 'METAL2'. (DPUI-924)
+Warning: The routing directions for layer 'METAL1 METAL2 METAL3 ' are missing. Auto deriving 'horizontal' routing direction for layer 'METAL3'. (DPUI-924)
+Use site_def 'unit' to initialize floorplan.
+Removing existing floorplan objects
+Creating core...
+Core utilization ratio = 55.84%
+Unplacing all cells...
+Creating site array...
+Creating routing tracks...
+Initializing floorplan completed.
+# Colocacion gruesa solamente. Aun faltan PG, taps, colocacion de pines
+# controlada por capas M31, CTS, ruteo y modelos RC de signoff.
+create_placement -floorplan -effort medium
+Information: Starting 'create_placement' (FLW-8000)
+Information: Time: 2026-10-25 18:10:59 / Session:  00:00:15 / Command:  00:00:00 / CPU:  00:00:00 / Memory: 547 MB (FLW-8100)
+Creating appropriate block views (if needed)...
+Multi-Processing Summary
+  Max number of cores for parent process: 1; hostname: synopsys-unis
+  No distributed processing
+Command Option Settings Summary
+  -floorplan -effort medium
+Info: starting to push down row track for sub-blocks.
+Information: All hard macros are fixed, no hard macro placement is done. (DPP-416)
+Generating automatic soft blockages for alu_imported, hor/vert channel sizes are 13.44/13.44
+Placing top level std cells.
+Warning: no valid parasitic for m31_initial corner(LATE) (NEX-018)
+Warning: no valid parasitic for m31_initial corner(LATE) (NEX-018)
+Warning: no valid parasitic for m31_initial corner(LATE) (NEX-018)
+Warning: no valid parasitic for m31_initial corner(LATE) (NEX-018)
+coarse place 0% done.
+coarse place 33% done.
+coarse place 67% done.
+coarse place 100% done.
+Running block placement.
+Floorplan placement done.
+****************************************
+Report : report_placement
+Design : alu_sync_top
+Version: Y-2026.03-SP2
+Date   : Sun Oct 25 18:10:59 2026
+****************************************
+  ==================
+  Note: Ignoring violations of fixed cells or between fixed pairs of cells. 
+        To include violations of / between fixed cells, disable -ignore_fixed. 
+  ==================
+
+  Wire length report (all)
+  ==================
+  wire length in design alu_imported: 26151.862 microns.
+    number of nets with unassigned pins: 58
+  wire length in design alu_imported (see through blk pins): 26151.862 microns.
+  ------------------
+  Total wire length: 26151.862 microns.
+
+  Physical hierarchy violations report
+  ====================================
+  Violations in design alu_imported:
+     0 cells have placement violation.
+  ------------------------------------
+  Total 0 cells have placement violation.
+
+  Voltage area violations report
+  ====================================
+  Voltage area placement violations in design alu_imported:
+     0 cells placed outside the voltage area which they belong to.
+  ------------------------------------
+  Total 0 macro cells placed outside the voltage area which they belong to.
+
+  Hard macro to hard macro overlap report
+  =======================================
+  HM to HM overlaps in design alu_imported: 0
+  ---------------------------------------
+  Total hard macro to hard macro overlaps: 0
+
+Information: Default error view alu_imported_dpplace.err is created in GUI error browser. (DPP-054)
+Information: Elapsed time for create_placement excluding pending time: 00:00:00.49. (DPUI-902)
+Information: CPU time for create_placement : 00:00:00.46. (DPUI-903)
+Information: Peak memory usage for create_placement : 644 MB. (DPUI-904)
+
+Information: Runtime Summary (create_placement)  (FLW-9000)
+----------------------------------------------------------------------------
+    Elapse (Hrs)   Elapse (%)       CPU/Elapse       Category
+----------------------------------------------------------------------------
+      0.00          100.0%             0.9           Other 
+----------------------------------------------------------------------------
+      0.00          100.0%             0.9           Total 
+----------------------------------------------------------------------------
+
+Host Options:
+-------------
+Max cores: 1
+
+Machine Spec:
+-------------
+Intel(R) Xeon(R) D-2123IT CPU @ 2.20GHz / 8 CPUs  
+Sockets: 1, Cores: 4, HT/SMT, not-VM
+----------------------------------------------------------------------------
+
+Information: Ending   'create_placement' (FLW-8001)
+Information: Time: 2026-10-25 18:10:59 / Session:  00:00:15 / Command:  00:00:00 / CPU:  00:00:00 / Memory: 645 MB (FLW-8100)
+1
+redirect -file [file join $REPORT_DIR legality.rpt] {
+    check_legality
+}
+redirect -file [file join $REPORT_DIR design.rpt] {
+    report_design
+}
+# Guardar un checkpoint nuevo sin modificar alu_imported.
+# Sin -force: si el checkpoint ya existe, ICC2 debe detenerse en vez de pisarlo.
+save_block -as $OUTPUT_BLOCK
+Information: Saving 'alu_m31.nlib:alu_imported.design' to 'alu_m31.nlib:alu_floorplan_etapa1.design'. (DES-028)
+1
+save_lib
+Saving library 'alu_m31.nlib'
+1
+puts "=================================================="
+==================================================
+puts "ALU_FLOORPLAN_ETAPA1_OK: $OUTPUT_BLOCK"
+ALU_FLOORPLAN_ETAPA1_OK: alu_floorplan_etapa1
+puts "LIB: $DESIGN_LIB"
+LIB: /home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib
+puts "Reportes: $REPORT_DIR"
+Reportes: /home/worellana/parcial_3/reports/icc2/floorplan_etapa1
+puts "PENDIENTE: validar capas, PG/taps/pines M31 y parasiticos RC"
+PENDIENTE: validar capas, PG/taps/pines M31 y parasiticos RC
+puts "=================================================="
+==================================================
+icc2_shell> exit
+Maximum memory usage for this session: 644.70 MB
+Maximum memory usage for this session including child processes: 644.70 MB
+CPU usage for this session:     15 seconds (  0.00 hours)
+Elapsed time for this session:     31 seconds (  0.01 hours)
+Thank you for using IC Compiler II.

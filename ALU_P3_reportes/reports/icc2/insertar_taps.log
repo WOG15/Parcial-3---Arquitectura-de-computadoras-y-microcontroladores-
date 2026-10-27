@@ -1,0 +1,537 @@
+
+
+
+                              IC Compiler II (TM)
+
+                Version Y-2026.03-SP2 for linux64 - Sep 01, 2026
+                           Base build date 6/22/2026.
+
+                    Copyright (c) 1988 - 2026 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+      Inc.  This software may only be used in accordance with the terms and
+  conditions of a written license agreement with Synopsys, Inc.  All other use,
+   reproduction, or distribution of this software is strictly prohibited.  By
+   installing, accessing, using, or executing this software, you agree that it
+  will reside on, operate within, and have access to the computers and networks
+    where such software is used ("Host System"), and that Synopsys may access
+     components and data of the Host System as necessary for it to function
+ properly, to authenticate and validate license keys, to verify that it is used
+ only in conformity with the applicable license restrictions, and to communicate
+                 error messages and associated data to Synopsys.
+
+ 
+Invocation: /usr/synopsys/icc2/Y-2026.03-SP2/linux64/nwtn/bin/icc2_exec
+Execution time: Mon Oct 26 17:12:06 2026
+Host: synopsys-unis (1 x 2720.666 MHz Intel(R) Xeon(R) D-2123IT CPU @ 2.20GHz)
+Working directory: /home/worellana/parcial_3
+
+# ALU+ / M31 - Insercion ACADEMICA de celdas TAP.
+# Se usa una distancia PROVISIONAL de 20 um, NO certificada por el PDK.
+# Ejecutar desde ~/parcial_3 con ICC2 cerrado en otras sesiones:
+#   icc2_shell -f scripts/icc2/insertar_taps_alu_m31.tcl \
+#     |& tee reports/icc2/insertar_taps.log
+#
+# Entrada: alu_pg_malla_legalizada (NO SE SOBREESCRIBE)
+# Salida : alu_pg_con_taps
+set ROOT [file normalize [pwd]]
+/home/worellana/parcial_3
+set LIB [file join $ROOT outputs icc2 alu_import_35ns alu_m31.nlib]
+/home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib
+set RPT [file join $ROOT reports icc2 taps_academico]
+/home/worellana/parcial_3/reports/icc2/taps_academico
+set IN_BLOCK  alu_pg_malla_legalizada
+alu_pg_malla_legalizada
+set OUT_BLOCK alu_pg_con_taps
+alu_pg_con_taps
+set TAP_DISTANCE 20.0
+20.0
+if {![file exists $LIB]} {
+    error "No existe $LIB; ejecutar desde ~/parcial_3"
+}
+file mkdir $RPT
+open_lib $LIB
+Information: Loading library file '/home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib' (FILE-007)
+Information: Loading library file '/home/worellana/parcial_3/technology/m31/ndm/m31_3m1t_11k.ndm' (FILE-007)
+{alu_m31.nlib}
+open_block $IN_BLOCK
+Information: User units loaded from library 'm31_3m1t_11k' (LNK-040)
+Opening block 'alu_m31.nlib:alu_pg_malla_legalizada.design' in edit mode
+{alu_m31.nlib:alu_pg_malla_legalizada.design}
+set TAP_LIB [get_lib_cells m31_3m1t_11k/TAP01TAS7]
+{m31_3m1t_11k/TAP01TAS7}
+if {[sizeof_collection $TAP_LIB] != 1} {
+    error "No se encontro una unica celda TAP01TAS7"
+}
+puts "M31 TAP: insertando con separacion academica $TAP_DISTANCE um"
+M31 TAP: insertando con separacion academica 20.0 um
+create_tap_cells \
+    -lib_cell $TAP_LIB \
+    -distance $TAP_DISTANCE \
+    -pattern stagger \
+    -skip_fixed_cells \
+    -prefix ALU_TAP
+Using libraries: alu_m31.nlib m31_3m1t_11k
+Visiting block alu_m31.nlib:alu_pg_malla_legalizada.design
+Design 'alu_sync_top' was successfully linked.
+* Disjointed site row process : FALSE
+Using AL to insert tap cells
+Information: tap_to_tap_distance is not a hard rule at tap insertion stage. Please set place.legalize.ignore_tap_to_tap_distance_rule to true to bypass the check.
+Warning: Site master "unit" has neither X-Symmetry nor Y-Symmetry. The "legal orientations" for the standard cells will be limited. (LGL-031)
+Warning: Routing direction of metal layer POLY2 is neither "horizontal" nor "vertical".  PDC checks will not be performed on this layer. (PDC-003)
+PDC app_options settings =========
+	place.legalize.enable_prerouted_net_check: 1
+	place.legalize.num_tracks_for_access_check: 1
+	place.legalize.use_eol_spacing_for_access_check: 0
+	place.legalize.allow_touch_track_for_access_check: 1
+	place.legalize.reduce_conservatism_in_eol_check: 0
+	place.legalize.preroute_shape_merge_distance: 0.0
+	place.legalize.enable_non_preferred_direction_span_check: 0
+
+Layer METAL1: cached 0 shapes out of 53 total shapes.
+Layer METAL2: cached 30 shapes out of 30 total shapes.
+Cached 1095 vias out of 1095 total vias.
+Information: Starting tap cell insertion into alu_pg_malla_legalizada using site master "unit". (CHF-200)
+	10% complete ...
+	30% complete ...
+	50% complete ...
+	60% complete ...
+	80% complete ...
+Information: Total 486 tap cells inserted successfully into alu_pg_malla_legalizada. (CHF-100)
+set TAPS [get_flat_cells -all -filter {ref_name == TAP01TAS7}]
+{tapfiller!ALU_TAP!TAP01TAS7!0 tapfiller!ALU_TAP!TAP01TAS7!1 tapfiller!ALU_TAP!TAP01TAS7!2 tapfiller!ALU_TAP!TAP01TAS7!3 tapfiller!ALU_TAP!TAP01TAS7!4 tapfiller!ALU_TAP!TAP01TAS7!5 tapfiller!ALU_TAP!TAP01TAS7!6 tapfiller!ALU_TAP!TAP01TAS7!7 tapfiller!ALU_TAP!TAP01TAS7!8 tapfiller!ALU_TAP!TAP01TAS7!9 tapfiller!ALU_TAP!TAP01TAS7!10 tapfiller!ALU_TAP!TAP01TAS7!11 tapfiller!ALU_TAP!TAP01TAS7!12 tapfiller!ALU_TAP!TAP01TAS7!13 tapfiller!ALU_TAP!TAP01TAS7!14 tapfiller!ALU_TAP!TAP01TAS7!15 tapfiller!ALU_TAP!TAP01TAS7!16 tapfiller!ALU_TAP!TAP01TAS7!17 tapfiller!ALU_TAP!TAP01TAS7!18 tapfiller!ALU_TAP!TAP01TAS7!19 tapfiller!ALU_TAP!TAP01TAS7!20 tapfiller!ALU_TAP!TAP01TAS7!21 tapfiller!ALU_TAP!TAP01TAS7!22 tapfiller!ALU_TAP!TAP01TAS7!23 tapfiller!ALU_TAP!TAP01TAS7!24 tapfiller!ALU_TAP!TAP01TAS7!25 tapfiller!ALU_TAP!TAP01TAS7!26 tapfiller!ALU_TAP!TAP01TAS7!27 tapfiller!ALU_TAP!TAP01TAS7!28 tapfiller!ALU_TAP!TAP01TAS7!29 tapfiller!ALU_TAP!TAP01TAS7!30 tapfiller!ALU_TAP!TAP01TAS7!31 tapfiller!ALU_TAP!TAP01TAS7!32 tapfiller!ALU_TAP!TAP01TAS7!33 tapfiller!ALU_TAP!TAP01TAS7!34 tapfiller!ALU_TAP!TAP01TAS7!35 tapfiller!ALU_TAP!TAP01TAS7!36 tapfiller!ALU_TAP!TAP01TAS7!37 tapfiller!ALU_TAP!TAP01TAS7!38 tapfiller!ALU_TAP!TAP01TAS7!39 tapfiller!ALU_TAP!TAP01TAS7!40 tapfiller!ALU_TAP!TAP01TAS7!41 tapfiller!ALU_TAP!TAP01TAS7!42 tapfiller!ALU_TAP!TAP01TAS7!43 tapfiller!ALU_TAP!TAP01TAS7!44 tapfiller!ALU_TAP!TAP01TAS7!45 tapfiller!ALU_TAP!TAP01TAS7!46 tapfiller!ALU_TAP!TAP01TAS7!47 tapfiller!ALU_TAP!TAP01TAS7!48 tapfiller!ALU_TAP!TAP01TAS7!49 tapfiller!ALU_TAP!TAP01TAS7!50 tapfiller!ALU_TAP!TAP01TAS7!51 tapfiller!ALU_TAP!TAP01TAS7!52 tapfiller!ALU_TAP!TAP01TAS7!53 tapfiller!ALU_TAP!TAP01TAS7!54 tapfiller!ALU_TAP!TAP01TAS7!55 tapfiller!ALU_TAP!TAP01TAS7!56 tapfiller!ALU_TAP!TAP01TAS7!57 tapfiller!ALU_TAP!TAP01TAS7!58 tapfiller!ALU_TAP!TAP01TAS7!59 tapfiller!ALU_TAP!TAP01TAS7!60 tapfiller!ALU_TAP!TAP01TAS7!61 tapfiller!ALU_TAP!TAP01TAS7!62 tapfiller!ALU_TAP!TAP01TAS7!63 tapfiller!ALU_TAP!TAP01TAS7!64 tapfiller!ALU_TAP!TAP01TAS7!65 tapfiller!ALU_TAP!TAP01TAS7!66 tapfiller!ALU_TAP!TAP01TAS7!67 tapfiller!ALU_TAP!TAP01TAS7!68 tapfiller!ALU_TAP!TAP01TAS7!69 tapfiller!ALU_TAP!TAP01TAS7!70 tapfiller!ALU_TAP!TAP01TAS7!71 tapfiller!ALU_TAP!TAP01TAS7!72 tapfiller!ALU_TAP!TAP01TAS7!73 tapfiller!ALU_TAP!TAP01TAS7!74 tapfiller!ALU_TAP!TAP01TAS7!75 tapfiller!ALU_TAP!TAP01TAS7!76 tapfiller!ALU_TAP!TAP01TAS7!77 tapfiller!ALU_TAP!TAP01TAS7!78 tapfiller!ALU_TAP!TAP01TAS7!79 tapfiller!ALU_TAP!TAP01TAS7!80 tapfiller!ALU_TAP!TAP01TAS7!81 tapfiller!ALU_TAP!TAP01TAS7!82 tapfiller!ALU_TAP!TAP01TAS7!83 tapfiller!ALU_TAP!TAP01TAS7!84 tapfiller!ALU_TAP!TAP01TAS7!85 tapfiller!ALU_TAP!TAP01TAS7!86 tapfiller!ALU_TAP!TAP01TAS7!87 tapfiller!ALU_TAP!TAP01TAS7!88 tapfiller!ALU_TAP!TAP01TAS7!89 tapfiller!ALU_TAP!TAP01TAS7!90 tapfiller!ALU_TAP!TAP01TAS7!91 tapfiller!ALU_TAP!TAP01TAS7!92 tapfiller!ALU_TAP!TAP01TAS7!93 tapfiller!ALU_TAP!TAP01TAS7!94 tapfiller!ALU_TAP!TAP01TAS7!95 tapfiller!ALU_TAP!TAP01TAS7!96 tapfiller!ALU_TAP!TAP01TAS7!97 tapfiller!ALU_TAP!TAP01TAS7!98 tapfiller!ALU_TAP!TAP01TAS7!99 ...}
+set NTAPS [sizeof_collection $TAPS]
+486
+puts "M31 TAP: instancias encontradas = $NTAPS"
+M31 TAP: instancias encontradas = 486
+set NTAPS [sizeof_collection $TAPS]
+486
+puts "M31 TAP: instancias encontradas = $NTAPS"
+M31 TAP: instancias encontradas = 486
+if {$NTAPS == 0} {
+    error "No se insertaron celdas TAP; no se guardara un nuevo checkpoint"
+}
+# Reconectar los pines fisicos de TODAS las celdas, incluyendo las TAP.
+set POWER_PINS  [get_pins -hierarchical -physical_context */VCCK]
+{{ALUControl_reg_reg[2]/VCCK} {ALUControl_reg_reg[1]/VCCK} {A_reg_reg[15]/VCCK} {A_reg_reg[14]/VCCK} {A_reg_reg[13]/VCCK} {B_reg_reg[15]/VCCK} {B_reg_reg[14]/VCCK} {B_reg_reg[13]/VCCK} {B_reg_reg[12]/VCCK} MulOverflow_reg/VCCK {Result_reg[15]/VCCK} {Result_reg[14]/VCCK} {Result_reg[13]/VCCK} {Result_reg[12]/VCCK} {Result_reg[11]/VCCK} {Result_reg[10]/VCCK} {Result_reg[9]/VCCK} {Result_reg[8]/VCCK} {Result_reg[7]/VCCK} {Result_reg[6]/VCCK} {Result_reg[5]/VCCK} {Result_reg[4]/VCCK} {Result_reg[3]/VCCK} {Result_reg[2]/VCCK} {Result_reg[1]/VCCK} {Result_reg[0]/VCCK} {NZCV_reg[3]/VCCK} {NZCV_reg[1]/VCCK} {NZCV_reg[0]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[0]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[1]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[2]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[4]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[5]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[6]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[7]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[8]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[9]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[10]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[11]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[12]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[13]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[14]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[15]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[0]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[1]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[2]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[3]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[4]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[5]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[6]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[7]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[8]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[9]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[10]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[11]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[12]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[13]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[14]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[15]/VCCK} {A_reg_reg[12]/VCCK} {A_reg_reg[11]/VCCK} {A_reg_reg[10]/VCCK} {A_reg_reg[9]/VCCK} {A_reg_reg[8]/VCCK} {A_reg_reg[6]/VCCK} {A_reg_reg[5]/VCCK} {B_reg_reg[11]/VCCK} {B_reg_reg[10]/VCCK} {B_reg_reg[9]/VCCK} {B_reg_reg[7]/VCCK} {B_reg_reg[6]/VCCK} {B_reg_reg[5]/VCCK} {A_reg_reg[2]/VCCK} {A_reg_reg[0]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[3]/VCCK} {A_reg_reg[1]/VCCK} {B_reg_reg[2]/VCCK} {A_reg_reg[3]/VCCK} {B_reg_reg[0]/VCCK} {B_reg_reg[1]/VCCK} {B_reg_reg[4]/VCCK} {B_reg_reg[8]/VCCK} {NZCV_reg[2]/VCCK} {B_reg_reg[3]/VCCK} {A_reg_reg[4]/VCCK} {ALUControl_reg_reg[0]/VCCK} {A_reg_reg[7]/VCCK} U59/VCCK U60/VCCK U61/VCCK U62/VCCK U63/VCCK U64/VCCK U65/VCCK U66/VCCK U67/VCCK U68/VCCK U69/VCCK U70/VCCK ...}
+set GROUND_PINS [get_pins -hierarchical -physical_context */GNDK]
+{{ALUControl_reg_reg[2]/GNDK} {ALUControl_reg_reg[1]/GNDK} {A_reg_reg[15]/GNDK} {A_reg_reg[14]/GNDK} {A_reg_reg[13]/GNDK} {B_reg_reg[15]/GNDK} {B_reg_reg[14]/GNDK} {B_reg_reg[13]/GNDK} {B_reg_reg[12]/GNDK} MulOverflow_reg/GNDK {Result_reg[15]/GNDK} {Result_reg[14]/GNDK} {Result_reg[13]/GNDK} {Result_reg[12]/GNDK} {Result_reg[11]/GNDK} {Result_reg[10]/GNDK} {Result_reg[9]/GNDK} {Result_reg[8]/GNDK} {Result_reg[7]/GNDK} {Result_reg[6]/GNDK} {Result_reg[5]/GNDK} {Result_reg[4]/GNDK} {Result_reg[3]/GNDK} {Result_reg[2]/GNDK} {Result_reg[1]/GNDK} {Result_reg[0]/GNDK} {NZCV_reg[3]/GNDK} {NZCV_reg[1]/GNDK} {NZCV_reg[0]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[0]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[1]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[2]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[4]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[5]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[6]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[7]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[8]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[9]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[10]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[11]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[12]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[13]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[14]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[15]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[0]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[1]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[2]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[3]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[4]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[5]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[6]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[7]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[8]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[9]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[10]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[11]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[12]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[13]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[14]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[15]/GNDK} {A_reg_reg[12]/GNDK} {A_reg_reg[11]/GNDK} {A_reg_reg[10]/GNDK} {A_reg_reg[9]/GNDK} {A_reg_reg[8]/GNDK} {A_reg_reg[6]/GNDK} {A_reg_reg[5]/GNDK} {B_reg_reg[11]/GNDK} {B_reg_reg[10]/GNDK} {B_reg_reg[9]/GNDK} {B_reg_reg[7]/GNDK} {B_reg_reg[6]/GNDK} {B_reg_reg[5]/GNDK} {A_reg_reg[2]/GNDK} {A_reg_reg[0]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[3]/GNDK} {A_reg_reg[1]/GNDK} {B_reg_reg[2]/GNDK} {A_reg_reg[3]/GNDK} {B_reg_reg[0]/GNDK} {B_reg_reg[1]/GNDK} {B_reg_reg[4]/GNDK} {B_reg_reg[8]/GNDK} {NZCV_reg[2]/GNDK} {B_reg_reg[3]/GNDK} {A_reg_reg[4]/GNDK} {ALUControl_reg_reg[0]/GNDK} {A_reg_reg[7]/GNDK} U59/GNDK U60/GNDK U61/GNDK U62/GNDK U63/GNDK U64/GNDK U65/GNDK U66/GNDK U67/GNDK U68/GNDK U69/GNDK U70/GNDK ...}
+if {[sizeof_collection $POWER_PINS] == 0 || [sizeof_collection $GROUND_PINS] == 0} {
+    error "No se encontraron pines fisicos de VCCK/GNDK"
+}
+connect_pg_net -net VCCK $POWER_PINS
+1
+connect_pg_net -net GNDK $GROUND_PINS
+1
+# Las TAP pueden requerir movimientos de celdas funcionales.
+legalize_placement
+Information: Starting 'legalize_placement' (FLW-8000)
+Information: Time: 2026-10-26 17:12:09 / Session:  00:00:14 / Command:  00:00:00 / CPU:  00:00:00 / Memory: 578 MB (FLW-8100)
+nplDplc2Placer::setParam(effort,1)
+nplDplc2Placer::setParam(debug,0)
+nplDplc2Placer::setParam(site_check,2)
+nplDplc2Placer::setParam(app_firm_wgt,0)
+Warning: Site master "unit" has neither X-Symmetry nor Y-Symmetry. The "legal orientations" for the standard cells will be limited. (LGL-031)
+Warning: Routing direction of metal layer POLY2 is neither "horizontal" nor "vertical".  PDC checks will not be performed on this layer. (PDC-003)
+PDC app_options settings =========
+	place.legalize.enable_prerouted_net_check: 1
+	place.legalize.num_tracks_for_access_check: 1
+	place.legalize.use_eol_spacing_for_access_check: 0
+	place.legalize.allow_touch_track_for_access_check: 1
+	place.legalize.reduce_conservatism_in_eol_check: 0
+	place.legalize.preroute_shape_merge_distance: 0.0
+	place.legalize.enable_non_preferred_direction_span_check: 0
+
+Layer METAL1: cached 0 shapes out of 53 total shapes.
+Layer METAL2: cached 30 shapes out of 30 total shapes.
+Cached 1095 vias out of 1095 total vias.
+
+Legalizing Top Level Design alu_sync_top ... 
+Information: Initializing classic cellmap without advanced rules enabled and without PDC enabled
+Information: The following app options are used in cellmap
+        place.legalize.enable_color_aware_placement : false
+        place.legalize.use_nll_query_cm : false
+        place.legalize.enable_advanced_legalizer : false
+        place.legalize.enable_prerouted_net_check : true
+        place.legalize.enable_advanced_prerouted_net_check : false
+        place.legalize.always_continue : true
+        place.legalize.limit_legality_checks : false
+        place.common.pnet_aware_density : 1.0000
+        place.common.pnet_aware_min_width : 0.0000
+        place.common.pnet_aware_layers : {}
+        place.common.use_placement_model : false
+        place.common.enable_advanced_placement_model : true
+        cts.placement.cell_spacing_rule_style : maximum
+Total 0.0111 seconds to build cellmap data
+Information: Creating classic rule checker.
+Warning: Routing direction of metal layer POLY2 is neither "horizontal" nor "vertical".  PDC checks will not be performed on this layer. (PDC-003)
+=====> Processed 47 ref cells (0 fillers) from library
+
+Bounds/Regions In This Design:
+        Area    Num Cells  Exclusive Name
+ (square um)
+     30946.4         1711        Yes DEFAULT_VA
+
+Warning: max_legality_failures=5000 ignored.
+	To use it, set limit_legality_checks to true.
+Warning: max_legality_check_range=500 ignored.
+	To use it, set limit_legality_checks to true.
+Starting legalizer.
+Warning: There is high fragmentation caused by many blockages or fixed cells.
+	The median subrow width (space between blockages) is 39 sites
+	and the median cell width is 8 sites. This makes it difficult for
+	the legalizer to pack in the cells and can result in high
+	displacements and long runtimes.
+Please look for the GIF files that are written out at the end of
+	legalization to see the impact of the fragmentation.
+Warning: Exclusive bound 'DEFAULT' has no cells.
+Optimizing Exclusive Bound 'DEFAULT_VA' (2/2)
+Warning: There is high fragmentation caused by many blockages or fixed cells.
+	The median subrow width (space between blockages) is 39 sites
+	and the median cell width is 8 sites. This makes it difficult for
+	the legalizer to pack in the cells and can result in high
+	displacements and long runtimes.
+Please look for the GIF files that are written out at the end of
+	legalization to see the impact of the fragmentation.
+    Done Exclusive Bound 'DEFAULT_VA' (2/2) (0 sec)
+Writing GIF plot to file './legalizer_debug_plots/alu_pg_malla_legalizada_SITE_unit.001-0001-max_displacements.gif'.
+Writing GIF plot to file './legalizer_debug_plots/alu_pg_malla_legalizada_SITE_unit.001-0002-colored_displacements.gif'.
+Legalization complete (0 total sec)
+
+****************************************
+  Report : Placement Attempts
+  Site   : unit
+****************************************
+
+number of cells:                   1711
+number of references:                47
+number of site rows:                 52
+number of locations attempted:    23548
+number of locations failed:        1999  (8.5%)
+
+Legality of references at locations:
+22 references had failures.
+
+Worst 10 references by total failures:
+ CELLS       UNFLIPPED                       FLIPPED                REFERENCE NAME
+         ATTEMPTS  FAILURES            ATTEMPTS  FAILURES           
+   348       4422       520 ( 11.8%)       1541       238 ( 15.4%)  NAND2X1TAS7
+    79       1268       159 ( 12.5%)        526        63 ( 12.0%)  NOR2X1TAS7
+    75       1137       149 ( 13.1%)        375        57 ( 15.2%)  OAI12X1TAS7
+    42        569       143 ( 25.1%)        350        41 ( 11.7%)  DFFQX1TAS7
+    47        827        99 ( 12.0%)        416        55 ( 13.2%)  AOI12X1TAS7
+    43        761       121 ( 15.9%)        345        21 (  6.1%)  NOR2B1X1TAS7
+    22        354        45 ( 12.7%)        167        25 ( 15.0%)  AOI22X1TAS7
+     8        123        29 ( 23.6%)         57        28 ( 49.1%)  DFFQX4TAS7
+     1        136        27 ( 19.9%)         79         9 ( 11.4%)  AOI12X2TAS7
+    16        264        25 (  9.5%)         86         9 ( 10.5%)  NAND2B1X1TAS7
+
+Worst 10 references by failure rate:
+ CELLS       UNFLIPPED                       FLIPPED                REFERENCE NAME
+         ATTEMPTS  FAILURES            ATTEMPTS  FAILURES           
+     8        123        29 ( 23.6%)         57        28 ( 49.1%)  DFFQX4TAS7
+     1          9         2 ( 22.2%)          9         3 ( 33.3%)  OAI12X2TAS7
+    42        569       143 ( 25.1%)        350        41 ( 11.7%)  DFFQX1TAS7
+     6         52        14 ( 26.9%)         27         0 (  0.0%)  DFFQX2TAS7
+     1        136        27 ( 19.9%)         79         9 ( 11.4%)  AOI12X2TAS7
+     1          6         1 ( 16.7%)          0         0 (  0.0%)  NAND4B2X1TAS7
+     6         84        13 ( 15.5%)          5         1 ( 20.0%)  OAI22X1TAS7
+    75       1137       149 ( 13.1%)        375        57 ( 15.2%)  OAI12X1TAS7
+    22        354        45 ( 12.7%)        167        25 ( 15.0%)  AOI22X1TAS7
+    43        761       121 ( 15.9%)        345        21 (  6.1%)  NOR2B1X1TAS7
+
+Legality of references in rows:
+0 references had row failures.
+
+****************************************
+  Report : Cell Displacements
+****************************************
+
+number of cells aggregated:        1225 (10714 total sites)
+avg row height over cells:        3.360 um
+rms cell displacement:            1.832 um ( 0.55 row height)
+rms weighted cell displacement:   1.832 um ( 0.55 row height)
+max cell displacement:           10.362 um ( 3.08 row height)
+avg cell displacement:            1.016 um ( 0.30 row height)
+avg weighted cell displacement:   1.016 um ( 0.30 row height)
+number of cells moved:              506
+number of large displacements:        1
+large displacement threshold:     3.000 row height
+
+Displacements of worst 10 cells:
+Cell: B_reg_reg[3] (DFFQX4TAS7)
+  Input location: (9.84,16.08)
+  Legal location: (12.24,26.16)
+  Displacement:  10.362 um ( 3.08 row height)
+Cell: A_reg_reg[1] (DFFQX4TAS7)
+  Input location: (6.48,110.16)
+  Legal location: (12.24,106.8)
+  Displacement:   6.668 um ( 1.98 row height)
+Cell: A_reg_reg[3] (DFFQX4TAS7)
+  Input location: (6.48,63.12)
+  Legal location: (12.24,59.76)
+  Displacement:   6.668 um ( 1.98 row height)
+Cell: B_reg_reg[2] (DFFQX4TAS7)
+  Input location: (6.48,22.8)
+  Legal location: (12.24,19.44)
+  Displacement:   6.668 um ( 1.98 row height)
+Cell: NZCV_reg[2] (DFFQX4TAS7)
+  Input location: (167.28,147.12)
+  Legal location: (162.48,143.76)
+  Displacement:   5.859 um ( 1.74 row height)
+Cell: B_reg_reg[0] (DFFQX4TAS7)
+  Input location: (6.48,100.08)
+  Legal location: (12.24,100.08)
+  Displacement:   5.760 um ( 1.71 row height)
+Cell: U234 (XNOR3X1TAS7)
+  Input location: (135.6,6)
+  Legal location: (139.44,9.36)
+  Displacement:   5.102 um ( 1.52 row height)
+Cell: U268 (XNOR3X1TAS7)
+  Input location: (47.76,16.08)
+  Legal location: (51.12,19.44)
+  Displacement:   4.752 um ( 1.41 row height)
+Cell: U564 (XNOR2X1TAS7)
+  Input location: (87.12,22.8)
+  Legal location: (90.48,26.16)
+  Displacement:   4.752 um ( 1.41 row height)
+Cell: B_reg_reg[6] (DFFQX1TAS7)
+  Input location: (10.8,106.8)
+  Legal location: (7.92,103.44)
+  Displacement:   4.425 um ( 1.32 row height)
+
+Legalization succeeded.
+Total Legalizer CPU: 0.592
+Total Legalizer Wall Time: 0.593
+----------------------------------------------------------------
+Information: Ending   'legalize_placement' (FLW-8001)
+Information: Time: 2026-10-26 17:12:09 / Session:  00:00:14 / Command:  00:00:00 / CPU:  00:00:00 / Memory: 578 MB (FLW-8100)
+1
+set LEGALITY [file join $RPT legality.rpt]
+/home/worellana/parcial_3/reports/icc2/taps_academico/legality.rpt
+set DRC      [file join $RPT pg_drc.rpt]
+/home/worellana/parcial_3/reports/icc2/taps_academico/pg_drc.rpt
+set CONN     [file join $RPT pg_connectivity.rpt]
+/home/worellana/parcial_3/reports/icc2/taps_academico/pg_connectivity.rpt
+set VIAS     [file join $RPT pg_missing_vias.rpt]
+/home/worellana/parcial_3/reports/icc2/taps_academico/pg_missing_vias.rpt
+redirect -file $LEGALITY { check_legality }
+redirect -file $DRC      { check_pg_drc -nets {VCCK GNDK} }
+redirect -file $CONN     { check_pg_connectivity }
+redirect -file $VIAS     { check_pg_missing_vias }
+# Rechazar problemas principales; el reporte de vias se inspecciona manualmente.
+set fh [open $LEGALITY r]
+file26
+set legal_text [read $fh]
+
+************************
+
+running check_legality
+
+Warning: Routing direction of metal layer POLY2 is neither "horizontal" nor "vertical".  PDC checks will not be performed on this layer. (PDC-003)
+PDC app_options settings =========
+	place.legalize.enable_prerouted_net_check: 1
+	place.legalize.num_tracks_for_access_check: 1
+	place.legalize.use_eol_spacing_for_access_check: 0
+	place.legalize.allow_touch_track_for_access_check: 1
+	place.legalize.reduce_conservatism_in_eol_check: 0
+	place.legalize.preroute_shape_merge_distance: 0.0
+	place.legalize.enable_non_preferred_direction_span_check: 0
+
+Layer METAL1: cached 0 shapes out of 53 total shapes.
+Layer METAL2: cached 30 shapes out of 30 total shapes.
+Cached 1095 vias out of 1095 total vias.
+
+check_legality for block design alu_sync_top ... 
+Information: Initializing classic cellmap without advanced rules enabled and without PDC enabled
+Information: The following app options are used in cellmap
+        place.legalize.enable_color_aware_placement : false
+        place.legalize.use_nll_query_cm : false
+        place.legalize.enable_advanced_legalizer : false
+        place.legalize.enable_prerouted_net_check : true
+        place.legalize.enable_advanced_prerouted_net_check : false
+        place.legalize.always_continue : true
+        place.legalize.limit_legality_checks : false
+        place.common.pnet_aware_density : 1.0000
+        place.common.pnet_aware_min_width : 0.0000
+        place.common.pnet_aware_layers : {}
+        place.common.use_placement_model : false
+        place.common.enable_advanced_placement_model : true
+        cts.placement.cell_spacing_rule_style : maximum
+Total 0.0099 seconds to build cellmap data
+Information: Creating classic rule checker.
+Warning: Routing direction of metal layer POLY2 is neither "horizontal" nor "vertical".  PDC checks will not be performed on this layer. (PDC-003)
+=====> Processed 47 ref cells (0 fillers) from library
+Design has no advanced rules
+Checking legality
+Checking cell legality:
+0%....10%....20%....30%....40%....50%....60%....70%....80%....90%....100%
+Sorting rows.
+Checking spacing rule legality.
+0%....10%....20%....30%....40%....50%....60%....70%....80%....90%....100%
+Checking packing rule legality.
+
+
+****************************************
+  Report : Legality
+****************************************
+
+VIOLATIONS BY CATEGORY:
+   MOVABLE  APP-FIXED USER-FIXED  DESCRIPTION
+         0          0          0  Two objects overlap.
+         0          0          0  A cell violates a pnet.
+         0          0          0  A cell is illegal at a site.
+         0          0          0  A cell is not aligned with a site.
+         0          0          0  A cell has an illegal orientation.
+         0          0          0  A cell spacing rule is violated.
+         0          0          0  A layer rule is violated.
+         0          0          0  A cell is in the wrong region.
+         0          0          0  Two cells violate cts margins.
+         0          0          0  Two cells violate coloring.
+
+         0          0          0  TOTAL
+
+TOTAL 0 Violations.
+
+VIOLATIONS BY SUBCATEGORY:
+     MOVABLE  APP-FIXED USER-FIXED  DESCRIPTION
+
+         0          0          0    Two objects overlap.
+           0          0          0    Two cells overlap.
+           0          0          0    Two cells have overlapping keepout margins.
+           0          0          0    A cell overlaps a blockage.
+           0          0          0    A cell keepout margin overlaps a blockage.
+
+         0          0          0    A cell violates a pnet.
+
+         0          0          0    A cell is illegal at a site.
+           0          0          0    A cell violates pin-track alignment rules.
+           0          0          0    A cell is illegal at a site.
+           0          0          0    A cell violates legal index rule.
+           0          0          0    A cell has the wrong variant for its location.
+
+         0          0          0    A cell is not aligned with a site.
+           0          0          0    A cell is not aligned with the base site.
+           0          0          0    A cell is not aligned with an overlaid site.
+
+         0          0          0    A cell has an illegal orientation.
+
+         0          0          0    A cell spacing rule is violated.
+           0          0          0    A spacing rule is violated in a row.
+           0          0          0    A spacing rule is violated between adjacent rows.
+           0          0          0    A cell violates vertical abutment rule.
+           0          0          0    A cell violates metal spacing rule.
+
+         0          0          0    A layer rule is violated.
+           0          0          0    A layer VTH rule is violated.
+           0          0          0    A layer OD rule is violated.
+           0          0          0    A layer OD max-width rule is violated.
+           0          0          0    A layer ALL_OD corner rule is violated.
+           0          0          0    A layer max-vertical-length rule is violated.
+           0          0          0    A layer TPO rule is violated.
+           0          0          0    Filler cell insertion cannot satisfy layer rules.
+
+         0          0          0    A cell is in the wrong region.
+           0          0          0    A cell is outside its hard bound.
+           0          0          0    A cell is in the wrong voltage area.
+           0          0          0    A cell violates an exclusive movebound.
+
+         0          0          0    Two cells violate cts margins.
+
+         0          0          0    Two cells violate coloring.
+
+
+check_legality for block design alu_sync_top succeeded!
+
+
+check_legality succeeded.
+
+**************************
+
+1
+
+close $fh
+if {![regexp -nocase {TOTAL[[:space:]]+0[[:space:]]+Violations} $legal_text]} {
+    error "TAP: fallo check_legality; inspecciona $LEGALITY. No se guardo checkpoint nuevo."
+}
+set fh [open $DRC r]
+file26
+set drc_text [read $fh]
+Command check_pg_drc started  at Mon Oct 26 17:12:10 2026
+Command check_pg_drc finished at Mon Oct 26 17:12:10 2026
+CPU usage for check_pg_drc: 0.16 seconds ( 0.00 hours)
+Elapsed time for check_pg_drc: 0.16 seconds ( 0.00 hours)
+No errors found.
+
+close $fh
+if {![regexp -nocase {No errors found} $drc_text]} {
+    error "TAP: verificar check_pg_drc en $DRC; no se guardo checkpoint nuevo."
+}
+set fh [open $CONN r]
+file26
+set conn_text [read $fh]
+Checking secondary net through power switch is enabled. 
+Secondary net will be checked together from primary net. They will be treated as the same net
+Primary Net : VCCK    Secondary Net:
+Primary Net : GNDK    Secondary Net:
+Loading cell instances...
+Number of Standard Cells: 1711
+Number of Macro Cells: 0
+Number of IO Pad Cells: 0
+Number of Blocks: 0
+Loading P/G wires and vias...
+Number of VCCK Wires: 52
+Number of VCCK Vias: 555
+Number of VCCK Terminals: 0
+**************Verify net VCCK connectivity*****************
+  Number of floating wires: 0
+  Number of floating vias: 0
+  Number of floating std cells: 0
+  Number of floating hard macros: 0
+  Number of floating I/O pads: 0
+  Number of floating terminals: 0
+  Number of floating hierarchical blocks: 0
+************************************************************
+Loading cell instances...
+Loading P/G wires and vias...
+Number of GNDK Wires: 51
+Number of GNDK Vias: 540
+Number of GNDK Terminals: 0
+**************Verify net GNDK connectivity*****************
+  Number of floating wires: 0
+  Number of floating vias: 0
+  Number of floating std cells: 0
+  Number of floating hard macros: 0
+  Number of floating I/O pads: 0
+  Number of floating terminals: 0
+  Number of floating hierarchical blocks: 0
+************************************************************
+Overall runtime: 0 seconds.
+
+close $fh
+if {![regexp {Verify net VCCK connectivity} $conn_text] || \
+    ![regexp {Verify net GNDK connectivity} $conn_text] || \
+    [regexp {Number of floating [^:\n]+:[[:space:]]*[1-9][0-9]*} $conn_text]} {
+    error "TAP: problema de conectividad PG; inspecciona $CONN. No se guardo checkpoint nuevo."
+}
+# Guardar la cantidad de TAP como evidencia.
+set fh [open [file join $RPT resumen.txt] w]
+file26
+puts $fh "Checkpoint origen: $IN_BLOCK"
+puts $fh "Checkpoint nuevo: $OUT_BLOCK"
+puts $fh "Biblioteca TAP: m31_3m1t_11k/TAP01TAS7"
+puts $fh "Distancia academica (no certificada): $TAP_DISTANCE um"
+puts $fh "Cantidad de celdas TAP: $NTAPS"
+puts $fh "Verificados: check_legality, check_pg_drc, check_pg_connectivity"
+puts $fh "Pendiente: inspeccionar pg_missing_vias.rpt y terminales externos PG"
+close $fh
+save_block -as $OUT_BLOCK
+Information: Saving 'alu_m31.nlib:alu_pg_malla_legalizada.design' to 'alu_m31.nlib:alu_pg_con_taps.design'. (DES-028)
+1
+save_lib
+Saving library 'alu_m31.nlib'
+1
+puts "ALU_TAPS_OK: $OUT_BLOCK | TAP_COUNT=$NTAPS | DISTANCE=$TAP_DISTANCE um"
+ALU_TAPS_OK: alu_pg_con_taps | TAP_COUNT=486 | DISTANCE=20.0 um
+puts "Reportes: $RPT"
+Reportes: /home/worellana/parcial_3/reports/icc2/taps_academico
+icc2_shell> 

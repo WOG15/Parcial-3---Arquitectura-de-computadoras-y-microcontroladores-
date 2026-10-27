@@ -1,0 +1,7 @@
+=== DIAGNOSTICO PG M31 ===
+CAPA METAL1 | routing_direction=horizontal | min_width=0.1960 | pitch=0.4800
+CAPA METAL2 | routing_direction=vertical | min_width=0.2400 | pitch=0.4800
+CAPA METAL3 | routing_direction=horizontal | min_width=0.4400 | pitch=0.9000
+CORE BBOX: {6.0000 6.0000} {183.1200 180.7200}
+CELDAS TAP: m31_3m1t_11k/TAP01TAS7
+NOTA: No se han creado nuevas vias ni straps; esta sesion solo inspecciona.

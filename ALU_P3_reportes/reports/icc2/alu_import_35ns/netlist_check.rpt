@@ -1,0 +1,42 @@
+****************************************
+Report : check_netlist
+        -cells
+        -nets
+        -ports
+Design : alu_sync_top
+Version: Y-2026.03-SP2
+Date   : Sun Oct 25 17:55:56 2026
+****************************************
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[15]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[15]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[14]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[14]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[13]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[13]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[12]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[12]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[11]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[11]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[10]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[10]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[9]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[9]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[8]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[8]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[7]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[7]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[6]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[6]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[5]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[5]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[4]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[4]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[3]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[3]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[2]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[2]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[1]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[1]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/or_result[0]' has a single tri-state driver 'ALU_INSTANCE/TRI_OR/Y_tri[0]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[15]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[15]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[14]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[14]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[13]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[13]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[12]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[12]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[11]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[11]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[10]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[10]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[9]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[9]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[8]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[8]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[7]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[7]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[6]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[6]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[5]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[5]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[4]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[4]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[3]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[3]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[2]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[2]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[1]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[1]/O'. (DCHK-014)
+Warning: In design 'alu_sync_top', 'flat' net 'ALU_INSTANCE/and_result[0]' has a single tri-state driver 'ALU_INSTANCE/TRI_AND/Y_tri[0]/O'. (DCHK-014)
+1

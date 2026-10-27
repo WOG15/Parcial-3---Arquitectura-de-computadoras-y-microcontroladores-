@@ -1,0 +1,13 @@
+****************************************
+Report : Reference Library Report
+Library: alu_m31.nlib
+Version: Y-2026.03-SP2
+Date   : Sun Oct 25 17:55:55 2026
+****************************************
+
+    Name         Path                                                          Location
+    -----------------------------------------------------------------------------------
+*+  m31_3m1t_11k /home/worellana/parcial_3/technology/m31/ndm/m31_3m1t_11k.ndm /home/worellana/parcial_3/technology/m31/ndm/m31_3m1t_11k.ndm
+    "*" = Library currently open
+    "+" = Library has technology information
+1

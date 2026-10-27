@@ -1,0 +1,458 @@
+
+
+
+                              IC Compiler II (TM)
+
+                Version Y-2026.03-SP2 for linux64 - Sep 01, 2026
+                           Base build date 6/22/2026.
+
+                    Copyright (c) 1988 - 2026 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+      Inc.  This software may only be used in accordance with the terms and
+  conditions of a written license agreement with Synopsys, Inc.  All other use,
+   reproduction, or distribution of this software is strictly prohibited.  By
+   installing, accessing, using, or executing this software, you agree that it
+  will reside on, operate within, and have access to the computers and networks
+    where such software is used ("Host System"), and that Synopsys may access
+     components and data of the Host System as necessary for it to function
+ properly, to authenticate and validate license keys, to verify that it is used
+ only in conformity with the applicable license restrictions, and to communicate
+                 error messages and associated data to Synopsys.
+
+ 
+Invocation: /usr/synopsys/icc2/Y-2026.03-SP2/linux64/nwtn/bin/icc2_exec
+Execution time: Mon Oct 26 16:36:58 2026
+Host: synopsys-unis (1 x 2831.619 MHz Intel(R) Xeon(R) D-2123IT CPU @ 2.20GHz)
+Working directory: /home/worellana/parcial_3
+
+# ALU+ M31: corregir legalidad tras crear la malla PG.
+# Ejecutar desde ~/parcial_3 mediante icc2_shell -f scripts/icc2/legalizar_malla_m31.tcl
+# NO modifica el checkpoint original alu_pg_malla_prelim en disco.
+set ROOT [file normalize [pwd]]
+/home/worellana/parcial_3
+set LIB  [file join $ROOT outputs icc2 alu_import_35ns alu_m31.nlib]
+/home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib
+set RPT  [file join $ROOT reports icc2 powerplan_malla_legalizada]
+/home/worellana/parcial_3/reports/icc2/powerplan_malla_legalizada
+set IN_BLOCK  alu_pg_malla_prelim
+alu_pg_malla_prelim
+set OUT_BLOCK alu_pg_malla_legalizada
+alu_pg_malla_legalizada
+if {![file exists $LIB]} {
+    error "No existe la biblioteca ICC2: $LIB. Ejecuta desde ~/parcial_3"
+}
+file mkdir $RPT
+open_lib $LIB
+Information: Loading library file '/home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib' (FILE-007)
+Information: Loading library file '/home/worellana/parcial_3/technology/m31/ndm/m31_3m1t_11k.ndm' (FILE-007)
+{alu_m31.nlib}
+open_block $IN_BLOCK
+Information: User units loaded from library 'm31_3m1t_11k' (LNK-040)
+Opening block 'alu_m31.nlib:alu_pg_malla_prelim.design' in edit mode
+{alu_m31.nlib:alu_pg_malla_prelim.design}
+# Conservar las geometrías PG actuales y desplazar únicamente celdas movibles.
+# El reporte anterior mostraba habilitada la comprobacion de pnet preruteada.
+puts "M31: ejecutando legalize_placement con malla PG presente"
+M31: ejecutando legalize_placement con malla PG presente
+legalize_placement
+Using libraries: alu_m31.nlib m31_3m1t_11k
+Visiting block alu_m31.nlib:alu_pg_malla_prelim.design
+Design 'alu_sync_top' was successfully linked.
+Information: Starting 'legalize_placement' (FLW-8000)
+Information: Time: 2026-10-26 16:37:00 / Session:  00:00:13 / Command:  00:00:00 / CPU:  00:00:00 / Memory: 531 MB (FLW-8100)
+nplDplc2Placer::setParam(effort,1)
+nplDplc2Placer::setParam(debug,0)
+nplDplc2Placer::setParam(site_check,2)
+nplDplc2Placer::setParam(app_firm_wgt,0)
+Warning: Site master "unit" has neither X-Symmetry nor Y-Symmetry. The "legal orientations" for the standard cells will be limited. (LGL-031)
+Warning: Routing direction of metal layer POLY2 is neither "horizontal" nor "vertical".  PDC checks will not be performed on this layer. (PDC-003)
+PDC app_options settings =========
+	place.legalize.enable_prerouted_net_check: 1
+	place.legalize.num_tracks_for_access_check: 1
+	place.legalize.use_eol_spacing_for_access_check: 0
+	place.legalize.allow_touch_track_for_access_check: 1
+	place.legalize.reduce_conservatism_in_eol_check: 0
+	place.legalize.preroute_shape_merge_distance: 0.0
+	place.legalize.enable_non_preferred_direction_span_check: 0
+
+Layer METAL1: cached 0 shapes out of 53 total shapes.
+Layer METAL2: cached 30 shapes out of 30 total shapes.
+Cached 1095 vias out of 1095 total vias.
+
+Legalizing Top Level Design alu_sync_top ... 
+Information: Initializing classic cellmap without advanced rules enabled and without PDC enabled
+Information: The following app options are used in cellmap
+        place.legalize.enable_color_aware_placement : false
+        place.legalize.use_nll_query_cm : false
+        place.legalize.enable_advanced_legalizer : false
+        place.legalize.enable_prerouted_net_check : true
+        place.legalize.enable_advanced_prerouted_net_check : false
+        place.legalize.always_continue : true
+        place.legalize.limit_legality_checks : false
+        place.common.pnet_aware_density : 1.0000
+        place.common.pnet_aware_min_width : 0.0000
+        place.common.pnet_aware_layers : {}
+        place.common.use_placement_model : false
+        place.common.enable_advanced_placement_model : true
+        cts.placement.cell_spacing_rule_style : maximum
+Total 0.1196 seconds to build cellmap data
+Information: Creating classic rule checker.
+Warning: Routing direction of metal layer POLY2 is neither "horizontal" nor "vertical".  PDC checks will not be performed on this layer. (PDC-003)
+=====> Processed 46 ref cells (0 fillers) from library
+
+Bounds/Regions In This Design:
+        Area    Num Cells  Exclusive Name
+ (square um)
+     30946.4         1225        Yes DEFAULT_VA
+
+Warning: max_legality_failures=5000 ignored.
+	To use it, set limit_legality_checks to true.
+Warning: max_legality_check_range=500 ignored.
+	To use it, set limit_legality_checks to true.
+Starting legalizer.
+Warning: Exclusive bound 'DEFAULT' has no cells.
+Optimizing Exclusive Bound 'DEFAULT_VA' (2/2)
+    Done Exclusive Bound 'DEFAULT_VA' (2/2) (0 sec)
+Legalization complete (0 total sec)
+
+****************************************
+  Report : Placement Attempts
+  Site   : unit
+****************************************
+
+number of cells:                   1225
+number of references:                46
+number of site rows:                 52
+number of locations attempted:    20563
+number of locations failed:        1763  (8.6%)
+
+Legality of references at locations:
+24 references had failures.
+
+Worst 10 references by total failures:
+ CELLS       UNFLIPPED                       FLIPPED                REFERENCE NAME
+         ATTEMPTS  FAILURES            ATTEMPTS  FAILURES           
+   348       4876       566 ( 11.6%)        942       152 ( 16.1%)  NAND2X1TAS7
+    75       1163       163 ( 14.0%)        219        31 ( 14.2%)  OAI12X1TAS7
+    79       1161       143 ( 12.3%)        381        49 ( 12.9%)  NOR2X1TAS7
+    42        622       135 ( 21.7%)        325        54 ( 16.6%)  DFFQX1TAS7
+    47        706        89 ( 12.6%)        171        22 ( 12.9%)  AOI12X1TAS7
+    43        547        98 ( 17.9%)        156         3 (  1.9%)  NOR2B1X1TAS7
+    22        359        37 ( 10.3%)         56         9 ( 16.1%)  AOI22X1TAS7
+    11        176        22 ( 12.5%)         64         7 ( 10.9%)  OAI12B2X1TAS7
+    48        750        24 (  3.2%)         47         3 (  6.4%)  XNOR2X1TAS7
+    16        240        25 ( 10.4%)         32         2 (  6.2%)  NAND2B1X1TAS7
+
+Worst 10 references by failure rate:
+ CELLS       UNFLIPPED                       FLIPPED                REFERENCE NAME
+         ATTEMPTS  FAILURES            ATTEMPTS  FAILURES           
+     1         16         5 ( 31.2%)          0         0 (  0.0%)  AOI12X2TAS7
+     1         16         5 ( 31.2%)         16         4 ( 25.0%)  NOR4X2TAS7
+     1         16         5 ( 31.2%)         16         4 ( 25.0%)  OAI12X2TAS7
+     6         60        12 ( 20.0%)         52        12 ( 23.1%)  DFFQX2TAS7
+    42        622       135 ( 21.7%)        325        54 ( 16.6%)  DFFQX1TAS7
+     8         78        11 ( 14.1%)         46        12 ( 26.1%)  DFFQX4TAS7
+     3         48         7 ( 14.6%)          0         0 (  0.0%)  MUX2BX1TAS7
+    43        547        98 ( 17.9%)        156         3 (  1.9%)  NOR2B1X1TAS7
+     6         96        13 ( 13.5%)         16         3 ( 18.8%)  OAI22X1TAS7
+    75       1163       163 ( 14.0%)        219        31 ( 14.2%)  OAI12X1TAS7
+
+Legality of references in rows:
+0 references had row failures.
+
+****************************************
+  Report : Cell Displacements
+****************************************
+
+number of cells aggregated:        1225 (10714 total sites)
+avg row height over cells:        3.360 um
+rms cell displacement:            0.070 um ( 0.02 row height)
+rms weighted cell displacement:   0.070 um ( 0.02 row height)
+max cell displacement:            0.480 um ( 0.14 row height)
+avg cell displacement:            0.010 um ( 0.00 row height)
+avg weighted cell displacement:   0.010 um ( 0.00 row height)
+number of cells moved:               23
+number of large displacements:        0
+large displacement threshold:     3.000 row height
+
+Displacements of worst 10 cells:
+Cell: U267 (NAND2X1TAS7)
+  Input location: (54,22.8)
+  Legal location: (54.48,22.8)
+  Displacement:   0.480 um ( 0.14 row height)
+Cell: U168 (NAND2X1TAS7)
+  Input location: (30,46.32)
+  Legal location: (30.48,46.32)
+  Displacement:   0.480 um ( 0.14 row height)
+Cell: U103 (NAND2X1TAS7)
+  Input location: (114,22.8)
+  Legal location: (113.52,22.8)
+  Displacement:   0.480 um ( 0.14 row height)
+Cell: NZCV_reg[2] (DFFQX4TAS7)
+  Input location: (167.76,147.12)
+  Legal location: (167.28,147.12)
+  Displacement:   0.480 um ( 0.14 row height)
+Cell: U191 (AOI22X1TAS7)
+  Input location: (29.04,19.44)
+  Legal location: (29.52,19.44)
+  Displacement:   0.480 um ( 0.14 row height)
+Cell: B_reg_reg[0] (DFFQX4TAS7)
+  Input location: (6,100.08)
+  Legal location: (6.48,100.08)
+  Displacement:   0.480 um ( 0.14 row height)
+Cell: A_reg_reg[3] (DFFQX4TAS7)
+  Input location: (6,63.12)
+  Legal location: (6.48,63.12)
+  Displacement:   0.480 um ( 0.14 row height)
+Cell: U1011 (AOI22X1TAS7)
+  Input location: (101.04,116.88)
+  Legal location: (101.52,116.88)
+  Displacement:   0.480 um ( 0.14 row height)
+Cell: U951 (AOI22X1TAS7)
+  Input location: (65.04,93.36)
+  Legal location: (65.52,93.36)
+  Displacement:   0.480 um ( 0.14 row height)
+Cell: U287 (NAND2X1TAS7)
+  Input location: (42,73.2)
+  Legal location: (42.48,73.2)
+  Displacement:   0.480 um ( 0.14 row height)
+
+Legalization succeeded.
+Total Legalizer CPU: 0.657
+Total Legalizer Wall Time: 0.660
+----------------------------------------------------------------
+Information: Ending   'legalize_placement' (FLW-8001)
+Information: Time: 2026-10-26 16:37:00 / Session:  00:00:14 / Command:  00:00:00 / CPU:  00:00:00 / Memory: 547 MB (FLW-8100)
+1
+set LEGALITY [file join $RPT legality.rpt]
+/home/worellana/parcial_3/reports/icc2/powerplan_malla_legalizada/legality.rpt
+set DRC      [file join $RPT pg_drc.rpt]
+/home/worellana/parcial_3/reports/icc2/powerplan_malla_legalizada/pg_drc.rpt
+set CONN     [file join $RPT pg_connectivity.rpt]
+/home/worellana/parcial_3/reports/icc2/powerplan_malla_legalizada/pg_connectivity.rpt
+set VIAS     [file join $RPT pg_missing_vias.rpt]
+/home/worellana/parcial_3/reports/icc2/powerplan_malla_legalizada/pg_missing_vias.rpt
+redirect -file $LEGALITY { check_legality }
+redirect -file $DRC      { check_pg_drc -nets {VCCK GNDK} }
+redirect -file $CONN     { check_pg_connectivity }
+redirect -file $VIAS     { check_pg_missing_vias }
+# La comprobación de legalidad produce texto, no un error Tcl, al fallar.
+set f [open $LEGALITY r]
+file26
+set contents [read $f]
+
+************************
+
+running check_legality
+
+Warning: Routing direction of metal layer POLY2 is neither "horizontal" nor "vertical".  PDC checks will not be performed on this layer. (PDC-003)
+PDC app_options settings =========
+	place.legalize.enable_prerouted_net_check: 1
+	place.legalize.num_tracks_for_access_check: 1
+	place.legalize.use_eol_spacing_for_access_check: 0
+	place.legalize.allow_touch_track_for_access_check: 1
+	place.legalize.reduce_conservatism_in_eol_check: 0
+	place.legalize.preroute_shape_merge_distance: 0.0
+	place.legalize.enable_non_preferred_direction_span_check: 0
+
+Layer METAL1: cached 0 shapes out of 53 total shapes.
+Layer METAL2: cached 30 shapes out of 30 total shapes.
+Cached 1095 vias out of 1095 total vias.
+
+check_legality for block design alu_sync_top ... 
+Information: Initializing classic cellmap without advanced rules enabled and without PDC enabled
+Information: The following app options are used in cellmap
+        place.legalize.enable_color_aware_placement : false
+        place.legalize.use_nll_query_cm : false
+        place.legalize.enable_advanced_legalizer : false
+        place.legalize.enable_prerouted_net_check : true
+        place.legalize.enable_advanced_prerouted_net_check : false
+        place.legalize.always_continue : true
+        place.legalize.limit_legality_checks : false
+        place.common.pnet_aware_density : 1.0000
+        place.common.pnet_aware_min_width : 0.0000
+        place.common.pnet_aware_layers : {}
+        place.common.use_placement_model : false
+        place.common.enable_advanced_placement_model : true
+        cts.placement.cell_spacing_rule_style : maximum
+Total 0.1258 seconds to build cellmap data
+Information: Creating classic rule checker.
+Warning: Routing direction of metal layer POLY2 is neither "horizontal" nor "vertical".  PDC checks will not be performed on this layer. (PDC-003)
+=====> Processed 46 ref cells (0 fillers) from library
+Design has no advanced rules
+Checking legality
+Checking cell legality:
+0%....10%....20%....30%....40%....50%....60%....70%....80%....90%....100%
+Sorting rows.
+Checking spacing rule legality.
+0%....10%....20%....30%....40%....50%....60%....70%....80%....90%....100%
+Checking packing rule legality.
+
+
+****************************************
+  Report : Legality
+****************************************
+
+VIOLATIONS BY CATEGORY:
+   MOVABLE  APP-FIXED USER-FIXED  DESCRIPTION
+         0          0          0  Two objects overlap.
+         0          0          0  A cell violates a pnet.
+         0          0          0  A cell is illegal at a site.
+         0          0          0  A cell is not aligned with a site.
+         0          0          0  A cell has an illegal orientation.
+         0          0          0  A cell spacing rule is violated.
+         0          0          0  A layer rule is violated.
+         0          0          0  A cell is in the wrong region.
+         0          0          0  Two cells violate cts margins.
+         0          0          0  Two cells violate coloring.
+
+         0          0          0  TOTAL
+
+TOTAL 0 Violations.
+
+VIOLATIONS BY SUBCATEGORY:
+     MOVABLE  APP-FIXED USER-FIXED  DESCRIPTION
+
+         0          0          0    Two objects overlap.
+           0          0          0    Two cells overlap.
+           0          0          0    Two cells have overlapping keepout margins.
+           0          0          0    A cell overlaps a blockage.
+           0          0          0    A cell keepout margin overlaps a blockage.
+
+         0          0          0    A cell violates a pnet.
+
+         0          0          0    A cell is illegal at a site.
+           0          0          0    A cell violates pin-track alignment rules.
+           0          0          0    A cell is illegal at a site.
+           0          0          0    A cell violates legal index rule.
+           0          0          0    A cell has the wrong variant for its location.
+
+         0          0          0    A cell is not aligned with a site.
+           0          0          0    A cell is not aligned with the base site.
+           0          0          0    A cell is not aligned with an overlaid site.
+
+         0          0          0    A cell has an illegal orientation.
+
+         0          0          0    A cell spacing rule is violated.
+           0          0          0    A spacing rule is violated in a row.
+           0          0          0    A spacing rule is violated between adjacent rows.
+           0          0          0    A cell violates vertical abutment rule.
+           0          0          0    A cell violates metal spacing rule.
+
+         0          0          0    A layer rule is violated.
+           0          0          0    A layer VTH rule is violated.
+           0          0          0    A layer OD rule is violated.
+           0          0          0    A layer OD max-width rule is violated.
+           0          0          0    A layer ALL_OD corner rule is violated.
+           0          0          0    A layer max-vertical-length rule is violated.
+           0          0          0    A layer TPO rule is violated.
+           0          0          0    Filler cell insertion cannot satisfy layer rules.
+
+         0          0          0    A cell is in the wrong region.
+           0          0          0    A cell is outside its hard bound.
+           0          0          0    A cell is in the wrong voltage area.
+           0          0          0    A cell violates an exclusive movebound.
+
+         0          0          0    Two cells violate cts margins.
+
+         0          0          0    Two cells violate coloring.
+
+
+check_legality for block design alu_sync_top succeeded!
+
+
+check_legality succeeded.
+
+**************************
+
+1
+
+close $f
+if {![regexp -nocase {TOTAL[[:space:]]+0[[:space:]]+Violations} $contents]} {
+    error "M31: quedaron violaciones de legalidad. Revisar $LEGALITY; checkpoint NO guardado."
+}
+# Verificar que no hayan quedado elementos flotantes PG.
+set f [open $CONN r]
+file26
+set contents [read $f]
+Checking secondary net through power switch is enabled. 
+Secondary net will be checked together from primary net. They will be treated as the same net
+Primary Net : VCCK    Secondary Net:
+Primary Net : GNDK    Secondary Net:
+Loading cell instances...
+Number of Standard Cells: 1225
+Number of Macro Cells: 0
+Number of IO Pad Cells: 0
+Number of Blocks: 0
+Loading P/G wires and vias...
+Number of VCCK Wires: 52
+Number of VCCK Vias: 555
+Number of VCCK Terminals: 0
+**************Verify net VCCK connectivity*****************
+  Number of floating wires: 0
+  Number of floating vias: 0
+  Number of floating std cells: 0
+  Number of floating hard macros: 0
+  Number of floating I/O pads: 0
+  Number of floating terminals: 0
+  Number of floating hierarchical blocks: 0
+************************************************************
+Loading cell instances...
+Loading P/G wires and vias...
+Number of GNDK Wires: 51
+Number of GNDK Vias: 540
+Number of GNDK Terminals: 0
+**************Verify net GNDK connectivity*****************
+  Number of floating wires: 0
+  Number of floating vias: 0
+  Number of floating std cells: 0
+  Number of floating hard macros: 0
+  Number of floating I/O pads: 0
+  Number of floating terminals: 0
+  Number of floating hierarchical blocks: 0
+************************************************************
+Overall runtime: 0 seconds.
+
+close $f
+if {![regexp {Verify net VCCK connectivity} $contents] || \
+    ![regexp {Verify net GNDK connectivity} $contents]} {
+    error "M31: no se verificaron ambas redes PG. Revisar $CONN; checkpoint NO guardado."
+}
+if {[regexp {Number of floating [^:\n]+:[[:space:]]*[1-9][0-9]*} $contents]} {
+    error "M31: hay conexiones PG flotantes. Revisar $CONN; checkpoint NO guardado."
+}
+# Comprobar de forma independiente ausencia de errores PG DRC.
+set f [open $DRC r]
+file26
+set contents [read $f]
+Command check_pg_drc started  at Mon Oct 26 16:37:01 2026
+Command check_pg_drc finished at Mon Oct 26 16:37:01 2026
+CPU usage for check_pg_drc: 0.14 seconds ( 0.00 hours)
+Elapsed time for check_pg_drc: 0.15 seconds ( 0.00 hours)
+No errors found.
+
+close $f
+if {![regexp -nocase {No errors found} $contents]} {
+    error "M31: confirmar resultado DRC en $DRC; checkpoint NO guardado."
+}
+# No basta con la legalidad: el reporte de vias se revisa manualmente.
+save_block -as $OUT_BLOCK
+Information: Saving 'alu_m31.nlib:alu_pg_malla_prelim.design' to 'alu_m31.nlib:alu_pg_malla_legalizada.design'. (DES-028)
+1
+save_lib
+Saving library 'alu_m31.nlib'
+1
+puts "ALU_PG_MALLA_LEGAL_OK: $OUT_BLOCK"
+ALU_PG_MALLA_LEGAL_OK: alu_pg_malla_legalizada
+puts "IMPORTANTE: revisar pg_missing_vias.rpt y guardar captura PG antes de placement."
+IMPORTANTE: revisar pg_missing_vias.rpt y guardar captura PG antes de placement.
+puts "Reportes: $RPT"
+Reportes: /home/worellana/parcial_3/reports/icc2/powerplan_malla_legalizada
+icc2_shell> cat reports/icc2/powerplan_malla_legalizada/legality.rpt
+Error: unknown command 'cat' (CMD-005)
+icc2_shell> exit
+Maximum memory usage for this session: 547.27 MB
+Maximum memory usage for this session including child processes: 547.27 MB
+CPU usage for this session:     14 seconds (  0.00 hours)
+Elapsed time for this session:     54 seconds (  0.02 hours)
+Thank you for using IC Compiler II.

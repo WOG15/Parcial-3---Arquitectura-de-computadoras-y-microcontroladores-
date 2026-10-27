@@ -1,0 +1,19 @@
+****************************************
+Report : clock
+Design : alu_sync_top
+Mode   : functional
+Version: Y-2026.03-SP2
+Date   : Mon Oct 26 20:07:52 2026
+****************************************
+
+
+Attributes:
+    p - Propagated clock
+    G - Generated  clock
+    U - Unexpanded generated clock
+
+Clock          Period   Waveform            Attrs     Sources
+--------------------------------------------------------------------------------
+clk             35.00   {0 17.5}            p         {clk}
+
+1

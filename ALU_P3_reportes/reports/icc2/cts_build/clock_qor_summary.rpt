@@ -1,0 +1,36 @@
+ Info: Initializing timer in CLOCK_SYN_REPORT_MODE
+Information: The value of option cts.compile.enable_cell_relocation has been overridden to "leaf_only" to support latency-driven placement. (CTS-973)
+****************************************
+Report : clock qor
+        -type summary
+Design : alu_sync_top
+Version: Y-2026.03-SP2
+Date   : Mon Oct 26 19:55:11 2026
+****************************************
+
+Attributes
+===========
+M Master Clock
+G Generated Clock
+& Internal Generated Clock
+U User Defined Skew Group
+D Default Skew Group
+* Generated Clock Balanced Separately
+
+==================================================
+==== Summary Reporting for Corner m31_initial ====
+==================================================
+
+========================================================= Summary Table for Corner m31_initial =========================================================
+Clock /                               Attrs     Sinks Levels    Clock     Clock     Clock       Max    Global  Trans DRC  Cap DRC      Wire
+Skew Group                                                   Repeater  Repeater   Stdcell   Latency      Skew     Count     Count    Length
+                                                                Count      Area      Area
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+### Mode: functional, Scenario: functional_initial
+clk                                     M,D        56      1        0      0.00      0.00      0.00      0.00         0         0    545.70
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+All Clocks                                         56      1        0      0.00      0.00      0.00      0.00         0         0    545.70
+
+
+Warning: Please use -largest / -smallest / -all switches with -show_verbose_paths / -show_paths to report the clock paths. (CTS-956)
+1

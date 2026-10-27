@@ -1,0 +1,2525 @@
+
+
+
+                              IC Compiler II (TM)
+
+                Version Y-2026.03-SP2 for linux64 - Sep 01, 2026
+                           Base build date 6/22/2026.
+
+                    Copyright (c) 1988 - 2026 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+      Inc.  This software may only be used in accordance with the terms and
+  conditions of a written license agreement with Synopsys, Inc.  All other use,
+   reproduction, or distribution of this software is strictly prohibited.  By
+   installing, accessing, using, or executing this software, you agree that it
+  will reside on, operate within, and have access to the computers and networks
+    where such software is used ("Host System"), and that Synopsys may access
+     components and data of the Host System as necessary for it to function
+ properly, to authenticate and validate license keys, to verify that it is used
+ only in conformity with the applicable license restrictions, and to communicate
+                 error messages and associated data to Synopsys.
+
+ 
+Invocation: /usr/synopsys/icc2/Y-2026.03-SP2/linux64/nwtn/bin/icc2_exec
+Execution time: Mon Oct 26 19:54:54 2026
+Host: synopsys-unis (1 x 2631.484 MHz Intel(R) Xeon(R) D-2123IT CPU @ 2.20GHz)
+Working directory: /home/worellana/parcial_3
+
+# ALU+ 16-bit / M31 — CTS etapa 1: construir arbol del reloj.
+# Ejecutar desde ~/parcial_3, con otras sesiones ICC2 cerradas:
+#   icc2_shell -f scripts/icc2/cts_build_alu_m31.tcl \
+#     |& tee reports/icc2/cts_build.log
+# Entrada: alu_place_pins (no se sobrescribe)
+# Salida:  alu_cts_build
+# RC: TLUPlus ilustrativo; no representa signoff del PDK.
+set ROOT [file normalize [pwd]]
+/home/worellana/parcial_3
+set LIB [file join $ROOT outputs icc2 alu_import_35ns alu_m31.nlib]
+/home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib
+set RC_FILE [file join $ROOT technology m31 rc_academico m31_rc_academico.tluplus]
+/home/worellana/parcial_3/technology/m31/rc_academico/m31_rc_academico.tluplus
+set RPT [file join $ROOT reports icc2 cts_build]
+/home/worellana/parcial_3/reports/icc2/cts_build
+set IN_BLOCK alu_place_pins
+alu_place_pins
+set OUT_BLOCK alu_cts_build
+alu_cts_build
+if {![file exists $LIB]} {error "Falta $LIB. Ejecutar desde ~/parcial_3"}
+if {![file exists $RC_FILE] || [file size $RC_FILE] == 0} {
+    error "Falta modelo parasitico RC: $RC_FILE"
+}
+file mkdir $RPT
+set_host_options -max_cores 4
+1
+open_lib $LIB
+Information: Loading library file '/home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib' (FILE-007)
+Information: Loading library file '/home/worellana/parcial_3/technology/m31/ndm/m31_3m1t_11k.ndm' (FILE-007)
+{alu_m31.nlib}
+open_block $IN_BLOCK
+Information: User units loaded from library 'm31_3m1t_11k' (LNK-040)
+Opening block 'alu_m31.nlib:alu_place_pins.design' in edit mode
+{alu_m31.nlib:alu_place_pins.design}
+current_design alu_sync_top
+{alu_m31.nlib:alu_place_pins.design}
+set CLOCK [get_clocks -quiet clk]
+Using libraries: alu_m31.nlib m31_3m1t_11k
+Visiting block alu_m31.nlib:alu_place_pins.design
+Design 'alu_sync_top' was successfully linked.
+{clk}
+if {[sizeof_collection $CLOCK] != 1} {
+    error "Reloj clk no disponible: revisar SDC. No se ejecutara CTS."
+}
+redirect -file [file join $RPT clocks_antes.rpt] {report_clocks}
+redirect -file [file join $RPT clock_cells_disponibles.rpt] {
+    puts "Celdas M31 de reloj disponibles (consulta, no cambia su purpose):"
+    puts [get_object_name [get_lib_cells -quiet m31_3m1t_11k/CLK*]]
+    puts "Buffers M31 disponibles:"
+    puts [get_object_name [get_lib_cells -quiet m31_3m1t_11k/BUF*]]
+}
+# El modelo ya fue asociado durante place_opt; repetir explicitamente su
+# asociacion en esta sesion para que no dependa del estado de la sesion previa.
+# Si el mismo modelo ya esta cargado en la biblioteca, read_parasitic_tech
+# puede emitir una advertencia/no-op; no se debe reemplazar con otro modelo.
+if {[catch {
+    read_parasitic_tech -tlup $RC_FILE -name m31_academic_rc
+} rc_err]} {
+    puts "AVISO: read_parasitic_tech informo: $rc_err"
+    puts "       Se intentara reutilizar m31_academic_rc existente."
+}
+NEX(WARNING): parasitic_tech file: /home/worellana/parcial_3/technology/m31/rc_academico/m31_rc_academico.tluplus already read in, mandatory 1-to-1 map between tluplus file and paraTech
+set RC_CORNER [get_corners -quiet m31_initial]
+{m31_initial}
+if {[sizeof_collection $RC_CORNER] != 1} {
+    error "No se encontro el corner m31_initial."
+}
+set_parasitic_parameters -corners $RC_CORNER \
+    -early_spec m31_academic_rc -late_spec m31_academic_rc
+1
+redirect -file [file join $RPT parasitics_antes.rpt] {
+    report_parasitic_parameters -corners $RC_CORNER
+}
+# Construir solamente el arbol, NO hacer route_clock ni final_opto todavia.
+# Mantener reglas CTS por defecto para conocer compatibilidad real del PDK
+# con solo METAL1/2/3; no aplicar reglas NDR de tecnologias mas grandes.
+puts "ALU_CTS: comenzando clock_opt -to build_clock"
+ALU_CTS: comenzando clock_opt -to build_clock
+clock_opt -to build_clock
+Information: Timer using 4 threads
+Information: Starting 'clock_opt -to build_clock' (FLW-8000)
+Information: Time: 2026-10-26 19:54:56 / Session:  00:00:14 / Command:  00:00:00 / CPU:  00:00:00 / Memory: 548 MB (FLW-8100)
+INFO: Running medium effort clock_opt flow.
+INFO: clock_opt is running in balanced flow mode.
+Warning: Cannot find any default max transition constraint on the design. (OPT-070)
+INFO: Total Power Aware Optimization Enabled (Dynamic + Leakage)
+Timing Update Started(Full_timing_update) : updateCount: 1 / Mem-peak : 595 MB / Date: Mon Oct 26 19:54:56 2026
+
+Information: Corner m31_initial: no PVT mismatches. (PVT-032)
+Information: Pin/Port with maximum arrivals in mode: 'functional',  'MulOverflow_reg/D'   : '2'. (TIM-134)
+Information: Average arrivals per pin/port in mode: 'functional' : '1'. (TIM-136)
+Timing Update Completed: Mem-peak: 595 MB / Date: Mon Oct 26 19:54:56 2026
+
+INFO: Cost Function Configuration 0.5/0.5/0.5/0.5/0.9/1.0
+Information: The stitching and editing of coupling caps is turned OFF for design 'alu_m31.nlib:alu_place_pins.design'. (TIM-125)
+Information: Design Average RC for design alu_place_pins  (NEX-011)
+Information: r = 0.105499 ohm/um, via_r = 0.413223 ohm/cut, c = 0.197942 ff/um, cc = 0.000000 ff/um (X dir) (NEX-017)
+Information: r = 0.250000 ohm/um, via_r = 0.413223 ohm/cut, c = 0.235449 ff/um, cc = 0.000000 ff/um (Y dir) (NEX-017)
+Number of Site types in the design = 1
+Setting up Chip Core
+Chip Core shape: (60000 60000) (1831200 1807200)
+Number of VARs = 1
+Number of unique PDs = 1
+Number of Power Domains = 1
+Number of Voltage Areas = 1
+Number of supply Nets = 2
+Number of used supplies = 0
+Blocked VAs: 
+INFO: run stage build_clock (init -> end)
+
+Information: The value of option cts.compile.enable_cell_relocation has been overridden to "leaf_only" to support latency-driven placement. (CTS-973)
+Information: CTS will work on the following scenarios. (CTS-101)
+Information: CTS will work on all clocks in active scenarios, including 1 master clocks and 0 generated clocks. (CTS-107)
+Information: Clock min_layer constraint is relaxed for clock nets to use layers lower than user specified min layer, based on wire delay estimation. (CTS-093)
+Information: 'm31_initial' is identified as primary corner for initial clock tree building. (CTS-103)
+CCD app option: ccd.targeted_ccd_path_groups:  **clock_gating_default**
+Target path group: scenario functional_initial pathgroup **clock_gating_default**
+Information: CCD will use corner m31_initial for honoring max prepone/postpone limits
+Information: Useful skew copied/scaled 0 user balance points, 0 tool-derived balance points and 0 clock latencies. (CCD-103)
+
+Summary of messages during CTS:
+===============================================================
+  Tag   Count  Type           Description
+---------------------------------------------------------------
+ No error or warning message.
+
+----------------------------------------------------------------------------------------------------------
+Information: Starting clock_opt / build_clock (FLW-8000)
+Information: Time: 2026-10-26 19:54:56 / Session:  00:00:15 / Command:  00:00:00 / CPU:  00:00:00 / Memory: 628 MB (FLW-8100)
+----------------------------------------------------------------------------------------------------------
+
+Information: Starting clock_opt / build_clock / Trial CTS (FLW-8000)
+Information: Time: 2026-10-26 19:54:56 / Session:  00:00:15 / Command:  00:00:00 / CPU:  00:00:00 / Memory: 628 MB (FLW-8100)
+Running clock synthesis step.
+Info: Enabling GR in trial CTO
+cts.compile.enable_local_skew turned off because cts.common.enable_max is true
+Information: The value of option cts.compile.enable_cell_relocation has been overridden to "leaf_only" to support latency-driven placement. (CTS-973)
+************************************************************
+* CTS STEP: Design Initialization for Trial Synthesis
+************************************************************
+Information: Pin/Port with maximum arrivals in mode: 'functional',  'MulOverflow_reg/D'   : '2'. (TIM-134)
+Information: Average arrivals per pin/port in mode: 'functional' : '1'. (TIM-136)
+Information: All clock objects will be converted from ideal to propagated clock during CTS. (CTS-105)
+Information: CTS will work on the following scenarios. (CTS-101)
+   functional_initial	(Mode: functional; Corner: m31_initial)
+Information: CTS will work on all clocks in active scenarios, including 1 master clocks and 0 generated clocks. (CTS-107)
+Information: Clock min_layer constraint is relaxed for clock nets to use layers lower than user specified min layer, based on wire delay estimation. (CTS-093)
+Output units used in this log:
+   Time        : 1.00ns
+   Resistance  : 1.00kOhm
+   Capacitance : 1.00pF
+   Power       : 1.00pW
+   Length      : 1.00um
+Information: Clock derating is enabled
+
+CTS related app options set by user:
+   cts.common.enable_ndr_enhancement = 1
+   cts.compile.enable_local_skew = true
+   cts.icg.timing_aware = true
+   cts.optimize.enable_improvement_mode = skew
+   cts.optimize.enable_local_skew = true
+
+Buffer/Inverter reference list for clock tree synthesis:
+   m31_3m1t_11k/BUFX1TAS7
+   m31_3m1t_11k/BUFX12TAS7
+   m31_3m1t_11k/BUFX16TAS7
+   m31_3m1t_11k/BUFX2TAS7
+   m31_3m1t_11k/BUFX20TAS7
+   m31_3m1t_11k/BUFX3TAS7
+   m31_3m1t_11k/BUFX4TAS7
+   m31_3m1t_11k/BUFX8TAS7
+   m31_3m1t_11k/CLKBUFX1TAS7
+   m31_3m1t_11k/CLKBUFX12TAS7
+   m31_3m1t_11k/CLKBUFX16TAS7
+   m31_3m1t_11k/CLKBUFX2TAS7
+   m31_3m1t_11k/CLKBUFX20TAS7
+   m31_3m1t_11k/CLKBUFX3TAS7
+   m31_3m1t_11k/CLKBUFX4TAS7
+   m31_3m1t_11k/CLKBUFX8TAS7
+   m31_3m1t_11k/DELAX1TAS7
+   m31_3m1t_11k/DELAX2TAS7
+   m31_3m1t_11k/DELAX4TAS7
+   m31_3m1t_11k/DELBX1TAS7
+   m31_3m1t_11k/DELBX2TAS7
+   m31_3m1t_11k/DELBX4TAS7
+   m31_3m1t_11k/DELCX1TAS7
+   m31_3m1t_11k/DELCX2TAS7
+   m31_3m1t_11k/DELCX4TAS7
+   m31_3m1t_11k/DELDX1TAS7
+   m31_3m1t_11k/DELDX2TAS7
+   m31_3m1t_11k/DELDX4TAS7
+   m31_3m1t_11k/CLKINVX1TAS7
+   m31_3m1t_11k/CLKINVX12TAS7
+   m31_3m1t_11k/CLKINVX16TAS7
+   m31_3m1t_11k/CLKINVX2TAS7
+   m31_3m1t_11k/CLKINVX20TAS7
+   m31_3m1t_11k/CLKINVX3TAS7
+   m31_3m1t_11k/CLKINVX4TAS7
+   m31_3m1t_11k/CLKINVX8TAS7
+   m31_3m1t_11k/INVX1TAS7
+   m31_3m1t_11k/INVX12TAS7
+   m31_3m1t_11k/INVX16TAS7
+   m31_3m1t_11k/INVX2TAS7
+   m31_3m1t_11k/INVX20TAS7
+   m31_3m1t_11k/INVX3TAS7
+   m31_3m1t_11k/INVX4TAS7
+   m31_3m1t_11k/INVX8TAS7
+
+ICG reference list:
+   m31_3m1t_11k/GCKHBQX1TAS7
+   m31_3m1t_11k/GCKHBQX2TAS7
+   m31_3m1t_11k/GCKHBQX4TAS7
+   m31_3m1t_11k/GCKLBQX1TAS7
+   m31_3m1t_11k/GCKLBQX2TAS7
+   m31_3m1t_11k/GCKLBQX4TAS7
+
+Information: 'm31_initial' is identified as primary corner for initial clock tree building. (CTS-103)
+Number of Site types in the design = 1
+Setting up Chip Core
+Chip Core shape: (60000 60000) (1831200 1807200)
+Number of VARs = 1
+Number of unique PDs = 1
+Number of Power Domains = 1
+Number of Voltage Areas = 1
+Number of supply Nets = 2
+Number of used supplies = 0
+Blocked VAs: 
+Warning: No clock routing rule is specified. (CTS-038)
+
+Clock cell spacing rule list:
+   No clock cell spacing rule is found.
+Information: The run time for design initialization is 0 hr : 0 min : 0.07 sec, cpu time is 0 hr : 0 min : 0.10 sec. (CTS-104)
+************************************************************
+* CTS STEP: Existing Clock Tree Removal
+************************************************************
+
+No buffer or inverter has been removed.
+Information: The run time for existing clock tree removal is 0 hr : 0 min : 0.00 sec, cpu time is 0 hr : 0 min : 0.00 sec. (CTS-104)
+************************************************************
+* CTS STEP: Clock Tree Initialization
+************************************************************
+Drc Mode Option: auto
+Information: Initializing classic cellmap without advanced rules enabled and with PDC enabled
+Information: The following app options are used in cellmap
+        place.legalize.enable_color_aware_placement : false
+        place.legalize.use_nll_query_cm : false
+        place.legalize.enable_advanced_legalizer : false
+        place.legalize.enable_prerouted_net_check : true
+        place.legalize.enable_advanced_prerouted_net_check : false
+        place.legalize.always_continue : true
+        place.legalize.limit_legality_checks : false
+        place.common.pnet_aware_density : 1.0000
+        place.common.pnet_aware_min_width : 0.0000
+        place.common.pnet_aware_layers : {}
+        place.common.use_placement_model : false
+        place.common.enable_advanced_placement_model : true
+        cts.placement.cell_spacing_rule_style : maximum
+Information: Creating classic rule checker.
+Warning: Routing direction of metal layer POLY2 is neither "horizontal" nor "vertical".  PDC checks will not be performed on this layer. (PDC-003)
+PDC app_options settings =========
+	place.legalize.enable_prerouted_net_check: 1
+	place.legalize.num_tracks_for_access_check: 1
+	place.legalize.use_eol_spacing_for_access_check: 0
+	place.legalize.allow_touch_track_for_access_check: 1
+	place.legalize.reduce_conservatism_in_eol_check: 0
+	place.legalize.preroute_shape_merge_distance: 0.0
+	place.legalize.enable_non_preferred_direction_span_check: 0
+
+Layer METAL1: cached 0 shapes out of 53 total shapes.
+Layer METAL2: cached 30 shapes out of 30 total shapes.
+Cached 1095 vias out of 1095 total vias.
+Total 0.0369 seconds to build cellmap data
+INFO: creating 12(r) x 12(c) GridCells YDim 16.8 XDim 16.8
+INFO: number of GridCells (alu_place_pins): 144
+INFO: creating 12(r) x 12(c) GridCells YDim 16.8 XDim 16.8
+INFO: number of GridCells (alu_place_pins): 144
+Total 0.0326 seconds to load 1624 cell instances into cellmap
+Moveable cells: 1138; Application fixed cells: 0; Macro cells: 0; User fixed cells: 486
+Average cell width 4.5967, cell height 3.3600, cell area 15.4449 for total 1138 placed and application fixed cells
+Information: Legalizer's PDC rule check is enabled
+Information: Legalizer's advanced rule check is enabled
+
+Start Auto-Exception Derivations...
+ No internal pin was found.
+ No conflict pin was found.
+ No macro pin was found for clock balance point settings.
+ No macro pin was found for disabling self arcs.
+ No pin with both self arc and through arc was found for disabling self arcs.
+Info: 56 sinks and boundary insts are collected
+Information: The run time for clock tree initialization is 0 hr : 0 min : 0.09 sec, cpu time is 0 hr : 0 min : 0.09 sec. (CTS-104)
+Setting target skew for clock: clk (mode functional corner m31_initial) as 5.250000
+Target skew for clocks, modes and corners:
+Information: Target skew for clock 'clk' in mode 'functional' corner 'm31_initial' is 5.250000. (CTS-083)
+Drc Mode Option: auto
+Corner Scaling is off, multiplier is 1.000000
+Automatic Zbuf-CTS Mode: total_powerInformation: Running Max-CTS
+Enable multi-thread Tasks, number of thread is 4
+Info: run cts with the following settings: _runCts 1 _runCto 1 _runSnapClockSinks 1
+Information: The stitching and editing of coupling caps is turned OFF for design 'alu_m31.nlib:alu_place_pins.design'. (TIM-125)
+Information: The RC mode used is VR for design 'alu_sync_top'. (NEX-022)
+Information: Update timing completed net estimation for all the timing graph nets (TIM-111)
+Information: Net estimation statistics: timing graph nets = 1175, routed nets = 0, across physical hierarchy nets = 0, parasitics cached nets = 1, delay annotated nets = 0, parasitics annotated nets = 0, multi-voltage nets = 0. (TIM-112)
+************************************************************
+Timer Settings:
+Delay Calculation Style:                   auto
+Signal Integrity Analysis:                 disabled
+Timing Window Analysis:                    disabled
+Advanced Waveform Propagation:             disabled
+Variation Type:                            fixed_derate
+Clock Reconvergence Pessimism Removal:     disabled
+Advanced Receiver Model:                   disabled
+LLE:                                       disabled
+ML Acceleration:                           off
+Smart Arc Optimization:                    disabled
+************************************************************
+************************************************************
+* CTS STEP: Clock Cell Relocation
+************************************************************
+Warning: No clock routing rules were specified. Use set_clock_routing_rules to specify routing rules for accurate clock latency estimation. (OPT-902)
+A total of 0 clock cells have been relocated
+Information: The run time for clock cell relocation is 0 hr : 0 min : 0.51 sec, cpu time is 0 hr : 0 min : 0.51 sec. (CTS-104)
+Information: The run time for netlink placement is 0 hr : 0 min : 0.00 sec, cpu time is 0 hr : 0 min : 0.00 sec. (CTS-104)
+************************************************************
+* CTS STEP: Gate-By-Gate Clock Tree Synthesis
+************************************************************
+Design rule constraints:
+     max fanout  = 1000000
+Computing criticality for all echelons
+Warning: No clock routing rules were specified. Use set_clock_routing_rules to specify routing rules for accurate clock latency estimation. (OPT-902)
+Num of echelons 1
+  Level 0 Num Nodes: 1
+Processing Echelon 1
+Processing parameter set (max_tran 0.500000 max_cap 0.600000)
+Warning: No default voltage defined in the design, taking it as zero for power calculations. (POW-080)
+Warning: No default voltage defined in the design, taking it as zero for power calculations. (POW-080)
+Warning: No default voltage defined in the design, taking it as zero for power calculations. (POW-080)
+Warning: No default voltage defined in the design, taking it as zero for power calculations. (POW-080)
+Warning: No default voltage defined in the design, taking it as zero for power calculations. (POW-080)
+Warning: No default voltage defined in the design, taking it as zero for power calculations. (POW-080)
+Warning: No default voltage defined in the design, taking it as zero for power calculations. (POW-080)
+Warning: No default voltage defined in the design, taking it as zero for power calculations. (POW-080)
+Warning: No default voltage defined in the design, taking it as zero for power calculations. (POW-080)
+Warning: No default voltage defined in the design, taking it as zero for power calculations. (POW-080)
+Note - message 'POW-080' limit (10) exceeded. Remainder will be suppressed.
+Information: timingScenario CTS_DRC_OFF_SCEN0 timingCorner m31_initial.  Using corner m31_initial for worst leakage corner. Using corner m31_initial for worst dynamic corner. (OPT-078)
+Information: Nominal = 1.1488642  Design MT = 0.475000  Target = 2.2977283  MaxRC = 0.000188 Fast Target = 0.349146 (OPT-081)
+Information: timingScenario CTS_DRC_OFF_SCEN0 timingCorner m31_initial.  Using corner m31_initial for worst leakage corner. Using corner m31_initial for worst dynamic corner. (OPT-078)
+Information: timingScenario CTS_DRC_OFF_SCEN0 timingCorner m31_initial.  Using corner m31_initial for worst leakage corner. Using corner m31_initial for worst dynamic corner. (OPT-078)
+Information: timingScenario CTS_DRC_OFF_SCEN0 timingCorner m31_initial.  Using corner m31_initial for worst leakage corner. Using corner m31_initial for worst dynamic corner. (OPT-078)
+Using layer METAL3 for buffering distances in roi (originally METAL3)
+bmap: stepx = stepy = 168000
+creating bmap
+DB units per micron : 10000
+Core Area = 12 X 12 ()
+Running regular buffering flow.
+   10%% ...Number of Drivers Sized: 0 [0.00%]
+
+-------------------------------------------------------------
+ Echelon 1 gate by gate clock synthesis
+ Gate level 1 clock tree synthesis
+ Driving pin = clk  (93.360, 186.503)
+ Clocks: 
+     clk (functional)
+ Design rule constraints:
+     max transition = 0.500000
+     max capacitance = 0.600000
+ Number of Sinks = 56
+ Number of Gates = 0
+ Number of Loads = 56
+
+ Loads with existing phase delay = 21
+   1. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : MulOverflow_reg/CK
+   2. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[15]/CK
+   3. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[14]/CK
+   4. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[13]/CK
+   5. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[12]/CK
+   6. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[11]/CK
+   7. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[10]/CK
+   8. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[9]/CK
+   9. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[8]/CK
+  10. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[7]/CK
+  11. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[6]/CK
+  12. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[5]/CK
+  13. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[4]/CK
+  14. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[3]/CK
+  15. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[2]/CK
+  16. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[1]/CK
+  17. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[0]/CK
+  18. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : NZCV_reg[3]/CK
+  19. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : NZCV_reg[1]/CK
+  20. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : NZCV_reg[0]/CK
+  21. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : NZCV_reg[2]/CK
+ Added 0 Repeaters (B: 0 I: 0). Built 0 Repeater Levels for driver clk
+ Phase delay: (max r/f: 0.004044/nan  min r/f: 0.004044/nan) : clk
+
+ Top critical loads: 
+   1. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : MulOverflow_reg/CK ; Location : (131.59, 135.26)
+   2. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[15]/CK ; Location : (171.91, 168.86)
+   3. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[14]/CK ; Location : (82.15, 158.98)
+   4. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[13]/CK ; Location : (172.39, 162.14)
+   5. Phase delay = (max r/f: -0.160000/__  min r/f: -0.160000/__) : Result_reg[12]/CK ; Location : (166.49, 162.14)
+Information: The run time for gate-by-gate clock tree synthesis is 0 hr : 0 min : 1.64 sec, cpu time is 0 hr : 0 min : 1.64 sec. (CTS-104)
+************************************************************
+* CTS STEP: Latency Bottleneck Analysis
+************************************************************
+The longest paths are reported for the primary corner.
+
+Information: Latency Bottleneck Path for clock 'clk' and skew group 'default' in mode 'functional' for clock root 'clk': (CTS-141)
+(1) clk [Location: (93.36, 186.50)] [Pre-CTS Fanout: 56] [Phase Delay: (Rise: 0.004044, Fall: nan)]
+ (2) A_reg_reg[3]/CK [Location: (13.99, 128.54)] [SINK PIN]
+
+Information: The run time for Latency Bottleneck Analysis is 0 hr : 0 min : 0.00 sec, cpu time is 0 hr : 0 min : 0.00 sec. (CTS-104)
+************************************************************
+* CTS STEP: DRC Fixing Beyond Exceptions
+************************************************************
+Warning: No clock routing rules were specified. Use set_clock_routing_rules to specify routing rules for accurate clock latency estimation. (OPT-902)
+Design rule constraints:
+     max fanout  = 1000000
+Num of echelons 0
+Information: The run time for DRC fixing beyond exceptions is 0 hr : 0 min : 0.49 sec, cpu time is 0 hr : 0 min : 0.48 sec. (CTS-104)
+************************************************************
+* CTS STEP: Transition Histogram
+************************************************************
+============================================================
+  Transition Histogram Report
+============================================================
+Histograms are reported for the primary corner: m31_initial
+
+  Clock: clk                             [Highest Sink Count, Highest Frequency]
+  Max Transition Constraint: 0.5000
+  ----------------------------------------------------------
+  [Sink Pins Only]  Pins: 56
+      0.002193 -   0.002472 :    1  ##
+      0.004978 -   0.005257 :    2  ####
+      0.005257 -   0.005535 :    1  ##
+      0.005535 -   0.005814 :    2  ####
+      0.006092 -   0.006371 :    1  ##
+      0.006371 -   0.006649 :    7  ############
+      0.006649 -   0.006927 :   12  ####################
+      0.006927 -   0.007206 :    1  ##
+      0.007484 -   0.007763 :   25  ########################################
+      0.007763 >            :    4  #######
+  ----------------------------------------------------------
+  [All Load Pins]  Pins: 56
+      0.002193 -   0.002472 :    1  ##
+      0.004978 -   0.005257 :    2  ####
+      0.005257 -   0.005535 :    1  ##
+      0.005535 -   0.005814 :    2  ####
+      0.006092 -   0.006371 :    1  ##
+      0.006371 -   0.006649 :    7  ############
+      0.006649 -   0.006927 :   12  ####################
+      0.006927 -   0.007206 :    1  ##
+      0.007484 -   0.007763 :   25  ########################################
+      0.007763 >            :    4  #######
+============================================================
+Information: The run time for Transition histogram is 0 hr : 0 min : 0.00 sec, cpu time is 0 hr : 0 min : 0.00 sec. (CTS-104)
+There are 0 buffers and 0 inverters added (total area 0.00) by Clock Tree Synthesis.
+Information: 0 out of 0 clock cells have been moved due to NDR or via ladder related legalization rules.
+Info: Clock cell and register co-legalization is disabled since advanced legalizer is disabled.
+==============================Displacement Report for clock sink==============================
+Clock sink moved: 0 out of 56, orientation changed without moving: 1
+Clock sink displacement max = 0.000000 um, average = 0.000000 um
+Clock sink with large displacement: 0 (Threshold: 10.080000 um)
+==============================================================================================
+Information: The run time for snapping registers is 0 hr : 0 min : 0.01 sec, cpu time is 0 hr : 0 min : 0.01 sec. (CTS-104)
+INFO: wire-opt feature for router enabled
+NEX(Warning): extract.rc_techfile_for_diode_mode_26_thickness not set, will igonre it
+Cut layer CNT has invalid minimum width specified
+Cell Min-Routing-Layer = METAL1
+Cell Max-Routing-Layer = METAL3
+Turn off antenna since no rule is specified
+Information: Option route.detail.force_end_on_preferred_grid will be ignored since none of the layers have preferred grid. (ZRT-703)
+Warning: Cannot find a default contact code for layer CNT. (ZRT-022)
+Warning: Port GNDK of cell alu_place_pins is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Port VCCK of cell alu_place_pins is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Ignore 2 top cell ports with no pins. (ZRT-027)
+Info: number of net_type_blockage: 0 
+Information: Via ladder engine would be activated for pattern must join connection in certain commands. Please refer to man-page for the command list. (ZRT-619)
+Information: AutoNdr rule can't be found. Check the settings.
+Information: When applicable Min-max layer allow_pin_connection mode will allow paths of length 6.20 outside the layer range. (ZRT-707)
+Information: When applicable Min-max layer allow_pin_connection mode will allow paths of length 6.20 outside the layer range on clock nets. (ZRT-718)
+Information: When applicable layer based tapering will taper up to 0.00 in distance from the pin. (ZRT-706)
+CTO: setting route_reuse..
+************************************************************
+* CTS STEP: Clock Net Global Routing
+************************************************************
+Performing initial clock net global routing ...
+Information: The net parasitics of block alu_sync_top are cleared. (TIM-123)
+Total number of global routed clock nets: 1
+Information: The run time for clock net global routing is 0 hr : 0 min : 0.26 sec, cpu time is 0 hr : 0 min : 0.27 sec. (CTS-104)
+Information: The stitching and editing of coupling caps is turned OFF for design 'alu_m31.nlib:alu_place_pins.design'. (TIM-125)
+Information: Design alu_place_pins has 1177 nets, 1 global routed, 0 detail routed. (NEX-024)
+Information: The RC mode used is CTO for design 'alu_sync_top'. (NEX-022)
+Information: Update timing completed net estimation for all the timing graph nets (TIM-111)
+Information: Net estimation statistics: timing graph nets = 1175, routed nets = 1, across physical hierarchy nets = 0, parasitics cached nets = 1, delay annotated nets = 0, parasitics annotated nets = 0, multi-voltage nets = 0. (TIM-112)
+Information: The netlist change observers are disabled for incremental timing updates. (TIM-119)
+Information: The netlist change observers are disabled for incremental extraction. (TIM-126)
+CTSSC route status detected: clock (VR 0, GR 99, DR 0), data (VR 1174, GR 0, DR 0); stage = auto, isPostRoute = FALSE
+Information: 'm31_initial' is identified as primary corner for initial clock tree building. (CTS-103)
+INFO: wire-opt feature for router enabled
+Cut layer CNT has invalid minimum width specified
+Cell Min-Routing-Layer = METAL1
+Cell Max-Routing-Layer = METAL3
+Turn off antenna since no rule is specified
+Information: Option route.detail.force_end_on_preferred_grid will be ignored since none of the layers have preferred grid. (ZRT-703)
+Warning: Cannot find a default contact code for layer CNT. (ZRT-022)
+Warning: Port GNDK of cell alu_place_pins is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Port VCCK of cell alu_place_pins is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Ignore 2 top cell ports with no pins. (ZRT-027)
+Info: number of net_type_blockage: 0 
+Information: Via ladder engine would be activated for pattern must join connection in certain commands. Please refer to man-page for the command list. (ZRT-619)
+Information: AutoNdr rule can't be found. Check the settings.
+Information: When applicable Min-max layer allow_pin_connection mode will allow paths of length 6.20 outside the layer range. (ZRT-707)
+Information: When applicable Min-max layer allow_pin_connection mode will allow paths of length 6.20 outside the layer range on clock nets. (ZRT-718)
+Information: When applicable layer based tapering will taper up to 0.00 in distance from the pin. (ZRT-706)
+GR Routing Service: Started IMRD 
+GR Routing Service: ndmAttrDef 'usr_tmng_crit' created with default value 0 
+GR Routing Service: ndmAttrDef 'rted_by_minDly' created with default value 0 
+GR Routing Service: ndmAttrDef 'port_subnet_crit_blkConn' created with default value 0 
+GR Routing Service: ndmAttrDef 'port_subnet_crit_blkPort' created with default value 0 
+Generating Timing information  
+Design  Scenario functional_initial (Mode functional Corner m31_initial)
+Generating Timing information  ... Done
+[End of Generating Timing Information] Elapsed real time: 0:00:00 
+[End of Generating Timing Information] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+Loading timing information to the router from design
+Information: Design Average RC for design alu_place_pins  (NEX-011)
+Information: r = 0.105499 ohm/um, via_r = 0.413223 ohm/cut, c = 0.197942 ff/um, cc = 0.000000 ff/um (X dir) (NEX-017)
+Information: r = 0.250000 ohm/um, via_r = 0.413223 ohm/cut, c = 0.235449 ff/um, cc = 0.000000 ff/um (Y dir) (NEX-017)
+Timing information loaded to the router.
+GR Routing Service: Setting costIdx to 3 
+GR Routing Service: rebuildCongmap: itr = 3 
+Number of partitions: 1 (1 x 1)
+Size of partitions: 56 gCells x 56 gCells
+Average gCell capacity  1.82	 on layer (1)	 METAL1
+Average gCell capacity  5.74	 on layer (2)	 METAL2
+Average gCell capacity  2.66	 on layer (3)	 METAL3
+Average number of tracks per gCell 6.96	 on layer (1)	 METAL1
+Average number of tracks per gCell 7.05	 on layer (2)	 METAL2
+Average number of tracks per gCell 3.71	 on layer (3)	 METAL3
+Number of gCells = 9408
+Number of partitions: 1 (1 x 1)
+Size of partitions: 56 gCells x 56 gCells
+[updNetsDmd] Elapsed real time: 0:00:00 
+[updNetsDmd] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+Created 4 thread routing service with costIdx = 3. (tbbMode 1)
+GR Routing Service: Setting costIdx to 1 
+rtapi Thread-server 0: startup 
+rtapi Thread-server 2: startup 
+rtapi Thread-server 3: startup 
+rtapi Thread-server 1: startup 
+Information: Freeing timing information from routing. (ZRT-574)
+
+************************************************************
+* CTS STEP: Initial DRC fixing
+************************************************************
+
+[cto] Starting InitDrc.1
+start cto; name: alu_place_pins; type: design; tot_drc_vio: 0; buf_ct: 0; buf_area: 0.000000; cell_area: 0.000000
+start cto; name: functional:clk; type: clock; latency: 0.002670; gskew: 0.162174; tot_drc_vio: 0; wtran: 0.000000; wcap: 0.000000; buf_ct: 0; buf_area: 0.000000; cell_area: 0.000000
+-------------------------------------------------------------
+Optimizing clock tree DRC
+clock: clk mode: functional root: clk
+Clock QoR Before DRC Optimization:
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Pre Initial DRC Fixing: GlobalSkew = 0.1622; ID = 0.0027; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+
+Begin Pre-Opt Drc Fixing
+Starting multithread based drc fixing Pre opt drc fixing
+Info: message level of flow 16 ctoDrc is set as 0/1 for verbose/tMessage
+Iteration 1 (effort: high)
+Information: run flow for exception tree
+Iteration 2 (effort: high)
+Information: run flow for exception tree
+
+    Optimization Summary 		
+
+-------------------------------------------------
+
+	# Drivers Attempted               =          0
+	# Skipped during isValid and estimate          =          0
+	# Failed subgraph evaluation           =          0
+	# Failed main graph committ          =          0
+	# Successful main graph commit      =          0
+	# NumCTCells changed               =          0
+
+
+	# Total CPU time                  = 00h:00m:00s
+	# Total elapsed time              = 00h:00m:00s
+	# Flow total speed up             =     1.0213
+
+-------------------------------------------------
+
+HARNESS Summary: 
+	Margin used: 0.005
+
+Info: message level of flow 16 ctoDrc is set back as 0/1 for verbose/tMessage
+Pre-Opt drc fixing cpu time 00:00:00.40u 00:00:00.00s 00:00:00.41e: 
+Clock QoR After Pre-Opt Drc Fixing:
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Post Initial DRC Fixing: GlobalSkew = 0.1622; ID = 0.0027; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+The elapsed time for optimization of clock tree is 0 hr : 0 min : 0.41 sec, cpu time is 0 hr : 0 min : 0.42 sec.
+Information: The run time for Initial DRC fixing is 0 hr : 0 min : 0.41 sec, cpu time is 0 hr : 0 min : 0.42 sec. (CTS-104)
+[cto] Finished InitDrc.1: PASS
+
+************************************************************
+* CTS STEP: Path-based global latency and skew optimization
+************************************************************
+
+[cto] Starting GLS.1
+No corner selected from constraint nor user primary corner
+Selecting clock clk mode functional corner:  m31_initial	
+-------------------------------------------------------------
+Optimizing clock tree global latency and skew
+clock: clk mode: functional root: clk
+Clock QoR Before Global latency and skew opt:
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Pre Optimization: GlobalSkew = 0.1622; ID = 0.0027; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+
+Begin Global Latency and Skew Optimization
+Starting multithread based global latency and skew optimization
+Info: message level of flow 17 ctoLatency is set as 0/1 for verbose/tMessage
+
+    Optimization Summary 		
+
+-------------------------------------------------
+
+	# Drivers Attempted               =          0
+	# Skipped during isValid and estimate          =          0
+	# Failed subgraph evaluation           =          0
+	# Failed main graph committ          =          0
+	# Successful main graph commit      =          0
+	# NumCTCells changed               =          0
+
+
+	# Total CPU time                  = 00h:00m:00s
+	# Total elapsed time              = 00h:00m:00s
+	# Flow total speed up             =     2.1777
+
+-------------------------------------------------
+
+Clock QoR After latency optimization:
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Post Latency Optimization: GlobalSkew = 0.1622; ID = 0.0027; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+Longest path:
+  (0) 0.0027		0.0000		A_reg_reg[3]/CK
+Shortest path:
+  (0) 0.0005		0.0000		Result_reg[14]/CK [BALANCE POINT] 
+  (1) -0.1595		-0.1600		Result_reg[14]/CK [BALANCE POINT] 
+
+    Optimization Summary 		
+
+-------------------------------------------------
+
+	# Drivers Attempted               =          0
+	# Skipped during isValid and estimate          =          0
+	# Failed subgraph evaluation           =          0
+	# Failed main graph committ          =          0
+	# Successful main graph commit      =          0
+	# NumCTCells changed               =          0
+
+
+	# Total CPU time                  = 00h:00m:00s
+	# Total elapsed time              = 00h:00m:00s
+	# Flow total speed up             =     2.1873
+
+-------------------------------------------------
+
+Info: message level of flow 17 ctoLatency is set back as 0/1 for verbose/tMessage
+Global latency and skew opt cpu time 00:00:00.03u 00:00:00.00s 00:00:00.01e: 
+Clock QoR After Global latency and skew opt:
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Post Network Flow Optimization: GlobalSkew = 0.1622; ID = 0.0027; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+Longest path:
+  (0) 0.0027		0.0000		A_reg_reg[3]/CK
+Shortest path:
+  (0) 0.0005		0.0000		Result_reg[14]/CK [BALANCE POINT] 
+  (1) -0.1595		-0.1600		Result_reg[14]/CK [BALANCE POINT] 
+The elapsed time for optimization of clock tree is 0 hr : 0 min : 0.02 sec, cpu time is 0 hr : 0 min : 0.04 sec.
+Information: The run time for Path-based global latency and skew optimization is 0 hr : 0 min : 0.02 sec, cpu time is 0 hr : 0 min : 0.04 sec. (CTS-104)
+[cto] Finished GLS.1: PASS
+
+************************************************************
+* CTS STEP: Area recovery
+************************************************************
+
+[cto] Starting AR.1
+No corner selected from constraint nor user primary corner
+Selecting clock clk mode functional corner:  m31_initial	
+-------------------------------------------------------------
+Optimizing clock tree area
+clock: clk mode: functional root: clk
+Starting multithread based area recovery and subtree balancing
+Info: message level of flow 19 ctoAreaRecovery is set as 0/1 for verbose/tMessage
+Iteration 2 (effort: low)
+
+    Optimization Summary 		
+
+-------------------------------------------------
+
+	# Drivers Attempted               =          0
+	# Skipped during isValid and estimate          =          0
+	# Failed subgraph evaluation           =          0
+	# Failed main graph committ          =          0
+	# Successful main graph commit      =          0
+	# NumCTCells changed               =          0
+
+
+	# Total CPU time                  = 00h:00m:00s
+	# Total elapsed time              = 00h:00m:00s
+	# Flow total speed up             =     1.0143
+
+-------------------------------------------------
+
+Info: message level of flow 19 ctoAreaRecovery is set back as 0/1 for verbose/tMessage
+Clock QoR After Area Recovery and Subtree Balancing:
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Post Area Recovery Resizing: GlobalSkew = 0.1622; ID = 0.0027; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+Area recovery and subtree balancing cpu time 00:00:00.05u 00:00:00.00s 00:00:00.04e: 
+The elapsed time for optimization of clock tree is 0 hr : 0 min : 0.04 sec, cpu time is 0 hr : 0 min : 0.05 sec.
+Information: The run time for Area recovery is 0 hr : 0 min : 0.04 sec, cpu time is 0 hr : 0 min : 0.05 sec. (CTS-104)
+[cto] Finished AR.1: PASS
+
+************************************************************
+* CTS STEP: Final DRC fixing
+************************************************************
+
+[cto] Starting PostDrc.1
+-------------------------------------------------------------
+Optimizing clock tree DRC
+clock: clk mode: functional root: clk
+Clock QoR Before DRC Optimization:
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Pre Final DRC Fixing: GlobalSkew = 0.1622; ID = 0.0027; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+
+Begin Post-Opt Drc Fixing
+Starting multithread based drc fixing Post opt drc fixing
+Info: message level of flow 16 ctoDrc is set as 0/1 for verbose/tMessage
+
+    Optimization Summary 		
+
+-------------------------------------------------
+
+	# Drivers Attempted               =          0
+	# Skipped during isValid and estimate          =          0
+	# Failed subgraph evaluation           =          0
+	# Failed main graph committ          =          0
+	# Successful main graph commit      =          0
+	# NumCTCells changed               =          0
+
+
+	# Total CPU time                  = 00h:00m:00s
+	# Total elapsed time              = 00h:00m:00s
+	# Flow total speed up             =     0.9984
+
+-------------------------------------------------
+
+Info: message level of flow 16 ctoDrc is set back as 0/1 for verbose/tMessage
+Post-Opt drc fixing cpu time 00:00:00.00u 00:00:00.00s 00:00:00.00e: 
+Clock QoR After Post-Opt Drc Fixing:
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Post Final DRC Fixing: GlobalSkew = 0.1622; ID = 0.0027; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+The elapsed time for optimization of clock tree is 0 hr : 0 min : 0.01 sec, cpu time is 0 hr : 0 min : 0.02 sec.
+Information: The run time for Final DRC fixing is 0 hr : 0 min : 0.01 sec, cpu time is 0 hr : 0 min : 0.02 sec. (CTS-104)
+[cto] Finished PostDrc.1: PASS
+[cto] Starting CtoAppOptionReset.1
+[cto] Finished CtoAppOptionReset.1: PASS
+
+************************************************************
+* CTS STEP: Local skew optimization
+************************************************************
+
+[cto] Starting SolverBasedCto.1
+Information: The stitching and editing of coupling caps is turned OFF for design 'alu_m31.nlib:alu_place_pins.design'. (TIM-125)
+Information: Update timing completed net estimation for all the timing graph nets (TIM-111)
+Information: Net estimation statistics: timing graph nets = 1175, routed nets = 1, across physical hierarchy nets = 0, parasitics cached nets = 1175, delay annotated nets = 0, parasitics annotated nets = 0, multi-voltage nets = 0. (TIM-112)
+
+Mode:functional       Latency(early)   Latency(late)
+Clock        Updated   rise    fall    rise    fall   Corner
+------------------------------------------------------------
+clk          Yes     0.0009  0.0009  0.0009  0.0009   m31_initial
+
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Pre Local Skew Optimization: GlobalSkew = nan; ID = nan; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+CCD MOO settings for (cto1, last_qor_strategy): 4 engines
+    Engine R2R_TNS has 9 objectives, 3 enabled moves, iterationLimit = 1, solverType = CG_LP, estimateFanoutPower = 0, mergeIOWithR2R = 1, areaOnly = 0, useOldEngine = 0, preponeOpt = 1
+                tns300Cutoff = 300, capAllowance = 1.600000, cgccdScaleBack = 5, powerccdScaleBack = 0, needTrialSeedGeneration = 0, drcMargin = 0.000000, commitOneByOne = 0, offRoute=0
+            R2R_TNS: priority 10, weight 10.000000, degradationPercentAllowed 0.010000, step back 0.090000, isTargeted 1, isMaximize 1
+            ICG_TNS: priority 15, weight 10.000000, degradationPercentAllowed 0.000000, step back 0.090000, isTargeted 1, isMaximize 1
+            HOLD_TNS: priority 20, weight 5.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 1, isMaximize 1
+            NONE_POWER: priority 30, weight 1.000000, degradationPercentAllowed 0.005000, step back 0.050000, isTargeted 1, isMaximize 0
+            R2R_WNS: priority 50, weight 5.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 1, isMaximize 1
+            ICG_WNS: priority 55, weight 5.000000, degradationPercentAllowed 0.000000, step back 0.050000, isTargeted 1, isMaximize 1
+            HOLD_WNS: priority 60, weight 5.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 0, isMaximize 1
+            IO_TNS: priority 70, weight 1.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 0, isMaximize 1
+            NONE_TOTAL_OFFSET: priority 99, weight 1.000000, degradationPercentAllowed nan, step back 0.050000, isTargeted 0, isMaximize 1
+        Moves enabled: SIZE_CLOCK_TIMING, BUFFER_REMOVAL_CLOCK_TIMING, REPARENTING_CLOCK_TIMING, 
+    Engine HOLD_TNS has 10 objectives, 2 enabled moves, iterationLimit = 1, solverType = CG_LP, estimateFanoutPower = 0, mergeIOWithR2R = 1, areaOnly = 0, useOldEngine = 0, preponeOpt = 0
+                tns300Cutoff = 300, capAllowance = 1.600000, cgccdScaleBack = 5, powerccdScaleBack = 0, needTrialSeedGeneration = 0, drcMargin = 0.000000, commitOneByOne = 0, offRoute=1
+            HOLD_TNS: priority 10, weight 2.000000, degradationPercentAllowed 0.010000, step back 0.090000, isTargeted 1, isMaximize 1
+            R2R_TNS: priority 20, weight 2.000000, degradationPercentAllowed 0.025000, step back 0.050000, isTargeted 1, isMaximize 1
+            ICG_TNS: priority 25, weight 2.000000, degradationPercentAllowed 0.000000, step back 0.050000, isTargeted 1, isMaximize 1
+            NONE_POWER: priority 30, weight 1.000000, degradationPercentAllowed 0.004000, step back 0.050000, isTargeted 1, isMaximize 0
+            NONE_BUFFER_COUNT: priority 40, weight 5.000000, degradationPercentAllowed 0.005000, step back 0.100000, isTargeted 1, isMaximize 0
+            R2R_WNS: priority 50, weight 1.000000, degradationPercentAllowed 0.010000, step back 0.050000, isTargeted 1, isMaximize 1
+            ICG_WNS: priority 55, weight 1.000000, degradationPercentAllowed 0.000000, step back 0.050000, isTargeted 1, isMaximize 1
+            HOLD_WNS: priority 60, weight 1.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 0, isMaximize 1
+            IO_TNS: priority 70, weight 1.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 0, isMaximize 1
+            NONE_TOTAL_OFFSET: priority 100, weight 1.000000, degradationPercentAllowed nan, step back 0.050000, isTargeted 0, isMaximize 1
+        Moves enabled: SIZE_CLOCK_TIMING, BUFFER_CLOCK, 
+    Engine R2R_TNS has 10 objectives, 2 enabled moves, iterationLimit = 1, solverType = CG_LP, estimateFanoutPower = 0, mergeIOWithR2R = 1, areaOnly = 0, useOldEngine = 0, preponeOpt = 0
+                tns300Cutoff = 300, capAllowance = 1.600000, cgccdScaleBack = 5, powerccdScaleBack = 0, needTrialSeedGeneration = 1, drcMargin = 0.000000, commitOneByOne = 0, offRoute=1
+            R2R_TNS: priority 10, weight 10.000000, degradationPercentAllowed 0.010000, step back 0.090000, isTargeted 1, isMaximize 1
+            ICG_TNS: priority 15, weight 10.000000, degradationPercentAllowed 0.000000, step back 0.090000, isTargeted 1, isMaximize 1
+            HOLD_TNS: priority 20, weight 5.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 1, isMaximize 1
+            NONE_POWER: priority 30, weight 1.000000, degradationPercentAllowed 0.005000, step back 0.050000, isTargeted 1, isMaximize 0
+            NONE_BUFFER_COUNT: priority 40, weight 5.000000, degradationPercentAllowed 0.005000, step back 0.100000, isTargeted 1, isMaximize 0
+            R2R_WNS: priority 50, weight 5.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 1, isMaximize 1
+            ICG_WNS: priority 55, weight 5.000000, degradationPercentAllowed 0.000000, step back 0.050000, isTargeted 1, isMaximize 1
+            HOLD_WNS: priority 60, weight 5.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 0, isMaximize 1
+            IO_TNS: priority 70, weight 1.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 0, isMaximize 1
+            NONE_TOTAL_OFFSET: priority 100, weight 1.000000, degradationPercentAllowed nan, step back 0.050000, isTargeted 0, isMaximize 1
+          Objectives for trial seed generation: 
+            R2R_TNS: priority 10, weight 10.000000, degradationPercentAllowed 0.010000, step back 0.070000, isTargeted 1, isMaximize 1
+            ICG_TNS: priority 15, weight 10.000000, degradationPercentAllowed 0.000000, step back 0.070000, isTargeted 1, isMaximize 1
+            NONE_BUFFER_COUNT: priority 20, weight 1.000000, degradationPercentAllowed 0.100000, step back 0.050000, isTargeted 1, isMaximize 0
+            NONE_TOTAL_OFFSET: priority 30, weight 1.000000, degradationPercentAllowed nan, step back 0.050000, isTargeted 1, isMaximize 1
+            R2R_WNS: priority 40, weight 5.000000, degradationPercentAllowed 0.010000, step back 0.050000, isTargeted 0, isMaximize 1
+            ICG_WNS: priority 45, weight 5.000000, degradationPercentAllowed 0.000000, step back 0.050000, isTargeted 0, isMaximize 1
+            HOLD_TNS: priority 50, weight 10.000000, degradationPercentAllowed 0.010000, step back 0.030000, isTargeted 0, isMaximize 1
+            HOLD_WNS: priority 60, weight 1.000000, degradationPercentAllowed 0.010000, step back 0.030000, isTargeted 0, isMaximize 1
+            IO_TNS: priority 70, weight 1.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 0, isMaximize 1
+        Moves enabled: SIZE_CLOCK_TIMING, BUFFER_CLOCK, 
+    Engine NONE_POWER has 10 objectives, 2 enabled moves, iterationLimit = 1, solverType = CG_LP, estimateFanoutPower = 1, mergeIOWithR2R = 1, areaOnly = 0, useOldEngine = 0, preponeOpt = 0
+                tns300Cutoff = 300, capAllowance = 100.000000, cgccdScaleBack = 5, powerccdScaleBack = 0, needTrialSeedGeneration = 0, drcMargin = 0.000000, commitOneByOne = 0, offRoute=0
+            NONE_POWER: priority 10, weight 20.000000, degradationPercentAllowed 0.005000, step back 0.050000, isTargeted 1, isMaximize 0
+            NONE_BUFFER_COUNT: priority 20, weight 10.000000, degradationPercentAllowed 0.005000, step back 0.050000, isTargeted 1, isMaximize 0
+            R2R_TNS: priority 30, weight 2.000000, degradationPercentAllowed 0.050000, step back 0.100000, isTargeted 1, isMaximize 1
+            ICG_TNS: priority 35, weight 2.000000, degradationPercentAllowed 0.000000, step back 0.100000, isTargeted 1, isMaximize 1
+            HOLD_TNS: priority 40, weight 1.000000, degradationPercentAllowed 0.000000, step back 0.050000, isTargeted 1, isMaximize 1
+            R2R_WNS: priority 50, weight 1.000000, degradationPercentAllowed 0.005000, step back 0.050000, isTargeted 1, isMaximize 1
+            ICG_WNS: priority 55, weight 1.000000, degradationPercentAllowed 0.000000, step back 0.050000, isTargeted 1, isMaximize 1
+            HOLD_WNS: priority 60, weight 1.000000, degradationPercentAllowed 0.100000, step back 0.050000, isTargeted 0, isMaximize 1
+            IO_TNS: priority 70, weight 1.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 0, isMaximize 1
+            NONE_TOTAL_OFFSET: priority 100, weight 1.000000, degradationPercentAllowed nan, step back 0.050000, isTargeted 0, isMaximize 1
+        Moves enabled: SIZE_CLOCK_POWER, BUFFER_REMOVAL_CLOCK_POWER, 
+DBG: ccdInfra::ccdInfra
+Drc Mode Option: auto
+CCD blasted path groups
+DBG: ccdInfra::initAppOptions
+DBG: ccdInfra::initCtsFixedBalancePins
+time.opto_enable_through_paths is changed to false by CCD 
+
+CCD-Info: App options set by user
+   clock_opt.flow.optimize_ndr = true
+CCD: using 4 threads
+CTSSC route status detected: clock (VR 0, GR 99, DR 0), data (VR 1174, GR 0, DR 0); stage = auto, isPostRoute = FALSE
+Information: Activity propagation will be performed for scenario functional_initial.
+Information: Doing activity propagation for mode 'functional' and corner 'm31_initial' with effort level 'low'. (POW-024)
+Information: Timer-derived activity data is cached on scenario functional_initial (POW-052)
+Information: Running switching activity propagation with 4 threads!
+
+ **** Information : No. of simulation cycles = 4 ****
+Total power = 0.158860, Leakage = 0.000001, Internal = 0.095591, Switching = 0.063268
+Information: 'm31_initial' is identified as primary corner for initial clock tree building. (CTS-103)
+
+CCD: Initial QOR:
+---------------------------------------------------------------------------------------------
+ Design (setup) WNS = -0.126598, TNS = -0.126598, NVP = 1
+ Design (hold) WNHS = 2.253627, TNHS = 0.000000, NHVP = 0
+
+    Scenario functional_initial  WNS = -0.126598, TNS = -0.126598, NVP = 1
+    Scenario functional_initial  WNHS = 2.253627, TNHS = 0.000000, NHVP = 0
+---------------------------------------------------------------------------------------------
+CCD-QoR: Timing: WNS = -0.127, TNS = -0.127, NVP = 1, UNWEIGHTED_TNS = -0.127, WNHS = 2.254, TNHS = 0.000, NHVP = 0, UNWEIGHTED_TNHS = 0.000, R2R(wns=-0.126598, tns=-0.126598, nvp=1)
+ All scenarios used by CCD
+    scenario 0: functional_initial , isDynamicPower, isLeakagePower, isMaxTran, isMaxCap
+          mode: functional, id = 1
+          corner: m31_initial, id = 1
+          isSetup: wns = -0.126598, unweighted tns = -0.126598
+          isHold: wns = 2.253627, unweighted tns = 0.000000
+
+Info: message level of flow 22 cto1 is set as 0/1 for verbose/tMessage
+Enable clock slack update
+
+    Optimization Summary 		
+
+-------------------------------------------------
+
+  # Seeds generated                              0
+  # Valid linear regressions                     0
+  # Seeds with valid budget                      0
+  # Seeds with accepted implementation           0
+  # NumCTCells changed                           0
+
+  # Total number of cells sized                  0
+  #   Number of clock gates sized                0
+  #   Number of clock repeaters sized            0
+  # Number of cells added                        0
+  # Number of cells removed                      0
+  # Number of cells relocated                    0
+  # Number of cells flipped rotated              0
+
+  # Total CPU time                               00h:00m:00s
+  # Total elapsed time                           00h:00m:00s
+  # Flow total speed up                          3.182725
+  # Init lazy tns CPU time                       00h:00m:00s
+  # Init lazy tns elapsed time                   00h:00m:00s
+  # Init lazy tns speed up                       3.176049
+  # Seed generation CPU time                     00h:00m:00s
+  # Seed generation elapsed time                 00h:00m:00s
+  # Seed generation speed up                     3.988235
+
+-------------------------------------------------
+
+Info: message level of flow 22 cto1 is set back as 0/1 for verbose/tMessage
+
+CCD: After FMAX optimization:cto1_R2R_TNS0
+---------------------------------------------------------------------------------------------
+ Design (setup) WNS = -0.126598, TNS = -0.126598, NVP = 1
+ Design (hold) WNHS = 2.253627, TNHS = 0.000000, NHVP = 0
+
+    Scenario functional_initial  WNS = -0.126598, TNS = -0.126598, NVP = 1
+    Scenario functional_initial  WNHS = 2.253627, TNHS = 0.000000, NHVP = 0
+---------------------------------------------------------------------------------------------
+CCD-QoR: Timing: WNS = -0.127, TNS = -0.127, NVP = 1, UNWEIGHTED_TNS = -0.127, WNHS = 2.254, TNHS = 0.000, NHVP = 0, UNWEIGHTED_TNHS = 0.000, R2R(wns=-0.126598, tns=-0.126598, nvp=1)
+Skip HOLD TNS optimization because hold wns violation is under threshold.
+Info: message level of flow 22 cto1 is set as 0/1 for verbose/tMessage
+
+    Optimization Summary 		
+
+-------------------------------------------------
+
+  # Seeds generated                              0
+  # Valid linear regressions                     0
+  # Seeds with valid budget                      0
+  # Seeds with accepted implementation           0
+  # NumCTCells changed                           0
+
+  # Total number of cells sized                  0
+  #   Number of clock gates sized                0
+  #   Number of clock repeaters sized            0
+  # Number of cells added                        0
+  # Number of cells removed                      0
+  # Number of cells relocated                    0
+  # Number of cells flipped rotated              0
+
+  # Total CPU time                               00h:00m:00s
+  # Total elapsed time                           00h:00m:00s
+  # Flow total speed up                          3.024438
+  # Init lazy tns CPU time                       00h:00m:00s
+  # Init lazy tns elapsed time                   00h:00m:00s
+  # Init lazy tns speed up                       3.040090
+  # Seed generation CPU time                     00h:00m:00s
+  # Seed generation elapsed time                 00h:00m:00s
+  # Seed generation speed up                     1.057143
+
+-------------------------------------------------
+
+Info: message level of flow 22 cto1 is set back as 0/1 for verbose/tMessage
+
+CCD: After FMAX optimization:cto1_R2R_TNS2
+---------------------------------------------------------------------------------------------
+ Design (setup) WNS = -0.126598, TNS = -0.126598, NVP = 1
+ Design (hold) WNHS = 2.253627, TNHS = 0.000000, NHVP = 0
+
+    Scenario functional_initial  WNS = -0.126598, TNS = -0.126598, NVP = 1
+    Scenario functional_initial  WNHS = 2.253627, TNHS = 0.000000, NHVP = 0
+---------------------------------------------------------------------------------------------
+CCD-QoR: Timing: WNS = -0.127, TNS = -0.127, NVP = 1, UNWEIGHTED_TNS = -0.127, WNHS = 2.254, TNHS = 0.000, NHVP = 0, UNWEIGHTED_TNHS = 0.000, R2R(wns=-0.126598, tns=-0.126598, nvp=1)
+Info: message level of flow 22 cto1 is set as 0/1 for verbose/tMessage
+
+    Optimization Summary 		
+
+-------------------------------------------------
+
+  # Seeds generated                              0
+  # Valid linear regressions                     0
+  # Seeds with valid budget                      0
+  # Seeds with accepted implementation           0
+  # NumCTCells changed                           0
+
+  # Total number of cells sized                  0
+  #   Number of clock gates sized                0
+  #   Number of clock repeaters sized            0
+  # Number of cells added                        0
+  # Number of cells removed                      0
+  # Number of cells relocated                    0
+  # Number of cells flipped rotated              0
+
+  # Total CPU time                               00h:00m:00s
+  # Total elapsed time                           00h:00m:00s
+  # Flow total speed up                          3.673612
+  # Init lazy tns CPU time                       00h:00m:00s
+  # Init lazy tns elapsed time                   00h:00m:00s
+  # Init lazy tns speed up                       3.700988
+  # Seed generation CPU time                     00h:00m:00s
+  # Seed generation elapsed time                 00h:00m:00s
+  # Seed generation speed up                     0.995798
+
+-------------------------------------------------
+
+Info: message level of flow 22 cto1 is set back as 0/1 for verbose/tMessage
+
+CCD: After FMAX optimization:cto1_NONE_POWER3
+---------------------------------------------------------------------------------------------
+ Design (setup) WNS = -0.126598, TNS = -0.126598, NVP = 1
+ Design (hold) WNHS = 2.253627, TNHS = 0.000000, NHVP = 0
+
+    Scenario functional_initial  WNS = -0.126598, TNS = -0.126598, NVP = 1
+    Scenario functional_initial  WNHS = 2.253627, TNHS = 0.000000, NHVP = 0
+---------------------------------------------------------------------------------------------
+CCD-QoR: Timing: WNS = -0.127, TNS = -0.127, NVP = 1, UNWEIGHTED_TNS = -0.127, WNHS = 2.254, TNHS = 0.000, NHVP = 0, UNWEIGHTED_TNHS = 0.000, R2R(wns=-0.126598, tns=-0.126598, nvp=1)
+Mark clock trees...
+Marking clock synthesized attributes
+
+Marking spacing rules
+
+Clock cell spacing rule list:
+   No clock cell spacing rule is found.
+CCD unblasted path groups
+time.opto_enable_through_paths is changed to true by CCD 
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Post Local Skew Optimization: GlobalSkew = nan; ID = nan; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+Information: The run time for Local skew optimization is 0 hr : 0 min : 2.95 sec, cpu time is 0 hr : 0 min : 4.47 sec. (CTS-104)
+[cto] Finished SolverBasedCto.1: PASS
+Information: The stitching and editing of coupling caps is turned OFF for design 'alu_m31.nlib:alu_place_pins.design'. (TIM-125)
+Information: Update timing completed net estimation for all the timing graph nets (TIM-111)
+Information: Net estimation statistics: timing graph nets = 1175, routed nets = 1, across physical hierarchy nets = 0, parasitics cached nets = 1, delay annotated nets = 0, parasitics annotated nets = 0, multi-voltage nets = 0. (TIM-112)
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Pre Incremental Route: GlobalSkew = 0.1622; ID = 0.0027; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+rtapi Thread-server 0: shutdown 
+rtapi Thread-server 3: shutdown 
+rtapi Thread-server 2: shutdown 
+rtapi Thread-server 1: shutdown 
+
+No. startProblems      =     0 
+
+No. doRoutes           =     0 
+No. doUnroutes         =     0 
+No. redoRoutes         =     0 
+No. redoUnroutes       =     0 
+No. undoRoutes         =     0 
+No. undoUnroutes       =     0 
+No. commitRoutes       =     0 
+No. commitUnroutes     =     0 
+No. uncommitRoutes     =     0 
+No. uncommitUnroutes   =     0 
+No. doRoute fails      =     0 
+No. doUnroute fails    =     0 
+
+No. viaLadderQueries   =     0 
+No. doDelVias          =     0 
+No. doAddVias          =     0 
+No. redoDelVias        =     0 
+No. redoAddVias        =     0 
+No. undoDelVias        =     0 
+No. undoAddVias        =     0 
+No. commitChangeVias   =     0 
+No. uncommitChangeVias =     0 
+No. doDelVias fails    =     0 
+No. doAddVias fails    =     0 
+
+Updating congestion ...
+Updating congestion ...
+GR Routing Service: Wrote GR congmap to NDM 
+Information: The netlist change observers are enabled for incremental timing updates. (TIM-120)
+Information: The netlist change observers are enabled for incremental extraction. (TIM-127)
+INFO: wire-opt feature for router enabled
+Information: The net parasitics of block alu_sync_top are cleared. (TIM-123)
+Cut layer CNT has invalid minimum width specified
+Cell Min-Routing-Layer = METAL1
+Cell Max-Routing-Layer = METAL3
+Turn off antenna since no rule is specified
+Information: Option route.detail.force_end_on_preferred_grid will be ignored since none of the layers have preferred grid. (ZRT-703)
+Warning: Cannot find a default contact code for layer CNT. (ZRT-022)
+Warning: Port GNDK of cell alu_place_pins is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Port VCCK of cell alu_place_pins is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Ignore 2 top cell ports with no pins. (ZRT-027)
+Info: number of net_type_blockage: 0 
+Information: Via ladder engine would be activated for pattern must join connection in certain commands. Please refer to man-page for the command list. (ZRT-619)
+Information: AutoNdr rule can't be found. Check the settings.
+Information: When applicable Min-max layer allow_pin_connection mode will allow paths of length 6.20 outside the layer range. (ZRT-707)
+Information: When applicable Min-max layer allow_pin_connection mode will allow paths of length 6.20 outside the layer range on clock nets. (ZRT-718)
+Information: When applicable layer based tapering will taper up to 0.00 in distance from the pin. (ZRT-706)
+Start Global Route ... 
+[Init] Elapsed real time: 0:00:00 
+[Init] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[Init] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[Init] Total (MB): Used    0  Alloctr    0  Proc 8700 
+Printing options for 'route.common.*'
+common.verbose_level                                    :	 0                   
+
+Printing options for 'route.global.*'
+
+Begin global routing.
+Constructing data structure ...
+Design statistics:
+Design Bounding Box (0.00um,0.00um,189.12um,186.72um)
+Number of routing layers = 3
+layer METAL1, dir Hor, min width = 0.196um, min space = 0.2um pitch = 0.48um
+layer METAL2, dir Ver, min width = 0.24um, min space = 0.24um pitch = 0.48um
+layer METAL3, dir Hor, min width = 0.44um, min space = 0.46um pitch = 0.9um
+Current Stage stats:
+[End of Build Tech Data] Elapsed real time: 0:00:00 
+[End of Build Tech Data] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Build Tech Data] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Build Tech Data] Total (MB): Used    0  Alloctr    0  Proc 8700 
+Net statistics:
+Total number of nets     = 1177
+Number of nets to route  = 1
+1174 open nets
+ of which 1174 are without routing or PSV shapes
+3 nets are fully connected,
+ of which 2 are detail routed and 1 are global routed.
+Current Stage stats:
+[End of Build All Nets] Elapsed real time: 0:00:00 
+[End of Build All Nets] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Build All Nets] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Build All Nets] Total (MB): Used    0  Alloctr    0  Proc 8700 
+Net length statistics: 
+Net Count(Ignore Fully Rted) 0, Total Half Perimeter Wire Length (HPWL) 0 microns
+HPWL   0 ~   50 microns: Net Count        0	Total HPWL            0 microns
+HPWL  50 ~  100 microns: Net Count        0	Total HPWL            0 microns
+HPWL 100 ~  200 microns: Net Count        0	Total HPWL            0 microns
+HPWL 200 ~  300 microns: Net Count        0	Total HPWL            0 microns
+HPWL 300 ~  400 microns: Net Count        0	Total HPWL            0 microns
+HPWL 400 ~  500 microns: Net Count        0	Total HPWL            0 microns
+HPWL 500 ~  600 microns: Net Count        0	Total HPWL            0 microns
+HPWL 600 ~  700 microns: Net Count        0	Total HPWL            0 microns
+HPWL 700 ~  800 microns: Net Count        0	Total HPWL            0 microns
+HPWL 800 ~  900 microns: Net Count        0	Total HPWL            0 microns
+HPWL 900 ~ 1000 microns: Net Count        0	Total HPWL            0 microns
+HPWL     > 1000 microns: Net Count        0	Total HPWL            0 microns
+Number of partitions: 1 (1 x 1)
+Size of partitions: 56 gCells x 56 gCells
+Average gCell capacity  1.82	 on layer (1)	 METAL1
+Average gCell capacity  5.74	 on layer (2)	 METAL2
+Average gCell capacity  2.66	 on layer (3)	 METAL3
+Average number of tracks per gCell 6.96	 on layer (1)	 METAL1
+Average number of tracks per gCell 7.05	 on layer (2)	 METAL2
+Average number of tracks per gCell 3.71	 on layer (3)	 METAL3
+Number of gCells = 9408
+Current Stage stats:
+[End of Build Congestion Map] Elapsed real time: 0:00:00 
+[End of Build Congestion Map] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Build Congestion Map] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Build Congestion Map] Total (MB): Used    0  Alloctr    0  Proc 8700 
+Number of partitions: 1 (1 x 1)
+Size of partitions: 56 gCells x 56 gCells
+Current Stage stats:
+[End of Add Nets Demand] Elapsed real time: 0:00:00 
+[End of Add Nets Demand] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Add Nets Demand] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Add Nets Demand] Total (MB): Used    0  Alloctr    0  Proc 8700 
+Number of user frozen nets = 0
+Total stats:
+[End of Build Data] Elapsed real time: 0:00:00 
+[End of Build Data] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Build Data] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Build Data] Total (MB): Used    0  Alloctr    0  Proc 8700 
+Current Stage stats:
+[End of Blocked Pin Detection] Elapsed real time: 0:00:00 
+[End of Blocked Pin Detection] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Blocked Pin Detection] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Blocked Pin Detection] Total (MB): Used    0  Alloctr    0  Proc 8700 
+Information: Using 4 threads for routing. (ZRT-444)
+Information: Multiple gcell levels ON
+Information: Buffer distance is estimated to be ~5000.0000um (1488 gCells)
+
+Start GR phase 0
+Number of partitions: 1 (1 x 1)
+Size of partitions: 56 gCells x 56 gCells
+[rtAllBotParts] Elapsed real time: 0:00:00 
+[rtAllBotParts] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[rtTop] Elapsed real time: 0:00:00 
+[rtTop] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+Current Stage stats:
+[End of Initial Routing] Elapsed real time: 0:00:00 
+[End of Initial Routing] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Initial Routing] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Initial Routing] Total (MB): Used    0  Alloctr    0  Proc 8700 
+Initial. Routing result:
+Initial. Both Dirs: Dmd-Cap  =     0 Max = 0 GRCs =     0 (0.00%)
+Initial. H routing: Dmd-Cap  =     0 Max = 0 (GRCs =  0) GRCs =     0 (0.00%)
+Initial. V routing: Dmd-Cap  =     0 Max = 0 (GRCs =  0) GRCs =     0 (0.00%)
+Initial. Both Dirs: Overflow =     0 Max = 0 GRCs =     0 (0.00%)
+Initial. H routing: Overflow =     0 Max = 0 (GRCs =  0) GRCs =     0 (0.00%)
+Initial. V routing: Overflow =     0 Max = 0 (GRCs =  0) GRCs =     0 (0.00%)
+Initial. METAL1     Overflow =     0 Max = 0 (GRCs =  0) GRCs =     0 (0.00%)
+Initial. METAL2     Overflow =     0 Max = 0 (GRCs =  0) GRCs =     0 (0.00%)
+Initial. METAL3     Overflow =     0 Max = 0 (GRCs =  0) GRCs =     0 (0.00%)
+
+Initial. Total Wire Length = 524.43
+Initial. Layer METAL1 wire length = 3.42
+Initial. Layer METAL2 wire length = 299.79
+Initial. Layer METAL3 wire length = 221.22
+Initial. Total Number of Contacts = 103
+Initial. Via V12_X_V1S1E11 count = 61
+Initial. Via V23_X_V1S1E11 count = 42
+Initial. completed.
+[End of Whole Chip Routing] Elapsed real time: 0:00:00 
+[End of Whole Chip Routing] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Whole Chip Routing] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Whole Chip Routing] Total (MB): Used    0  Alloctr    0  Proc 8700 
+
+Congestion utilization per direction:
+Average vertical track utilization   =  0.68 %
+Peak    vertical track utilization   = 25.00 %
+Average horizontal track utilization =  0.58 %
+Peak    horizontal track utilization = 100.00 %
+
+[End of Global Routing] Elapsed real time: 0:00:00 
+[End of Global Routing] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Global Routing] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Global Routing] Total (MB): Used    0  Alloctr    0  Proc 8700 
+Total number of open nets = 0, of which 0 are frozen
+Updating congestion ...
+Updating congestion ...
+[End of dbOut] Elapsed real time: 0:00:00 
+[End of dbOut] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of dbOut] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of dbOut] Total (MB): Used    0  Alloctr    0  Proc 8700 
+Expert-Warning: No GR congestion 
+Skip track assign
+Skip detail route
+Updating the database ...
+Information: The stitching and editing of coupling caps is turned OFF for design 'alu_m31.nlib:alu_place_pins.design'. (TIM-125)
+Information: Design alu_place_pins has 1177 nets, 1 global routed, 0 detail routed. (NEX-024)
+Information: The RC mode used is CTO for design 'alu_sync_top'. (NEX-022)
+Information: Update timing completed net estimation for all the timing graph nets (TIM-111)
+Information: Net estimation statistics: timing graph nets = 1175, routed nets = 1, across physical hierarchy nets = 0, parasitics cached nets = 1, delay annotated nets = 0, parasitics annotated nets = 0, multi-voltage nets = 0. (TIM-112)
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Post Incremental Route: GlobalSkew = 0.1622; ID = 0.0027; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+There are 0 buffers added and 0 inverters added by Clock Tree Optimization.
+************************************************************
+* CTS STEP: Postlude
+************************************************************
+Info: 56 sinks and boundary insts are set as application_fixed
+Information: The run time for postlude is 0 hr : 0 min : 0.01 sec, cpu time is 0 hr : 0 min : 0.01 sec. (CTS-104)
+************************************************************
+* CTS STEP: Summary report
+************************************************************
+There are 1 flat clock tree nets.
+There are 0 non-sink instances (total area 0.00) on clock trees including 0 instances dont_touch.
+Clock tree synthesize and optimization added 0 buffers and 0 inverters (total area 0.00).
+ Compilation of clock trees finished successfully
+ Run time for cts 00:00:08.86u 00:00:00.23s 00:00:06.70e: 
+
+Summary of messages during CTS:
+===============================================================
+  Tag   Count  Type           Description
+---------------------------------------------------------------
+CTS-038    1  Warning  No clock routing rule is specified.
+
+No clock balance group was found, so skip the balance
+Info: clearing CTS-GR option
+Info: clearinf CTO-GR option
+Information: Ending   clock_opt / build_clock / Trial CTS (FLW-8001)
+Information: Time: 2026-10-26 19:55:04 / Session:  00:00:22 / Command:  00:00:07 / CPU:  00:00:10 / Memory: 1436 MB (FLW-8100)
+
+Information: The net parasitics of block alu_sync_top are cleared. (TIM-123)
+Information: The stitching and editing of coupling caps is turned OFF for design 'alu_m31.nlib:alu_place_pins.design'. (TIM-125)
+Information: Design alu_place_pins has 1177 nets, 1 global routed, 0 detail routed. (NEX-024)
+Information: The RC mode used is CTO for design 'alu_sync_top'. (NEX-022)
+Information: Design Average RC for design alu_place_pins  (NEX-011)
+Information: r = 0.105499 ohm/um, via_r = 0.413223 ohm/cut, c = 0.197942 ff/um, cc = 0.000000 ff/um (X dir) (NEX-017)
+Information: r = 0.250000 ohm/um, via_r = 0.413223 ohm/cut, c = 0.235449 ff/um, cc = 0.000000 ff/um (Y dir) (NEX-017)
+Information: Update timing completed net estimation for all the timing graph nets (TIM-111)
+Information: Net estimation statistics: timing graph nets = 1175, routed nets = 1, across physical hierarchy nets = 0, parasitics cached nets = 1175, delay annotated nets = 0, parasitics annotated nets = 0, multi-voltage nets = 0. (TIM-112)
+Clock-opt command begin                   CPU:    24 s (  0.01 hr )  ELAPSE:    23 s (  0.01 hr )  MEM-PEAK:  1435 MB
+Warning: Cannot find any default max transition constraint on the design. (OPT-070)
+Info: update em.
+
+Clock-opt timing update complete          CPU:    24 s (  0.01 hr )  ELAPSE:    23 s (  0.01 hr )  MEM-PEAK:  1435 MB
+INFO: Propagating Switching Activities
+Information: Activity propagation will be performed for scenario functional_initial.
+Information: Doing activity propagation for mode 'functional' and corner 'm31_initial' with effort level 'medium'. (POW-024)
+Information: Timer-derived activity data is cached on scenario functional_initial (POW-052)
+Information: Running switching activity propagation with 4 threads!
+
+ **** Information : No. of simulation cycles = 6 ****
+INFO: Switching Activity propagation took     0.00001 sec
+INFO: Propagating Switching Activity for all power flows 
+
+Clock-opt initial QoR
+_____________________
+Scenario Mapping Table
+1: functional_initial
+
+Pathgroup Mapping Table
+1: **default**
+2: **async_default**
+3: **clock_gating_default**
+4: **in2reg_default**
+5: **reg2out_default**
+6: **in2out_default**
+7: clk
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+PATHGROUP QOR 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+Scene  PG      WNS        TNS    NSV      WHV        THV    NHV
+    1   1   0.0000     0.0000      0   0.0000     0.0000      0
+    1   2   0.0000     0.0000      0   0.0000     0.0000      0
+    1   3   0.0000     0.0000      0   0.0000     0.0000      0
+    1   4   0.0000     0.0000      0   0.0000     0.0000      0
+    1   5   0.0000     0.0000      0   0.0000     0.0000      0
+    1   6   0.0000     0.0000      0   0.0000     0.0000      0
+    1   7   0.1266     0.1266      1   0.0000     0.0000      0
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SCENARIO QOR 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Scene  PG      WNS        TNS   R2RTNS    NSV      WHV        THV    NHV  MaxTrnV   MaxTranC  MaxCapV    Leakage
+    1   *   0.1266     0.1266   0.1266      1   0.0000     0.0000      0        0     0.0000        0    658.903
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DESIGN QOR 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Scene  PG      WNS        TNS   R2RTNS    NSV      WHV        THV    NHV  MaxTrnV   MaxTranC  MaxCapV    Leakage         Area    InstCnt     BufCnt     InvCnt
+    *   *   0.1266     0.1266   0.1266      1   0.0000     0.0000      0        0     0.0000        0    658.903     17576.29       1138          3        126
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Clock-opt initial QoR Summary       WNS        TNS   R2RTNS    NSV      WHV        THV    NHV  MaxTrnV  MaxCapV    Leakage         Area    InstCnt
+Clock-opt initial QoR Summary    0.1266     0.1266   0.1266      1   0.0000     0.0000      0        0        0    658.903     17576.29       1138
+Information: The netlist change observers are disabled for incremental extraction. (TIM-126)
+INFO: using 4 threads
+Clock-opt initialization complete         CPU:    30 s (  0.01 hr )  ELAPSE:    24 s (  0.01 hr )  MEM-PEAK:  1435 MB
+Clock-opt optimization summary            SETUP-COST    R2R-COST HOLD-COST LDRC-COST          AREA     LEAKAGE     INSTCNT            ELAPSE       MEM
+Warning: Cannot find any default max transition constraint on the design. (OPT-070)
+Number of Site types in the design = 1
+Setting up Chip Core
+Chip Core shape: (60000 60000) (1831200 1807200)
+Number of VARs = 1
+Number of unique PDs = 1
+Number of Power Domains = 1
+Number of Voltage Areas = 1
+Number of supply Nets = 2
+Number of used supplies = 0
+Blocked VAs: 
+
+    Scenario functional_initial  WNS = 0.126598, TNS = 0.126598, NVP = 1
+    Scenario functional_initial  WNHS = invalid, TNHS = 0.000000, NHVP = 0
+
+     ELAPSED  WORST NEG TOTAL NEG              MAX       MAX     BUFFER    INVERTER   LVTH      LVTH      PEAK   
+      TIME      SLACK     SLACK     AREA    TRAN COST CAP COST    COUNT     COUNT     COUNT    PERCENT   MEMORY  
+    --------- --------- --------- --------- --------- --------- --------- --------- --------- --------- ---------
+      0:00:24     0.127     0.127 19143.936     0.000     0.000         3       126         0     0.000      1435 
+
+Information: The netlist change observers are enabled for incremental extraction. (TIM-127)
+
+Information: Initializing classic cellmap without advanced rules enabled and without PDC enabled
+Information: The following app options are used in cellmap
+        place.legalize.enable_color_aware_placement : false
+        place.legalize.use_nll_query_cm : false
+        place.legalize.enable_advanced_legalizer : false
+        place.legalize.enable_prerouted_net_check : true
+        place.legalize.enable_advanced_prerouted_net_check : false
+        place.legalize.always_continue : true
+        place.legalize.limit_legality_checks : false
+        place.common.pnet_aware_density : 1.0000
+        place.common.pnet_aware_min_width : 0.0000
+        place.common.pnet_aware_layers : {}
+        place.common.use_placement_model : false
+        place.common.enable_advanced_placement_model : true
+        cts.placement.cell_spacing_rule_style : maximum
+Total 0.0111 seconds to build cellmap data
+INFO: creating 19(r) x 19(c) GridCells YDim 10.08 XDim 10.08
+INFO: number of GridCells (alu_place_pins): 361
+INFO: creating 19(r) x 19(c) GridCells YDim 10.08 XDim 10.08
+INFO: number of GridCells (alu_place_pins): 361
+Total 0.0245 seconds to load 1624 cell instances into cellmap
+Moveable cells: 1082; Application fixed cells: 56; Macro cells: 0; User fixed cells: 486
+Average cell width 4.5967, cell height 3.3600, cell area 15.4449 for total 1138 placed and application fixed cells
+Clock-opt optimization Phase 5 Iter  1          0.13        0.13      0.00         -      17576.29      658.90        1138              0.01      1435
+
+APSINFO: No multi-Vth libcells found, turning off percentage LVT optimization flow
+Clock-opt optimization Phase 6 Iter  1          0.13        0.13      0.00         -      17576.29      658.90        1138              0.01      1435
+Corner Scaling is off, multiplier is 1.000000
+
+    Scenario functional_initial  WNS = 0.126598, TNS = 0.126598, NVP = 1
+    Scenario functional_initial  WNHS = invalid, TNHS = 0.000000, NHVP = 0
+
+     ELAPSED  WORST NEG TOTAL NEG              MAX       MAX     BUFFER    INVERTER   LVTH      LVTH      PEAK   
+      TIME      SLACK     SLACK     AREA    TRAN COST CAP COST    COUNT     COUNT     COUNT    PERCENT   MEMORY  
+    --------- --------- --------- --------- --------- --------- --------- --------- --------- --------- ---------
+      0:00:25     0.127     0.127 19143.936     0.000     0.000         3       126         0     0.000      1435 
+
+Information: timingScenario functional_initial timingCorner m31_initial.  Using corner m31_initial for worst leakage corner. (OPT-078)
+Information: Nominal = 1.1488642  Design MT = inf  Target = 2.2977283  MaxRC = 0.000157 Fast Target = 0.349146 (OPT-081)
+Information: timingScenario functional_initial timingCorner m31_initial.  Using corner m31_initial for worst leakage corner. (OPT-078)
+Information: timingScenario functional_initial timingCorner m31_initial.  Using corner m31_initial for worst leakage corner. (OPT-078)
+Information: timingScenario functional_initial timingCorner m31_initial.  Using corner m31_initial for worst leakage corner. (OPT-078)
+Collecting Drivers ...  
+Design max_transition = inf
+Design max_capacitance = inf
+Using layer METAL3 for buffering distances in roi (originally METAL3)
+ndr _snps_autoNdr_delay_1w3s is auto ndr
+GRE layer bins: None, METAL2
+ndr _snps_autoNdr_delay_1w3s is auto ndr
+Running regular buffering flow.
+Found 1 buffer-tree drivers
+
+Roi-HfsDrc SN: 1798569713 435980330 0 67108865 0 (3000.000000)
+
+Processing Buffer Trees  (ROI) ... 
+
+    [1]  10%% ...
+    [1] 100%  Done
+
+                  Deleted        Added
+------------ ------------ ------------
+    Buffers:            0            1
+  Inverters:            0            0
+------------ ------------ ------------
+      Total:            0            1
+------------ ------------ ------------
+
+Number of Drivers Sized: 0 [0.00%]
+
+                      P: 0 [0.00%%]
+                      N: 0 [0.00%%]
+
+Zbuf-RUNTIME (Hr:Min:Sec)  CPU 0 hr : 0 min : 0.38 sec ELAPSE 0 hr : 0 min : 0.38 sec
+Zbuf-RUNTIME         (Min) CPU 0 min ELAPSE 0 min
+ZBuf-MEM(max-mem) total 1470244 K / inuse 852572 K
+
+    Scenario functional_initial  WNS = 0.126598, TNS = 0.126598, NVP = 1
+    Scenario functional_initial  WNHS = invalid, TNHS = 0.000000, NHVP = 0
+
+     ELAPSED  WORST NEG TOTAL NEG              MAX       MAX     BUFFER    INVERTER   LVTH      LVTH      PEAK   
+      TIME      SLACK     SLACK     AREA    TRAN COST CAP COST    COUNT     COUNT     COUNT    PERCENT   MEMORY  
+    --------- --------- --------- --------- --------- --------- --------- --------- --------- --------- ---------
+      0:00:25     0.127     0.127 19163.289     0.000     0.000         4       126         0     0.000      1435 
+
+Corner Scaling is off, multiplier is 1.000000
+Using layer METAL3 for buffering distances in roi (originally METAL3)
+ndr _snps_autoNdr_delay_1w3s is auto ndr
+ndr _snps_autoNdr_delay_1w3s is auto ndr
+bmap: stepx = stepy = 168000
+creating bmap
+DB units per micron : 10000
+Core Area = 12 X 12 ()
+Clock-opt optimization Phase 6 Iter  2          0.13        0.13      0.00         -      17576.29      658.90        1138              0.01      1435
+Clock-opt optimization Phase 6 Iter  3          0.13        0.13      0.00         -      17576.29      658.90        1138              0.01      1435
+INFO: Restore MV PD Boundary Restriction
+
+Clock-opt optimization Phase 7 Iter  1          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Clock-opt optimization Phase 7 Iter  2          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Clock-opt optimization Phase 7 Iter  3          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Clock-opt optimization Phase 7 Iter  4          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Clock-opt optimization Phase 7 Iter  5          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Clock-opt optimization Phase 7 Iter  6          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Clock-opt optimization Phase 7 Iter  7          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Clock-opt optimization Phase 7 Iter  8          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Clock-opt optimization Phase 7 Iter  9          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Clock-opt optimization Phase 7 Iter 10          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Clock-opt optimization Phase 7 Iter 11          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Clock-opt optimization Phase 7 Iter 12          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Clock-opt optimization Phase 7 Iter 13          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Clock-opt optimization Phase 7 Iter 14          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Corner Scaling is off, multiplier is 1.000000
+Using layer METAL3 for buffering distances in roi (originally METAL3)
+ndr _snps_autoNdr_delay_1w3s is auto ndr
+ndr _snps_autoNdr_delay_1w3s is auto ndr
+bmap: stepx = stepy = 168000
+creating bmap
+DB units per micron : 10000
+Core Area = 12 X 12 ()
+Clock-opt optimization Phase 7 Iter 15          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Clock-opt optimization Phase 7 Iter 16          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+Clock-opt optimization Phase 7 Iter 17          0.13        0.13      0.00         -      17595.65      660.26        1139              0.01      1435
+
+Clock-opt optimization Phase 8 Iter  1          0.00        0.00      0.00         -      17605.32      660.81        1139              0.01      1435
+
+Information: Starting clock_opt / build_clock / CTS (FLW-8000)
+Information: Time: 2026-10-26 19:55:07 / Session:  00:00:26 / Command:  00:00:11 / CPU:  00:00:20 / Memory: 1436 MB (FLW-8100)
+Clock-opt optimization Phase 9 Iter  1          0.00        0.00      0.00         -      17605.32      660.81        1139              0.01      1435
+Info: Enabling GR in final CTS
+Info: Enabling GR in final CTO
+cts.compile.enable_local_skew turned off because cts.common.enable_max is true
+************************************************************
+* CTS STEP: Design Initialization for Clock Synthesis
+************************************************************
+Information: The stitching and editing of coupling caps is turned OFF for design 'alu_m31.nlib:alu_place_pins.design'. (TIM-125)
+Information: Update timing completed net estimation for all the timing graph nets (TIM-111)
+Information: Net estimation statistics: timing graph nets = 1176, routed nets = 1, across physical hierarchy nets = 0, parasitics cached nets = 1, delay annotated nets = 0, parasitics annotated nets = 0, multi-voltage nets = 0. (TIM-112)
+Information: CTS will work on the following scenarios. (CTS-101)
+   functional_initial	(Mode: functional; Corner: m31_initial)
+Information: CTS will work on all clocks in active scenarios, including 1 master clocks and 0 generated clocks. (CTS-107)
+Information: Clock min_layer constraint is relaxed for clock nets to use layers lower than user specified min layer, based on wire delay estimation. (CTS-093)
+Output units used in this log:
+   Time        : 1.00ns
+   Resistance  : 1.00kOhm
+   Capacitance : 1.00pF
+   Power       : 1.00pW
+   Length      : 1.00um
+Information: Clock derating is enabled
+
+CTS related app options set by user:
+   cts.common.enable_ndr_enhancement = 1
+   cts.compile.enable_cell_relocation = none
+   cts.compile.enable_global_route = true
+   cts.compile.enable_local_skew = true
+   cts.icg.timing_aware = true
+   cts.optimize.enable_improvement_mode = skew
+   cts.optimize.enable_local_skew = true
+
+Buffer/Inverter reference list for clock tree synthesis:
+   m31_3m1t_11k/BUFX1TAS7
+   m31_3m1t_11k/BUFX12TAS7
+   m31_3m1t_11k/BUFX16TAS7
+   m31_3m1t_11k/BUFX2TAS7
+   m31_3m1t_11k/BUFX20TAS7
+   m31_3m1t_11k/BUFX3TAS7
+   m31_3m1t_11k/BUFX4TAS7
+   m31_3m1t_11k/BUFX8TAS7
+   m31_3m1t_11k/CLKBUFX1TAS7
+   m31_3m1t_11k/CLKBUFX12TAS7
+   m31_3m1t_11k/CLKBUFX16TAS7
+   m31_3m1t_11k/CLKBUFX2TAS7
+   m31_3m1t_11k/CLKBUFX20TAS7
+   m31_3m1t_11k/CLKBUFX3TAS7
+   m31_3m1t_11k/CLKBUFX4TAS7
+   m31_3m1t_11k/CLKBUFX8TAS7
+   m31_3m1t_11k/DELAX1TAS7
+   m31_3m1t_11k/DELAX2TAS7
+   m31_3m1t_11k/DELAX4TAS7
+   m31_3m1t_11k/DELBX1TAS7
+   m31_3m1t_11k/DELBX2TAS7
+   m31_3m1t_11k/DELBX4TAS7
+   m31_3m1t_11k/DELCX1TAS7
+   m31_3m1t_11k/DELCX2TAS7
+   m31_3m1t_11k/DELCX4TAS7
+   m31_3m1t_11k/DELDX1TAS7
+   m31_3m1t_11k/DELDX2TAS7
+   m31_3m1t_11k/DELDX4TAS7
+   m31_3m1t_11k/CLKINVX1TAS7
+   m31_3m1t_11k/CLKINVX12TAS7
+   m31_3m1t_11k/CLKINVX16TAS7
+   m31_3m1t_11k/CLKINVX2TAS7
+   m31_3m1t_11k/CLKINVX20TAS7
+   m31_3m1t_11k/CLKINVX3TAS7
+   m31_3m1t_11k/CLKINVX4TAS7
+   m31_3m1t_11k/CLKINVX8TAS7
+   m31_3m1t_11k/INVX1TAS7
+   m31_3m1t_11k/INVX12TAS7
+   m31_3m1t_11k/INVX16TAS7
+   m31_3m1t_11k/INVX2TAS7
+   m31_3m1t_11k/INVX20TAS7
+   m31_3m1t_11k/INVX3TAS7
+   m31_3m1t_11k/INVX4TAS7
+   m31_3m1t_11k/INVX8TAS7
+
+ICG reference list:
+   m31_3m1t_11k/GCKHBQX1TAS7
+   m31_3m1t_11k/GCKHBQX2TAS7
+   m31_3m1t_11k/GCKHBQX4TAS7
+   m31_3m1t_11k/GCKLBQX1TAS7
+   m31_3m1t_11k/GCKLBQX2TAS7
+   m31_3m1t_11k/GCKLBQX4TAS7
+
+Information: 'm31_initial' is identified as primary corner for initial clock tree building. (CTS-103)
+Number of Site types in the design = 1
+Setting up Chip Core
+Chip Core shape: (60000 60000) (1831200 1807200)
+Number of VARs = 1
+Number of unique PDs = 1
+Number of Power Domains = 1
+Number of Voltage Areas = 1
+Number of supply Nets = 2
+Number of used supplies = 0
+Blocked VAs: 
+Warning: No clock routing rule is specified. (CTS-038)
+
+Clock cell spacing rule list:
+   No clock cell spacing rule is found.
+************************************************************
+* CTS STEP: Clock Tree Initialization
+************************************************************
+Drc Mode Option: auto
+Information: Initializing classic cellmap without advanced rules enabled and with PDC enabled
+Information: The following app options are used in cellmap
+        place.legalize.enable_color_aware_placement : false
+        place.legalize.use_nll_query_cm : false
+        place.legalize.enable_advanced_legalizer : false
+        place.legalize.enable_prerouted_net_check : true
+        place.legalize.enable_advanced_prerouted_net_check : false
+        place.legalize.always_continue : true
+        place.legalize.limit_legality_checks : false
+        place.common.pnet_aware_density : 1.0000
+        place.common.pnet_aware_min_width : 0.0000
+        place.common.pnet_aware_layers : {}
+        place.common.use_placement_model : false
+        place.common.enable_advanced_placement_model : true
+        cts.placement.cell_spacing_rule_style : maximum
+Information: Creating classic rule checker.
+Warning: Routing direction of metal layer POLY2 is neither "horizontal" nor "vertical".  PDC checks will not be performed on this layer. (PDC-003)
+PDC app_options settings =========
+	place.legalize.enable_prerouted_net_check: 1
+	place.legalize.num_tracks_for_access_check: 1
+	place.legalize.use_eol_spacing_for_access_check: 0
+	place.legalize.allow_touch_track_for_access_check: 1
+	place.legalize.reduce_conservatism_in_eol_check: 0
+	place.legalize.preroute_shape_merge_distance: 0.0
+	place.legalize.enable_non_preferred_direction_span_check: 0
+
+Layer METAL1: cached 0 shapes out of 72 total shapes.
+Layer METAL2: cached 30 shapes out of 81 total shapes.
+Cached 1095 vias out of 1198 total vias.
+Total 0.0251 seconds to build cellmap data
+INFO: creating 12(r) x 12(c) GridCells YDim 16.8 XDim 16.8
+INFO: number of GridCells (alu_place_pins): 144
+INFO: creating 12(r) x 12(c) GridCells YDim 16.8 XDim 16.8
+INFO: number of GridCells (alu_place_pins): 144
+Total 0.0338 seconds to load 1625 cell instances into cellmap
+Moveable cells: 1083; Application fixed cells: 56; Macro cells: 0; User fixed cells: 486
+Average cell width 4.6002, cell height 3.3600, cell area 15.4568 for total 1139 placed and application fixed cells
+Information: Legalizer's PDC rule check is enabled
+Information: Legalizer's advanced rule check is enabled
+
+Start Auto-Exception Derivations...
+ No internal pin was found.
+ No conflict pin was found.
+ No macro pin was found for clock balance point settings.
+ No macro pin was found for disabling self arcs.
+ No pin with both self arc and through arc was found for disabling self arcs.
+Information: The run time for clock tree initialization is 0 hr : 0 min : 0.06 sec, cpu time is 0 hr : 0 min : 0.06 sec. (CTS-104)
+Drc Mode Option: auto
+Enable multi-thread Tasks, number of thread is 4
+CTS checksum info: ctsSch::runFinalCtsInitDesign end
+Design checksums     = 0x13DA7E3D (loc)  0x6FB940AF (lcell)  0x96F93184 (name), 0x418F52C5 (net)
+CTS: Design checksums = 0x13DA7E3D (loc)  0x6FB940AF (lcell)  0x96F93184 (name), 0x418F52C5 (net)
+CTS: Clock tree checksums = 0xE090FC88 (loc)  0xF7AECE90 (lcell)  0xDFB4CCC0 (term), 0xDC4CBC8B (net)  0xB5B5EFE9 (netLen)
+CTS: Placement checksums = 45d7dcb (loc) 31bc0eb8 (lcell) 96f93184 (name) c08a4a94 (net) c8260650 (graph) 0 (slack) 80bc9eba (para) 
+Information: The netlist change observers are disabled for incremental timing updates. (TIM-119)
+Information: The netlist change observers are disabled for incremental extraction. (TIM-126)
+CTSSC route status detected: clock (VR 0, GR 99, DR 0), data (VR 1175, GR 0, DR 0); stage = auto, isPostRoute = FALSE
+Information: 'm31_initial' is identified as primary corner for initial clock tree building. (CTS-103)
+INFO: wire-opt feature for router enabled
+Cut layer CNT has invalid minimum width specified
+Cell Min-Routing-Layer = METAL1
+Cell Max-Routing-Layer = METAL3
+Turn off antenna since no rule is specified
+Information: Option route.detail.force_end_on_preferred_grid will be ignored since none of the layers have preferred grid. (ZRT-703)
+Warning: Cannot find a default contact code for layer CNT. (ZRT-022)
+Warning: Port GNDK of cell alu_place_pins is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Port VCCK of cell alu_place_pins is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Ignore 2 top cell ports with no pins. (ZRT-027)
+Info: number of net_type_blockage: 0 
+Information: Via ladder engine would be activated for pattern must join connection in certain commands. Please refer to man-page for the command list. (ZRT-619)
+Information: AutoNdr rule can't be found. Check the settings.
+Information: When applicable Min-max layer allow_pin_connection mode will allow paths of length 6.20 outside the layer range. (ZRT-707)
+Information: When applicable Min-max layer allow_pin_connection mode will allow paths of length 6.20 outside the layer range on clock nets. (ZRT-718)
+Information: When applicable layer based tapering will taper up to 0.00 in distance from the pin. (ZRT-706)
+GR Routing Service: Started IMRD 
+GR Routing Service: ndmAttrDef 'usr_tmng_crit' created with default value 0 
+GR Routing Service: ndmAttrDef 'rted_by_minDly' created with default value 0 
+GR Routing Service: ndmAttrDef 'port_subnet_crit_blkConn' created with default value 0 
+GR Routing Service: ndmAttrDef 'port_subnet_crit_blkPort' created with default value 0 
+Generating Timing information  
+Design  Scenario functional_initial (Mode functional Corner m31_initial)
+Generating Timing information  ... Done
+[End of Generating Timing Information] Elapsed real time: 0:00:00 
+[End of Generating Timing Information] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+Loading timing information to the router from design
+Timing information loaded to the router.
+GR Routing Service: Setting costIdx to 3 
+GR Routing Service: rebuildCongmap: itr = 3 
+Number of partitions: 1 (1 x 1)
+Size of partitions: 56 gCells x 56 gCells
+Average gCell capacity  1.82	 on layer (1)	 METAL1
+Average gCell capacity  5.74	 on layer (2)	 METAL2
+Average gCell capacity  2.66	 on layer (3)	 METAL3
+Average number of tracks per gCell 6.96	 on layer (1)	 METAL1
+Average number of tracks per gCell 7.05	 on layer (2)	 METAL2
+Average number of tracks per gCell 3.71	 on layer (3)	 METAL3
+Number of gCells = 9408
+Number of partitions: 1 (1 x 1)
+Size of partitions: 56 gCells x 56 gCells
+[updNetsDmd] Elapsed real time: 0:00:00 
+[updNetsDmd] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+Created 4 thread routing service with costIdx = 3. (tbbMode 1)
+GR Routing Service: Setting costIdx to 1 
+rtapi Thread-server 0: startup 
+rtapi Thread-server 2: startup 
+rtapi Thread-server 3: startup 
+rtapi Thread-server 1: startup 
+Information: Freeing timing information from routing. (ZRT-574)
+
+************************************************************
+* CTS STEP: Initial DRC fixing
+************************************************************
+
+[cto] Starting InitDrc.1
+start cto; name: alu_place_pins; type: design; name: alu_place_pins; type: design; tot_drc_vio: 0; buf_ct: 0; buf_area: 0.000000; cell_area: 0.000000
+start cto; name: functional:clk; type: clock; name: functional:clk; type: clock; latency: 0.002670; gskew: 0.162174; tot_drc_vio: 0; wtran: 0.000000; wcap: 0.000000; buf_ct: 0; buf_area: 0.000000; cell_area: 0.000000
+-------------------------------------------------------------
+Optimizing clock tree DRC
+clock: clk mode: functional root: clk
+Clock QoR Before DRC Optimization:
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Pre Initial DRC Fixing: GlobalSkew = 0.1622; ID = 0.0027; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+
+Begin Pre-Opt Drc Fixing
+Starting multithread based drc fixing Pre opt drc fixing
+Info: message level of flow 16 ctoDrc is set as 0/1 for verbose/tMessage
+Iteration 1 (effort: high)
+Information: run flow for exception tree
+Iteration 2 (effort: high)
+Information: run flow for exception tree
+
+    Optimization Summary 		
+
+-------------------------------------------------
+
+	# Drivers Attempted               =          0
+	# Skipped during isValid and estimate          =          0
+	# Failed subgraph evaluation           =          0
+	# Failed main graph committ          =          0
+	# Successful main graph commit      =          0
+	# NumCTCells changed               =          0
+
+
+	# Total CPU time                  = 00h:00m:00s
+	# Total elapsed time              = 00h:00m:00s
+	# Flow total speed up             =     1.0145
+
+-------------------------------------------------
+
+HARNESS Summary: 
+	Margin used: 0.005
+
+Info: message level of flow 16 ctoDrc is set back as 0/1 for verbose/tMessage
+Pre-Opt drc fixing cpu time 00:00:00.40u 00:00:00.00s 00:00:00.40e: 
+Clock QoR After Pre-Opt Drc Fixing:
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Post Initial DRC Fixing: GlobalSkew = 0.1622; ID = 0.0027; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+The elapsed time for optimization of clock tree is 0 hr : 0 min : 0.41 sec, cpu time is 0 hr : 0 min : 0.42 sec.
+Information: The run time for Initial DRC fixing is 0 hr : 0 min : 0.41 sec, cpu time is 0 hr : 0 min : 0.42 sec. (CTS-104)
+[cto] Finished InitDrc.1: PASS
+
+************************************************************
+* CTS STEP: Multi-objective Clock Optimization
+************************************************************
+
+[cto] Starting MultiObjectiveCto.1
+Mark clock trees...
+Marking clock synthesized attributes
+
+Marking spacing rules
+
+Clock cell spacing rule list:
+   No clock cell spacing rule is found.
+Information: The stitching and editing of coupling caps is turned OFF for design 'alu_m31.nlib:alu_place_pins.design'. (TIM-125)
+Information: Pin/Port with maximum arrivals in mode: 'functional',  'MulOverflow_reg/D'   : '2'. (TIM-134)
+Information: Average arrivals per pin/port in mode: 'functional' : '1'. (TIM-136)
+Information: Update timing completed net estimation for all the timing graph nets (TIM-111)
+Information: Net estimation statistics: timing graph nets = 1176, routed nets = 1176, across physical hierarchy nets = 0, parasitics cached nets = 1176, delay annotated nets = 0, parasitics annotated nets = 0, multi-voltage nets = 0. (TIM-112)
+Information: 'm31_initial' is identified as primary corner for initial clock tree building. (CTS-103)
+CCD app option: ccd.targeted_ccd_path_groups:  **clock_gating_default**
+Target path group: scenario functional_initial pathgroup **clock_gating_default**
+Information: CCD will use corner m31_initial for honoring max prepone/postpone limits
+CCD-Info: Adjusting IO clock latencies to improve timing (ccd.adjust_io_clock_latency = true)
+@ CG solver holdWeight = 0.100000
+@ CG solver setupWeight = 1.000000
+@ CG solver holdStartpointWeight = 0.050000
+@ CG solver setupStartpointWeight = 0.500000
+@ CG solver delayCostWeight = 5.000000
+@ CG solver zeroDirWeight = 5.000000
+@ CG solver wnsWeight = 10.000000
+INFO: Clock latencies not changed
+CUS IO adjustment before multi-objective clock optimization did not change IO
+CCD MOO settings for (budget_implementation, last_qor_strategy): 5 engines
+    Engine R2R_TNS has 8 objectives, 3 enabled moves, iterationLimit = 2, solverType = CG_LP, estimateFanoutPower = 0, mergeIOWithR2R = 1, areaOnly = 0, useOldEngine = 0, preponeOpt = 1
+                tns300Cutoff = 300, capAllowance = 1.600000, cgccdScaleBack = 5, powerccdScaleBack = 0, needTrialSeedGeneration = 0, drcMargin = 0.000000, commitOneByOne = 0, offRoute=0
+            R2R_TNS: priority 10, weight 10.000000, degradationPercentAllowed 0.010000, step back 0.100000, isTargeted 1, isMaximize 1
+            IO_TNS: priority 10, weight 10.000000, degradationPercentAllowed 0.010000, step back 0.050000, isTargeted 0, isMaximize 1
+            ICG_TNS: priority 10, weight 10.000000, degradationPercentAllowed 0.000000, step back 0.100000, isTargeted 1, isMaximize 1
+            R2R_WNS: priority 20, weight 5.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 1, isMaximize 1
+            ICG_WNS: priority 25, weight 5.000000, degradationPercentAllowed 0.000000, step back 0.050000, isTargeted 1, isMaximize 1
+            HOLD_TNS: priority 30, weight 5.000000, degradationPercentAllowed 0.500000, step back 0.050000, isTargeted 1, isMaximize 1
+            NONE_POWER: priority 40, weight 1.000000, degradationPercentAllowed 0.010000, step back 0.010000, isTargeted 1, isMaximize 0
+            NONE_TOTAL_OFFSET: priority 99, weight 1.000000, degradationPercentAllowed nan, step back 0.050000, isTargeted 0, isMaximize 1
+        Moves enabled: SIZE_CLOCK_TIMING, BUFFER_REMOVAL_CLOCK_TIMING, REPARENTING_CLOCK_TIMING, 
+    Engine R2R_TNS has 9 objectives, 2 enabled moves, iterationLimit = 1, solverType = CG_LP, estimateFanoutPower = 0, mergeIOWithR2R = 1, areaOnly = 0, useOldEngine = 0, preponeOpt = 0
+                tns300Cutoff = 300, capAllowance = 1.600000, cgccdScaleBack = 5, powerccdScaleBack = 0, needTrialSeedGeneration = 1, drcMargin = 0.000000, commitOneByOne = 0, offRoute=1
+            R2R_TNS: priority 10, weight 10.000000, degradationPercentAllowed 0.010000, step back 0.100000, isTargeted 1, isMaximize 1
+            IO_TNS: priority 10, weight 10.000000, degradationPercentAllowed 0.010000, step back 0.050000, isTargeted 0, isMaximize 1
+            ICG_TNS: priority 10, weight 10.000000, degradationPercentAllowed 0.000000, step back 0.100000, isTargeted 1, isMaximize 1
+            R2R_WNS: priority 11, weight 5.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 1, isMaximize 1
+            ICG_WNS: priority 11, weight 5.000000, degradationPercentAllowed 0.000000, step back 0.050000, isTargeted 1, isMaximize 1
+            HOLD_TNS: priority 20, weight 5.000000, degradationPercentAllowed 0.500000, step back 0.050000, isTargeted 1, isMaximize 1
+            NONE_POWER: priority 30, weight 1.000000, degradationPercentAllowed 0.010000, step back 0.010000, isTargeted 1, isMaximize 0
+            NONE_BUFFER_COUNT: priority 40, weight 1.000000, degradationPercentAllowed 0.010000, step back 0.100000, isTargeted 1, isMaximize 0
+            NONE_TOTAL_OFFSET: priority 100, weight 1.000000, degradationPercentAllowed nan, step back 0.050000, isTargeted 0, isMaximize 1
+          Objectives for trial seed generation: 
+            R2R_TNS: priority 10, weight 10.000000, degradationPercentAllowed 0.010000, step back 0.070000, isTargeted 1, isMaximize 1
+            ICG_TNS: priority 15, weight 10.000000, degradationPercentAllowed 0.000000, step back 0.070000, isTargeted 1, isMaximize 1
+            NONE_BUFFER_COUNT: priority 20, weight 1.000000, degradationPercentAllowed 0.100000, step back 0.050000, isTargeted 1, isMaximize 0
+            NONE_TOTAL_OFFSET: priority 30, weight 1.000000, degradationPercentAllowed nan, step back 0.050000, isTargeted 1, isMaximize 1
+            R2R_WNS: priority 40, weight 5.000000, degradationPercentAllowed 0.010000, step back 0.050000, isTargeted 0, isMaximize 1
+            ICG_WNS: priority 45, weight 5.000000, degradationPercentAllowed 0.000000, step back 0.050000, isTargeted 0, isMaximize 1
+            HOLD_TNS: priority 50, weight 10.000000, degradationPercentAllowed 0.010000, step back 0.030000, isTargeted 0, isMaximize 1
+            HOLD_WNS: priority 60, weight 1.000000, degradationPercentAllowed 0.010000, step back 0.030000, isTargeted 0, isMaximize 1
+            IO_TNS: priority 70, weight 1.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 0, isMaximize 1
+        Moves enabled: SIZE_CLOCK_TIMING, BUFFER_CLOCK, 
+    Engine R2R_TNS has 9 objectives, 2 enabled moves, iterationLimit = 1, solverType = CG_LP, estimateFanoutPower = 0, mergeIOWithR2R = 1, areaOnly = 0, useOldEngine = 0, preponeOpt = 0
+                tns300Cutoff = 300, capAllowance = 1.600000, cgccdScaleBack = 5, powerccdScaleBack = 0, needTrialSeedGeneration = 0, drcMargin = 0.000000, commitOneByOne = 0, offRoute=1
+            R2R_TNS: priority 10, weight 10.000000, degradationPercentAllowed 0.010000, step back 0.100000, isTargeted 1, isMaximize 1
+            IO_TNS: priority 10, weight 10.000000, degradationPercentAllowed 0.010000, step back 0.050000, isTargeted 0, isMaximize 1
+            ICG_TNS: priority 10, weight 10.000000, degradationPercentAllowed 0.000000, step back 0.100000, isTargeted 1, isMaximize 1
+            R2R_WNS: priority 11, weight 5.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 1, isMaximize 1
+            ICG_WNS: priority 11, weight 5.000000, degradationPercentAllowed 0.000000, step back 0.050000, isTargeted 1, isMaximize 1
+            HOLD_TNS: priority 20, weight 5.000000, degradationPercentAllowed 0.500000, step back 0.050000, isTargeted 1, isMaximize 1
+            NONE_POWER: priority 30, weight 1.000000, degradationPercentAllowed 0.010000, step back 0.010000, isTargeted 1, isMaximize 0
+            NONE_BUFFER_COUNT: priority 40, weight 1.000000, degradationPercentAllowed 0.010000, step back 0.100000, isTargeted 1, isMaximize 0
+            NONE_TOTAL_OFFSET: priority 100, weight 1.000000, degradationPercentAllowed nan, step back 0.050000, isTargeted 0, isMaximize 1
+        Moves enabled: SIZE_CLOCK_TIMING, BUFFER_CLOCK, 
+    Engine HOLD_TNS has 10 objectives, 2 enabled moves, iterationLimit = 1, solverType = CG_LP, estimateFanoutPower = 0, mergeIOWithR2R = 1, areaOnly = 0, useOldEngine = 0, preponeOpt = 0
+                tns300Cutoff = 300, capAllowance = 1.600000, cgccdScaleBack = 5, powerccdScaleBack = 0, needTrialSeedGeneration = 0, drcMargin = 0.000000, commitOneByOne = 0, offRoute=1
+            HOLD_TNS: priority 10, weight 2.000000, degradationPercentAllowed 0.010000, step back 0.090000, isTargeted 1, isMaximize 1
+            R2R_TNS: priority 20, weight 2.000000, degradationPercentAllowed 0.025000, step back 0.050000, isTargeted 1, isMaximize 1
+            R2R_WNS: priority 25, weight 1.000000, degradationPercentAllowed 0.010000, step back 0.050000, isTargeted 1, isMaximize 1
+            ICG_TNS: priority 25, weight 2.000000, degradationPercentAllowed 0.000000, step back 0.050000, isTargeted 1, isMaximize 1
+            ICG_WNS: priority 28, weight 1.000000, degradationPercentAllowed 0.000000, step back 0.050000, isTargeted 1, isMaximize 1
+            NONE_POWER: priority 30, weight 1.000000, degradationPercentAllowed 0.004000, step back 0.010000, isTargeted 1, isMaximize 0
+            NONE_BUFFER_COUNT: priority 40, weight 5.000000, degradationPercentAllowed 0.005000, step back 0.100000, isTargeted 1, isMaximize 0
+            HOLD_WNS: priority 60, weight 1.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 0, isMaximize 1
+            IO_TNS: priority 70, weight 1.000000, degradationPercentAllowed nan, step back 0.050000, isTargeted 0, isMaximize 1
+            NONE_TOTAL_OFFSET: priority 100, weight 1.000000, degradationPercentAllowed nan, step back 0.050000, isTargeted 0, isMaximize 1
+        Moves enabled: SIZE_CLOCK_TIMING, BUFFER_CLOCK, 
+    Engine R2R_WNS has 10 objectives, 4 enabled moves, iterationLimit = 1, solverType = LP_ONLY, estimateFanoutPower = 0, mergeIOWithR2R = 1, areaOnly = 0, useOldEngine = 0, preponeOpt = 0
+                tns300Cutoff = 300, capAllowance = 1.600000, cgccdScaleBack = 5, powerccdScaleBack = 0, needTrialSeedGeneration = 0, drcMargin = 0.000000, commitOneByOne = 0, offRoute=1
+            R2R_WNS: priority 10, weight 10.000000, degradationPercentAllowed 0.000000, step back 0.005000, isTargeted 1, isMaximize 1
+            ICG_WNS: priority 15, weight 10.000000, degradationPercentAllowed 0.000000, step back 0.005000, isTargeted 1, isMaximize 1
+            R2R_TNS: priority 20, weight 5.000000, degradationPercentAllowed 0.050000, step back 0.050000, isTargeted 1, isMaximize 1
+            ICG_TNS: priority 25, weight 5.000000, degradationPercentAllowed 0.000000, step back 0.050000, isTargeted 1, isMaximize 1
+            NONE_BUFFER_COUNT: priority 30, weight 1.000000, degradationPercentAllowed 0.010000, step back 0.100000, isTargeted 1, isMaximize 0
+            NONE_TOTAL_OFFSET: priority 33, weight 1.000000, degradationPercentAllowed nan, step back 0.000000, isTargeted 1, isMaximize 1
+            NONE_POWER: priority 35, weight 20.000000, degradationPercentAllowed 0.010000, step back 0.010000, isTargeted 0, isMaximize 0
+            HOLD_TNS: priority 60, weight 1.000000, degradationPercentAllowed 0.100000, step back 0.100000, isTargeted 0, isMaximize 1
+            IO_TNS: priority 70, weight 1.000000, degradationPercentAllowed 0.100000, step back 0.050000, isTargeted 0, isMaximize 1
+            IO_WNS: priority 80, weight 1.000000, degradationPercentAllowed 0.100000, step back 0.050000, isTargeted 0, isMaximize 1
+        Moves enabled: SIZE_CLOCK_TIMING, BUFFER_CLOCK, BUFFER_REMOVAL_CLOCK_TIMING, REPARENTING_CLOCK_TIMING, 
+DBG: ccdInfra::ccdInfra
+Drc Mode Option: auto
+CCD blasted path groups
+DBG: ccdInfra::initAppOptions
+DBG: ccdInfra::initCtsFixedBalancePins
+time.opto_enable_through_paths is changed to false by CCD 
+
+CCD-Info: App options set by user
+   clock_opt.flow.optimize_ndr = true
+CCD: using 4 threads
+CTSSC route status detected: clock (VR 0, GR 99, DR 0), data (VR 1175, GR 0, DR 0); stage = auto, isPostRoute = FALSE
+Total power = 0.160113, Leakage = 0.000001, Internal = 0.096103, Switching = 0.064009
+Information: 'm31_initial' is identified as primary corner for initial clock tree building. (CTS-103)
+
+CCD: Initial QOR:
+---------------------------------------------------------------------------------------------
+ Design (setup) WNS = 0.001480, TNS = 0.000000, NVP = 0
+ Design (hold) WNHS = 2.253258, TNHS = 0.000000, NHVP = 0
+
+    Scenario functional_initial  WNS = 0.001480, TNS = 0.000000, NVP = 0
+    Scenario functional_initial  WNHS = 2.253258, TNHS = 0.000000, NHVP = 0
+---------------------------------------------------------------------------------------------
+CCD-QoR: Timing: WNS = 0.001, TNS = 0.000, NVP = 0, UNWEIGHTED_TNS = 0.000, WNHS = 2.253, TNHS = 0.000, NHVP = 0, UNWEIGHTED_TNHS = 0.000, R2R(wns=0.001480, tns=0.000000, nvp=0)
+ All scenarios used by CCD
+    scenario 0: functional_initial , isDynamicPower, isLeakagePower, isMaxTran, isMaxCap
+          mode: functional, id = 1
+          corner: m31_initial, id = 1
+          isSetup: wns = 0.001480, unweighted tns = 0.000000
+          isHold: wns = 2.253258, unweighted tns = 0.000000
+
+Skip R2R TNS optimization because wns violation is under threshold.
+Skip R2R TNS optimization because wns violation is under threshold.
+Skip R2R TNS optimization because wns violation is under threshold.
+Skip HOLD TNS optimization because hold wns violation is under threshold.
+Skip R2R WNS optimization because wns violation is under threshold.
+Mark clock trees...
+Marking clock synthesized attributes
+
+Marking spacing rules
+
+Clock cell spacing rule list:
+   No clock cell spacing rule is found.
+CCD unblasted path groups
+time.opto_enable_through_paths is changed to true by CCD 
+Information: The run time for Multi-objective Clock Optimization is 0 hr : 0 min : 0.30 sec, cpu time is 0 hr : 0 min : 0.80 sec. (CTS-104)
+[cto] Finished MultiObjectiveCto.1: PASS
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Pre Incremental Route: GlobalSkew = nan; ID = nan; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+rtapi Thread-server 0: shutdown 
+rtapi Thread-server 2: shutdown 
+rtapi Thread-server 3: shutdown 
+rtapi Thread-server 1: shutdown 
+
+No. startProblems      =     0 
+
+No. doRoutes           =     0 
+No. doUnroutes         =     0 
+No. redoRoutes         =     0 
+No. redoUnroutes       =     0 
+No. undoRoutes         =     0 
+No. undoUnroutes       =     0 
+No. commitRoutes       =     0 
+No. commitUnroutes     =     0 
+No. uncommitRoutes     =     0 
+No. uncommitUnroutes   =     0 
+No. doRoute fails      =     0 
+No. doUnroute fails    =     0 
+
+No. viaLadderQueries   =     0 
+No. doDelVias          =     0 
+No. doAddVias          =     0 
+No. redoDelVias        =     0 
+No. redoAddVias        =     0 
+No. undoDelVias        =     0 
+No. undoAddVias        =     0 
+No. commitChangeVias   =     0 
+No. uncommitChangeVias =     0 
+No. doDelVias fails    =     0 
+No. doAddVias fails    =     0 
+
+Updating congestion ...
+Updating congestion ...
+GR Routing Service: Wrote GR congmap to NDM 
+Information: The netlist change observers are enabled for incremental timing updates. (TIM-120)
+Information: The netlist change observers are enabled for incremental extraction. (TIM-127)
+INFO: wire-opt feature for router enabled
+Information: The net parasitics of block alu_sync_top are cleared. (TIM-123)
+Cut layer CNT has invalid minimum width specified
+Cell Min-Routing-Layer = METAL1
+Cell Max-Routing-Layer = METAL3
+Turn off antenna since no rule is specified
+Information: Option route.detail.force_end_on_preferred_grid will be ignored since none of the layers have preferred grid. (ZRT-703)
+Warning: Cannot find a default contact code for layer CNT. (ZRT-022)
+Warning: Port GNDK of cell alu_place_pins is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Port VCCK of cell alu_place_pins is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Ignore 2 top cell ports with no pins. (ZRT-027)
+Info: number of net_type_blockage: 0 
+Information: Via ladder engine would be activated for pattern must join connection in certain commands. Please refer to man-page for the command list. (ZRT-619)
+Information: AutoNdr rule can't be found. Check the settings.
+Information: When applicable Min-max layer allow_pin_connection mode will allow paths of length 6.20 outside the layer range. (ZRT-707)
+Information: When applicable Min-max layer allow_pin_connection mode will allow paths of length 6.20 outside the layer range on clock nets. (ZRT-718)
+Information: When applicable layer based tapering will taper up to 0.00 in distance from the pin. (ZRT-706)
+Start Global Route ... 
+[Init] Elapsed real time: 0:00:00 
+[Init] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[Init] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[Init] Total (MB): Used    0  Alloctr    0  Proc 8704 
+Printing options for 'route.common.*'
+common.verbose_level                                    :	 0                   
+
+Printing options for 'route.global.*'
+
+Begin global routing.
+Constructing data structure ...
+Design statistics:
+Design Bounding Box (0.00um,0.00um,189.12um,186.72um)
+Number of routing layers = 3
+layer METAL1, dir Hor, min width = 0.196um, min space = 0.2um pitch = 0.48um
+layer METAL2, dir Ver, min width = 0.24um, min space = 0.24um pitch = 0.48um
+layer METAL3, dir Hor, min width = 0.44um, min space = 0.46um pitch = 0.9um
+Current Stage stats:
+[End of Build Tech Data] Elapsed real time: 0:00:00 
+[End of Build Tech Data] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Build Tech Data] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Build Tech Data] Total (MB): Used    0  Alloctr    0  Proc 8704 
+Net statistics:
+Total number of nets     = 1178
+Number of nets to route  = 1
+1175 open nets
+ of which 1175 are without routing or PSV shapes
+3 nets are fully connected,
+ of which 2 are detail routed and 1 are global routed.
+Current Stage stats:
+[End of Build All Nets] Elapsed real time: 0:00:00 
+[End of Build All Nets] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Build All Nets] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Build All Nets] Total (MB): Used    0  Alloctr    0  Proc 8704 
+Net length statistics: 
+Net Count(Ignore Fully Rted) 0, Total Half Perimeter Wire Length (HPWL) 0 microns
+HPWL   0 ~   50 microns: Net Count        0	Total HPWL            0 microns
+HPWL  50 ~  100 microns: Net Count        0	Total HPWL            0 microns
+HPWL 100 ~  200 microns: Net Count        0	Total HPWL            0 microns
+HPWL 200 ~  300 microns: Net Count        0	Total HPWL            0 microns
+HPWL 300 ~  400 microns: Net Count        0	Total HPWL            0 microns
+HPWL 400 ~  500 microns: Net Count        0	Total HPWL            0 microns
+HPWL 500 ~  600 microns: Net Count        0	Total HPWL            0 microns
+HPWL 600 ~  700 microns: Net Count        0	Total HPWL            0 microns
+HPWL 700 ~  800 microns: Net Count        0	Total HPWL            0 microns
+HPWL 800 ~  900 microns: Net Count        0	Total HPWL            0 microns
+HPWL 900 ~ 1000 microns: Net Count        0	Total HPWL            0 microns
+HPWL     > 1000 microns: Net Count        0	Total HPWL            0 microns
+Number of partitions: 1 (1 x 1)
+Size of partitions: 56 gCells x 56 gCells
+Average gCell capacity  1.82	 on layer (1)	 METAL1
+Average gCell capacity  5.74	 on layer (2)	 METAL2
+Average gCell capacity  2.66	 on layer (3)	 METAL3
+Average number of tracks per gCell 6.96	 on layer (1)	 METAL1
+Average number of tracks per gCell 7.05	 on layer (2)	 METAL2
+Average number of tracks per gCell 3.71	 on layer (3)	 METAL3
+Number of gCells = 9408
+Current Stage stats:
+[End of Build Congestion Map] Elapsed real time: 0:00:00 
+[End of Build Congestion Map] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Build Congestion Map] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Build Congestion Map] Total (MB): Used    0  Alloctr    0  Proc 8704 
+Number of partitions: 1 (1 x 1)
+Size of partitions: 56 gCells x 56 gCells
+Current Stage stats:
+[End of Add Nets Demand] Elapsed real time: 0:00:00 
+[End of Add Nets Demand] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Add Nets Demand] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Add Nets Demand] Total (MB): Used    0  Alloctr    0  Proc 8704 
+Number of user frozen nets = 0
+Total stats:
+[End of Build Data] Elapsed real time: 0:00:00 
+[End of Build Data] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Build Data] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Build Data] Total (MB): Used    0  Alloctr    0  Proc 8704 
+Current Stage stats:
+[End of Blocked Pin Detection] Elapsed real time: 0:00:00 
+[End of Blocked Pin Detection] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Blocked Pin Detection] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Blocked Pin Detection] Total (MB): Used    0  Alloctr    0  Proc 8704 
+Information: Using 4 threads for routing. (ZRT-444)
+Information: Multiple gcell levels ON
+Information: Buffer distance is estimated to be ~5000.0000um (1488 gCells)
+
+Start GR phase 0
+Number of partitions: 1 (1 x 1)
+Size of partitions: 56 gCells x 56 gCells
+[rtAllBotParts] Elapsed real time: 0:00:00 
+[rtAllBotParts] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[rtTop] Elapsed real time: 0:00:00 
+[rtTop] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+Current Stage stats:
+[End of Initial Routing] Elapsed real time: 0:00:00 
+[End of Initial Routing] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Initial Routing] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Initial Routing] Total (MB): Used    0  Alloctr    0  Proc 8704 
+Initial. Routing result:
+Initial. Both Dirs: Dmd-Cap  =     0 Max = 0 GRCs =     0 (0.00%)
+Initial. H routing: Dmd-Cap  =     0 Max = 0 (GRCs =  0) GRCs =     0 (0.00%)
+Initial. V routing: Dmd-Cap  =     0 Max = 0 (GRCs =  0) GRCs =     0 (0.00%)
+Initial. Both Dirs: Overflow =     0 Max = 0 GRCs =     0 (0.00%)
+Initial. H routing: Overflow =     0 Max = 0 (GRCs =  0) GRCs =     0 (0.00%)
+Initial. V routing: Overflow =     0 Max = 0 (GRCs =  0) GRCs =     0 (0.00%)
+Initial. METAL1     Overflow =     0 Max = 0 (GRCs =  0) GRCs =     0 (0.00%)
+Initial. METAL2     Overflow =     0 Max = 0 (GRCs =  0) GRCs =     0 (0.00%)
+Initial. METAL3     Overflow =     0 Max = 0 (GRCs =  0) GRCs =     0 (0.00%)
+
+Initial. Total Wire Length = 524.43
+Initial. Layer METAL1 wire length = 3.42
+Initial. Layer METAL2 wire length = 299.79
+Initial. Layer METAL3 wire length = 221.22
+Initial. Total Number of Contacts = 103
+Initial. Via V12_X_V1S1E11 count = 61
+Initial. Via V23_X_V1S1E11 count = 42
+Initial. completed.
+[End of Whole Chip Routing] Elapsed real time: 0:00:00 
+[End of Whole Chip Routing] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Whole Chip Routing] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Whole Chip Routing] Total (MB): Used    0  Alloctr    0  Proc 8704 
+
+Congestion utilization per direction:
+Average vertical track utilization   =  0.68 %
+Peak    vertical track utilization   = 25.00 %
+Average horizontal track utilization =  0.58 %
+Peak    horizontal track utilization = 100.00 %
+
+[End of Global Routing] Elapsed real time: 0:00:00 
+[End of Global Routing] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of Global Routing] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of Global Routing] Total (MB): Used    0  Alloctr    0  Proc 8704 
+Total number of open nets = 0, of which 0 are frozen
+Updating congestion ...
+Updating congestion ...
+[End of dbOut] Elapsed real time: 0:00:00 
+[End of dbOut] Elapsed cpu  time: sys=0:00:00 usr=0:00:00 total=0:00:00
+[End of dbOut] Stage (MB): Used    0  Alloctr    0  Proc    0 
+[End of dbOut] Total (MB): Used    0  Alloctr    0  Proc 8704 
+Expert-Warning: No GR congestion 
+Skip track assign
+Skip detail route
+Updating the database ...
+Clock: clk, Mode: functional, Root: clk
+Information: CTS QoR Post Incremental Route: GlobalSkew = nan; ID = nan; NetsWithDRC = 0; Worst Tran/Cap cost = 0.0000/0.0000; ClockBufCount = 0; ClockBufArea = 0.0000; ClockCellArea = 0.0000; ClockWireLen = 545.7010; Clock = clk; Mode = functional; Corner = m31_initial; ClockRoot = clk. (CTS-037)
+************************************************************
+* CTS STEP: Postlude
+************************************************************
+nplDplc2Placer::setParam(effort,1)
+nplDplc2Placer::setParam(debug,0)
+nplDplc2Placer::setParam(site_check,2)
+nplDplc2Placer::setParam(app_firm_wgt,0)
+Warning: Routing direction of metal layer POLY2 is neither "horizontal" nor "vertical".  PDC checks will not be performed on this layer. (PDC-003)
+PDC app_options settings =========
+	place.legalize.enable_prerouted_net_check: 1
+	place.legalize.num_tracks_for_access_check: 1
+	place.legalize.use_eol_spacing_for_access_check: 0
+	place.legalize.allow_touch_track_for_access_check: 1
+	place.legalize.reduce_conservatism_in_eol_check: 0
+	place.legalize.preroute_shape_merge_distance: 0.0
+	place.legalize.enable_non_preferred_direction_span_check: 0
+
+Layer METAL1: cached 0 shapes out of 72 total shapes.
+Layer METAL2: cached 30 shapes out of 81 total shapes.
+Cached 1095 vias out of 1198 total vias.
+
+Legalizing Top Level Design alu_sync_top ... 
+Information: Initializing classic cellmap without advanced rules enabled and without PDC enabled
+Information: The following app options are used in cellmap
+        place.legalize.enable_color_aware_placement : false
+        place.legalize.use_nll_query_cm : false
+        place.legalize.enable_advanced_legalizer : false
+        place.legalize.enable_prerouted_net_check : true
+        place.legalize.enable_advanced_prerouted_net_check : false
+        place.legalize.always_continue : true
+        place.legalize.limit_legality_checks : false
+        place.common.pnet_aware_density : 1.0000
+        place.common.pnet_aware_min_width : 0.0000
+        place.common.pnet_aware_layers : {}
+        place.common.use_placement_model : false
+        place.common.enable_advanced_placement_model : true
+        cts.placement.cell_spacing_rule_style : maximum
+Total 0.0104 seconds to build cellmap data
+Information: Creating classic rule checker.
+Warning: Routing direction of metal layer POLY2 is neither "horizontal" nor "vertical".  PDC checks will not be performed on this layer. (PDC-003)
+=====> Processed 66 ref cells (0 fillers) from library
+
+Bounds/Regions In This Design:
+        Area    Num Cells  Exclusive Name
+ (square um)
+     30946.4         1625        Yes DEFAULT_VA
+
+Warning: max_legality_failures=5000 ignored.
+	To use it, set limit_legality_checks to true.
+Warning: max_legality_check_range=500 ignored.
+	To use it, set limit_legality_checks to true.
+Starting legalizer.
+Warning: There is high fragmentation caused by many blockages or fixed cells.
+	The median subrow width (space between blockages) is 39 sites
+	and the median cell width is 8 sites. This makes it difficult for
+	the legalizer to pack in the cells and can result in high
+	displacements and long runtimes.
+Please look for the GIF files that are written out at the end of
+	legalization to see the impact of the fragmentation.
+Warning: Exclusive bound 'DEFAULT' has no cells.
+Optimizing Exclusive Bound 'DEFAULT_VA' (2/2)
+Warning: There is high fragmentation caused by many blockages or fixed cells.
+	The median subrow width (space between blockages) is 39 sites
+	and the median cell width is 8 sites. This makes it difficult for
+	the legalizer to pack in the cells and can result in high
+	displacements and long runtimes.
+Please look for the GIF files that are written out at the end of
+	legalization to see the impact of the fragmentation.
+    Done Exclusive Bound 'DEFAULT_VA' (2/2) (0 sec)
+Writing GIF plot to file './legalizer_debug_plots/alu_place_pins_SITE_unit.001-0001-max_displacements.gif'.
+Writing GIF plot to file './legalizer_debug_plots/alu_place_pins_SITE_unit.001-0002-colored_displacements.gif'.
+Legalization complete (0 total sec)
+
+****************************************
+  Report : Placement Attempts
+  Site   : unit
+****************************************
+
+number of cells:                   1625
+number of references:                66
+number of site rows:                 52
+number of locations attempted:    15999
+number of locations failed:        1275  (8.0%)
+
+Legality of references at locations:
+26 references had failures.
+
+Worst 10 references by total failures:
+ CELLS       UNFLIPPED                       FLIPPED                REFERENCE NAME
+         ATTEMPTS  FAILURES            ATTEMPTS  FAILURES           
+   243       2526       308 ( 12.2%)       1467       178 ( 12.1%)  NAND2X1TAS7
+    70        728        78 ( 10.7%)        457        62 ( 13.6%)  NOR2X1TAS7
+    64        727        86 ( 11.8%)        277        40 ( 14.4%)  OAI12X1TAS7
+    52        500        59 ( 11.8%)        317        37 ( 11.7%)  NAND2B1X1TAS7
+    52        466        62 ( 13.3%)        248        28 ( 11.3%)  NOR2B1X1TAS7
+    40        406        47 ( 11.6%)        156        17 ( 10.9%)  OAI12B2X1TAS7
+    31        296        40 ( 13.5%)        135        16 ( 11.9%)  AOI12X1TAS7
+    20        199        25 ( 12.6%)         84        11 ( 13.1%)  AOI22X1TAS7
+    10         84        17 ( 20.2%)         46         9 ( 19.6%)  AOI12X2TAS7
+     8         90        16 ( 17.8%)         28         6 ( 21.4%)  OAI12X2TAS7
+
+Worst 10 references by failure rate:
+ CELLS       UNFLIPPED                       FLIPPED                REFERENCE NAME
+         ATTEMPTS  FAILURES            ATTEMPTS  FAILURES           
+     1          3         2 ( 66.7%)          3         1 ( 33.3%)  NAND4X2TAS7
+     2         18         6 ( 33.3%)         18         5 ( 27.8%)  OAI112X2TAS7
+    10         84        17 ( 20.2%)         46         9 ( 19.6%)  AOI12X2TAS7
+     8         90        16 ( 17.8%)         28         6 ( 21.4%)  OAI12X2TAS7
+     3         32         5 ( 15.6%)          0         0 (  0.0%)  NOR2X4TAS7
+     3         31         6 ( 19.4%)         23         2 (  8.7%)  AOI12B2X1TAS7
+     9         84        14 ( 16.7%)         25         1 (  4.0%)  OAI12B2X2TAS7
+     2         30         4 ( 13.3%)         30         4 ( 13.3%)  MUX2BX1TAS7
+     8         77        10 ( 13.0%)         30         4 ( 13.3%)  NAND2X2TAS7
+    31        296        40 ( 13.5%)        135        16 ( 11.9%)  AOI12X1TAS7
+
+Legality of references in rows:
+0 references had row failures.
+
+****************************************
+  Report : Cell Displacements
+****************************************
+
+number of cells aggregated:        1083 (9370 total sites)
+avg row height over cells:        3.360 um
+rms cell displacement:            0.171 um ( 0.05 row height)
+rms weighted cell displacement:   0.171 um ( 0.05 row height)
+max cell displacement:            5.859 um ( 1.74 row height)
+avg cell displacement:            0.005 um ( 0.00 row height)
+avg weighted cell displacement:   0.005 um ( 0.00 row height)
+number of cells moved:                1
+number of large displacements:        0
+large displacement threshold:     3.000 row height
+
+Displacements of worst 10 cells:
+Cell: U1078 (NOR2B1X1TAS7)
+  Input location: (90.48,177.36)
+  Legal location: (85.68,174)
+  Displacement:   5.859 um ( 1.74 row height)
+Cell: U286 (AND2X1TAS7)
+  Input location: (11.76,59.76)
+  Legal location: (11.76,59.76)
+  Displacement:   0.000 um ( 0.00 row height)
+Cell: ctmTdsLR_2_574 (AND2X1TAS7)
+  Input location: (114.96,32.88)
+  Legal location: (114.96,32.88)
+  Displacement:   0.000 um ( 0.00 row height)
+Cell: U277 (AND2X1TAS7)
+  Input location: (13.68,36.24)
+  Legal location: (13.68,36.24)
+  Displacement:   0.000 um ( 0.00 row height)
+Cell: ctmTdsLR_1_546 (AND2X1TAS7)
+  Input location: (120.24,22.8)
+  Legal location: (120.24,22.8)
+  Displacement:   0.000 um ( 0.00 row height)
+Cell: U204 (AND2X1TAS7)
+  Input location: (103.92,22.8)
+  Legal location: (103.92,22.8)
+  Displacement:   0.000 um ( 0.00 row height)
+Cell: U227 (AND2X1TAS7)
+  Input location: (138,19.44)
+  Legal location: (138,19.44)
+  Displacement:   0.000 um ( 0.00 row height)
+Cell: U218 (AND2X1TAS7)
+  Input location: (114.48,29.52)
+  Legal location: (114.48,29.52)
+  Displacement:   0.000 um ( 0.00 row height)
+Cell: U142 (AND2X1TAS7)
+  Input location: (100.08,29.52)
+  Legal location: (100.08,29.52)
+  Displacement:   0.000 um ( 0.00 row height)
+Cell: U339 (AND2X1TAS7)
+  Input location: (122.16,32.88)
+  Legal location: (122.16,32.88)
+  Displacement:   0.000 um ( 0.00 row height)
+
+ Successfully legalize placement.
+Info: 56 sinks and boundary insts are collected
+Info: 56 sinks and boundary insts are unset from application_fixed
+************************************************************
+* CTS STEP: Summary report
+************************************************************
+There are 1 flat clock tree nets.
+There are 0 non-sink instances (total area 0.00) on clock trees including 0 instances dont_touch.
+Clock tree synthesize and optimization added 0 buffers and 0 inverters (total area 0.00).
+ Compilation of clock trees finished successfully
+ Run time for cts 00:00:03.22u 00:00:00.06s 00:00:02.10e: 
+
+Summary of messages during CTS:
+===============================================================
+  Tag   Count  Type           Description
+---------------------------------------------------------------
+CTS-038    1  Warning  No clock routing rule is specified.
+Info: clearing CTS-GR option
+Info: clearinf CTO-GR option
+Information: The stitching and editing of coupling caps is turned OFF for design 'alu_m31.nlib:alu_place_pins.design'. (TIM-125)
+Information: Design alu_place_pins has 1178 nets, 1 global routed, 0 detail routed. (NEX-024)
+Number of Site types in the design = 1
+Setting up Chip Core
+Chip Core shape: (60000 60000) (1831200 1807200)
+Number of VARs = 1
+Number of unique PDs = 1
+Number of Power Domains = 1
+Number of Voltage Areas = 1
+Number of supply Nets = 2
+Number of used supplies = 0
+Blocked VAs: 
+Information: Initializing classic cellmap without advanced rules enabled and without PDC enabled
+Information: The following app options are used in cellmap
+        place.legalize.enable_color_aware_placement : false
+        place.legalize.use_nll_query_cm : false
+        place.legalize.enable_advanced_legalizer : false
+        place.legalize.enable_prerouted_net_check : true
+        place.legalize.enable_advanced_prerouted_net_check : false
+        place.legalize.always_continue : true
+        place.legalize.limit_legality_checks : false
+        place.common.pnet_aware_density : 1.0000
+        place.common.pnet_aware_min_width : 0.0000
+        place.common.pnet_aware_layers : {}
+        place.common.use_placement_model : false
+        place.common.enable_advanced_placement_model : true
+        cts.placement.cell_spacing_rule_style : maximum
+Total 0.0106 seconds to build cellmap data
+INFO: creating 12(r) x 12(c) GridCells YDim 16.8 XDim 16.8
+INFO: number of GridCells (alu_place_pins): 144
+INFO: creating 12(r) x 12(c) GridCells YDim 16.8 XDim 16.8
+INFO: number of GridCells (alu_place_pins): 144
+Total 0.0266 seconds to load 1625 cell instances into cellmap
+Moveable cells: 1139; Application fixed cells: 0; Macro cells: 0; User fixed cells: 486
+Average cell width 4.6002, cell height 3.3600, cell area 15.4568 for total 1139 placed and application fixed cells
+Information: Current block utilization is '0.56890', effective utilization is '0.61955'. (OPT-055)
+Information: The RC mode used is CTO for design 'alu_sync_top'. (NEX-022)
+Information: Design Average RC for design alu_place_pins  (NEX-011)
+Information: r = 0.105499 ohm/um, via_r = 0.413223 ohm/cut, c = 0.197508 ff/um, cc = 0.000000 ff/um (X dir) (NEX-017)
+Information: r = 0.250000 ohm/um, via_r = 0.413223 ohm/cut, c = 0.235062 ff/um, cc = 0.000000 ff/um (Y dir) (NEX-017)
+Information: Update timing completed net estimation for all the timing graph nets (TIM-111)
+Information: Net estimation statistics: timing graph nets = 1176, routed nets = 1, across physical hierarchy nets = 0, parasitics cached nets = 1176, delay annotated nets = 0, parasitics annotated nets = 0, multi-voltage nets = 0. (TIM-112)
+
+    Scenario functional_initial  WNS = 0.000000, TNS = 0.000000, NVP = 0
+
+     ELAPSED  WORST NEG TOTAL NEG              MAX       MAX     BUFFER    INVERTER   LVTH      LVTH      PEAK   
+      TIME      SLACK     SLACK     AREA    TRAN COST CAP COST    COUNT     COUNT     COUNT    PERCENT   MEMORY  
+    --------- --------- --------- --------- --------- --------- --------- --------- --------- --------- ---------
+      0:00:28     0.000     0.000 19172.967     0.000     0.000         4       126         0     0.000      1435 
+
+Information: Ending   clock_opt / build_clock / CTS (FLW-8001)
+Information: Time: 2026-10-26 19:55:10 / Session:  00:00:28 / Command:  00:00:13 / CPU:  00:00:23 / Memory: 1436 MB (FLW-8100)
+Information: The value of option cts.compile.enable_cell_relocation has been overridden to "leaf_only" to support latency-driven placement. (CTS-973)
+
+Clock-opt optimization Phase 10 Iter  1         0.00        0.00      0.00         -      17605.32      660.81        1139              0.01      1435
+
+Enable dominated scenarios
+
+Clock-opt optimization complete                 0.00        0.00      0.00         -      17605.32      660.81        1139              0.01      1435
+Co-efficient Ratio Summary:
+4.193421617715  6.578038185390  2.479639299837  7.744187640401  -0.485050100353  -3.179565933784  5.567214754587  2.894454387461  6.565921217863  9.017937505874  3.104670800933  9.863439509851  6.078188754234  2.745955960515  8.318228404907  9.699225326083  2.464635550064
+1.382370233886  9.387184031279  3.142429418229  0.968752889964  -6.613180823294  -4.146578893224  7.876358918112  2.191135103696  0.963734141094  2.700148443881  3.840450064440  3.750206053169  7.663413632448  6.213958786342  7.759781273967  7.862243356717  0.402399577150
+0.032845007457  0.596111524931  4.701287308452  7.205135612169  -8.278351498268  -1.183725290997  3.334436408244  5.867609731622  7.173894385364  9.669819999761  7.591487347087  7.632106393266  7.679034089561  9.832063742474  1.878918717928  3.230072743539  1.226282637326
+7.050450494780  2.403928173631  6.139852544054  4.100210066110  -1.274718689655  -4.570746753063  5.624878808820  7.826857253678  4.759133418263  5.409027926377  2.609823652834  0.626142538674  6.381632633232  9.188134554817  0.513769696621  5.027570018562  6.119825046103
+6.181472312107  1.581675365776  7.486041822107  9.584562469756  -2.041727487119  -3.921160967338  0.650488682345  9.472458902409  3.368484394994  4.897111549020  6.860149244452  2.000104051691  9.095301988902  2.198701231934  0.915013967443  5.466092708426  8.142602655883
+4.607193265224  8.244463794567  3.504870705451  1.682716012888  -7.173433818510  -9.939562808373  3.617852772683  8.946772637652  1.169969532707  4.529946656262  3.090979409795  5.580726136993  1.131353744833  0.722469157676  7.515050317690  0.649322609371  1.017043643513
+5.811519666269  5.826730883342  4.349383292435  0.216216918317  -9.612142522527  -7.311156882104  0.823519141628  0.356161286693  8.022019569284  2.603132585844  5.024802551363  1.359359521353  5.407529432524  2.805883909930  1.265413952200  0.417760713533  1.833884065081
+Information: The net parasitics of block alu_sync_top are cleared. (TIM-123)
+Information: The stitching and editing of coupling caps is turned OFF for design 'alu_m31.nlib:alu_place_pins.design'. (TIM-125)
+Information: Design alu_place_pins has 1178 nets, 1 global routed, 0 detail routed. (NEX-024)
+Information: The RC mode used is CTO for design 'alu_sync_top'. (NEX-022)
+Information: Design Average RC for design alu_place_pins  (NEX-011)
+Information: r = 0.105499 ohm/um, via_r = 0.413223 ohm/cut, c = 0.197508 ff/um, cc = 0.000000 ff/um (X dir) (NEX-017)
+Information: r = 0.250000 ohm/um, via_r = 0.413223 ohm/cut, c = 0.235062 ff/um, cc = 0.000000 ff/um (Y dir) (NEX-017)
+Information: Update timing completed net estimation for all the timing graph nets (TIM-111)
+Information: Net estimation statistics: timing graph nets = 1176, routed nets = 1, across physical hierarchy nets = 0, parasitics cached nets = 1176, delay annotated nets = 0, parasitics annotated nets = 0, multi-voltage nets = 0. (TIM-112)
+
+Clock-opt final QoR
+___________________
+Scenario Mapping Table
+1: functional_initial
+
+Pathgroup Mapping Table
+1: **default**
+2: **async_default**
+3: **clock_gating_default**
+4: **in2reg_default**
+5: **reg2out_default**
+6: **in2out_default**
+7: clk
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+PATHGROUP QOR 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+Scene  PG      WNS        TNS    NSV      WHV        THV    NHV
+    1   1   0.0000     0.0000      0   0.0000     0.0000      0
+    1   2   0.0000     0.0000      0   0.0000     0.0000      0
+    1   3   0.0000     0.0000      0   0.0000     0.0000      0
+    1   4   0.0000     0.0000      0   0.0000     0.0000      0
+    1   5   0.0000     0.0000      0   0.0000     0.0000      0
+    1   6   0.0000     0.0000      0   0.0000     0.0000      0
+    1   7   0.0000     0.0000      0   0.0000     0.0000      0
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SCENARIO QOR 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Scene  PG      WNS        TNS   R2RTNS    NSV      WHV        THV    NHV  MaxTrnV   MaxTranC  MaxCapV    Leakage
+    1   *   0.0000     0.0000   0.0000      0   0.0000     0.0000      0        0     0.0000        0    660.813
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DESIGN QOR 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Scene  PG      WNS        TNS   R2RTNS    NSV      WHV        THV    NHV  MaxTrnV   MaxTranC  MaxCapV    Leakage         Area    InstCnt     BufCnt     InvCnt
+    *   *   0.0000     0.0000   0.0000      0   0.0000     0.0000      0        0     0.0000        0    660.813     17605.32       1139          4        126
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Clock-opt final QoR Summary         WNS        TNS   R2RTNS    NSV      WHV        THV    NHV  MaxTrnV  MaxCapV    Leakage         Area    InstCnt
+Clock-opt final QoR Summary      0.0000     0.0000   0.0000      0   0.0000     0.0000      0        0        0    660.813     17605.32       1139
+
+Clock-opt command complete                CPU:    39 s (  0.01 hr )  ELAPSE:    30 s (  0.01 hr )  MEM-PEAK:  1435 MB
+Clock-opt command statistics  CPU=15 sec (0.00 hr) ELAPSED=7 sec (0.00 hr) MEM-PEAK=1.401 GB
+
+
+
+Information: Runtime Summary (clock_opt / build_clock)  (FLW-9000)
+----------------------------------------------------------------------------
+    Elapse (Hrs)   Elapse (%)       CPU/Elapse       Category
+----------------------------------------------------------------------------
+      0.00           46.5%             1.3           Trial CTS 
+      0.00           14.3%             1.6           Final CTS 
+      0.00           13.1%             3.3           Init 
+      0.00            9.8%             2.1           LDRC 
+      0.00            8.3%             1.2           Other 
+      0.00            4.4%             1.0           Global Route 
+      0.00            1.7%             1.8           Setup Opt 
+      0.00            0.6%             3.3           Full Timing Update 
+      0.00            0.5%             1.7           Power/Area Opt 
+      0.00            0.4%             2.9           TNS CCD 
+      0.00            0.2%             1.0           CUS 
+      0.00            0.2%             3.6           Power CCD 
+----------------------------------------------------------------------------
+      0.00          100.0%             1.7           Total 
+----------------------------------------------------------------------------
+
+Host Options:
+-------------
+Max cores: 4
+
+Machine Spec:
+-------------
+Intel(R) Xeon(R) D-2123IT CPU @ 2.20GHz / 8 CPUs  
+Sockets: 1, Cores: 4, HT/SMT, not-VM
+----------------------------------------------------------------------------
+
+Information: Ending   clock_opt / build_clock (FLW-8001)
+Information: Time: 2026-10-26 19:55:11 / Session:  00:00:29 / Command:  00:00:15 / CPU:  00:00:25 / Memory: 1436 MB (FLW-8100)
+Information: Running auto PG connection. (NDM-099)
+Information: Ending   'clock_opt -to build_clock' (FLW-8001)
+Information: Time: 2026-10-26 19:55:11 / Session:  00:00:29 / Command:  00:00:15 / CPU:  00:00:25 / Memory: 1436 MB (FLW-8100)
+1
+puts "ALU_CTS: arbol construido; reconectando power/ground de celdas CTS"
+ALU_CTS: arbol construido; reconectando power/ground de celdas CTS
+set POWER_PINS [get_pins -hierarchical -physical_context */VCCK]
+{{ALUControl_reg_reg[2]/VCCK} {ALUControl_reg_reg[1]/VCCK} {A_reg_reg[15]/VCCK} {A_reg_reg[14]/VCCK} {A_reg_reg[13]/VCCK} {B_reg_reg[15]/VCCK} {B_reg_reg[14]/VCCK} {B_reg_reg[13]/VCCK} {B_reg_reg[12]/VCCK} MulOverflow_reg/VCCK {Result_reg[15]/VCCK} {Result_reg[14]/VCCK} {Result_reg[13]/VCCK} {Result_reg[12]/VCCK} {Result_reg[11]/VCCK} {Result_reg[10]/VCCK} {Result_reg[9]/VCCK} {Result_reg[8]/VCCK} {Result_reg[7]/VCCK} {Result_reg[6]/VCCK} {Result_reg[5]/VCCK} {Result_reg[4]/VCCK} {Result_reg[3]/VCCK} {Result_reg[2]/VCCK} {Result_reg[1]/VCCK} {Result_reg[0]/VCCK} {NZCV_reg[3]/VCCK} {NZCV_reg[1]/VCCK} {NZCV_reg[0]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[0]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[1]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[2]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[4]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[5]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[6]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[7]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[8]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[9]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[10]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[11]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[12]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[13]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[14]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[15]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[0]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[1]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[2]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[3]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[4]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[5]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[6]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[7]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[8]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[9]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[10]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[11]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[12]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[13]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[14]/VCCK} {ALU_INSTANCE/TRI_OR/Y_tri[15]/VCCK} {A_reg_reg[12]/VCCK} {A_reg_reg[11]/VCCK} {A_reg_reg[10]/VCCK} {A_reg_reg[9]/VCCK} {A_reg_reg[8]/VCCK} {A_reg_reg[6]/VCCK} {A_reg_reg[5]/VCCK} {B_reg_reg[11]/VCCK} {B_reg_reg[10]/VCCK} {B_reg_reg[9]/VCCK} {B_reg_reg[7]/VCCK} {B_reg_reg[6]/VCCK} {B_reg_reg[5]/VCCK} {A_reg_reg[2]/VCCK} {A_reg_reg[0]/VCCK} {ALU_INSTANCE/TRI_AND/Y_tri[3]/VCCK} {A_reg_reg[1]/VCCK} {B_reg_reg[2]/VCCK} {A_reg_reg[3]/VCCK} {B_reg_reg[0]/VCCK} {B_reg_reg[1]/VCCK} {B_reg_reg[4]/VCCK} {B_reg_reg[8]/VCCK} {NZCV_reg[2]/VCCK} {B_reg_reg[3]/VCCK} {A_reg_reg[4]/VCCK} {ALUControl_reg_reg[0]/VCCK} {A_reg_reg[7]/VCCK} U59/VCCK U60/VCCK ctmTdsLR_1_641/VCCK U62/VCCK U63/VCCK U64/VCCK U65/VCCK U66/VCCK U67/VCCK U68/VCCK U69/VCCK U70/VCCK ...}
+set GROUND_PINS [get_pins -hierarchical -physical_context */GNDK]
+{{ALUControl_reg_reg[2]/GNDK} {ALUControl_reg_reg[1]/GNDK} {A_reg_reg[15]/GNDK} {A_reg_reg[14]/GNDK} {A_reg_reg[13]/GNDK} {B_reg_reg[15]/GNDK} {B_reg_reg[14]/GNDK} {B_reg_reg[13]/GNDK} {B_reg_reg[12]/GNDK} MulOverflow_reg/GNDK {Result_reg[15]/GNDK} {Result_reg[14]/GNDK} {Result_reg[13]/GNDK} {Result_reg[12]/GNDK} {Result_reg[11]/GNDK} {Result_reg[10]/GNDK} {Result_reg[9]/GNDK} {Result_reg[8]/GNDK} {Result_reg[7]/GNDK} {Result_reg[6]/GNDK} {Result_reg[5]/GNDK} {Result_reg[4]/GNDK} {Result_reg[3]/GNDK} {Result_reg[2]/GNDK} {Result_reg[1]/GNDK} {Result_reg[0]/GNDK} {NZCV_reg[3]/GNDK} {NZCV_reg[1]/GNDK} {NZCV_reg[0]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[0]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[1]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[2]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[4]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[5]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[6]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[7]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[8]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[9]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[10]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[11]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[12]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[13]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[14]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[15]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[0]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[1]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[2]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[3]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[4]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[5]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[6]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[7]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[8]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[9]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[10]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[11]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[12]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[13]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[14]/GNDK} {ALU_INSTANCE/TRI_OR/Y_tri[15]/GNDK} {A_reg_reg[12]/GNDK} {A_reg_reg[11]/GNDK} {A_reg_reg[10]/GNDK} {A_reg_reg[9]/GNDK} {A_reg_reg[8]/GNDK} {A_reg_reg[6]/GNDK} {A_reg_reg[5]/GNDK} {B_reg_reg[11]/GNDK} {B_reg_reg[10]/GNDK} {B_reg_reg[9]/GNDK} {B_reg_reg[7]/GNDK} {B_reg_reg[6]/GNDK} {B_reg_reg[5]/GNDK} {A_reg_reg[2]/GNDK} {A_reg_reg[0]/GNDK} {ALU_INSTANCE/TRI_AND/Y_tri[3]/GNDK} {A_reg_reg[1]/GNDK} {B_reg_reg[2]/GNDK} {A_reg_reg[3]/GNDK} {B_reg_reg[0]/GNDK} {B_reg_reg[1]/GNDK} {B_reg_reg[4]/GNDK} {B_reg_reg[8]/GNDK} {NZCV_reg[2]/GNDK} {B_reg_reg[3]/GNDK} {A_reg_reg[4]/GNDK} {ALUControl_reg_reg[0]/GNDK} {A_reg_reg[7]/GNDK} U59/GNDK U60/GNDK ctmTdsLR_1_641/GNDK U62/GNDK U63/GNDK U64/GNDK U65/GNDK U66/GNDK U67/GNDK U68/GNDK U69/GNDK U70/GNDK ...}
+if {[sizeof_collection $POWER_PINS] == 0 || [sizeof_collection $GROUND_PINS] == 0} {
+    error "No hay pines PG fisicos tras CTS."
+}
+connect_pg_net -net VCCK $POWER_PINS
+1
+connect_pg_net -net GNDK $GROUND_PINS
+1
+redirect -file [file join $RPT qor.rpt] {report_qor}
+redirect -file [file join $RPT setup.rpt] {
+    report_timing -delay_type max -max_paths 10
+}
+redirect -file [file join $RPT hold.rpt] {
+    report_timing -delay_type min -max_paths 10
+}
+redirect -file [file join $RPT legality.rpt] {check_legality}
+redirect -file [file join $RPT pg_drc.rpt] {check_pg_drc -nets {VCCK GNDK}}
+redirect -file [file join $RPT pg_connectivity.rpt] {
+    check_pg_connectivity -nets {VCCK GNDK}
+}
+# Algunos reportes especializados pueden variar entre versiones.
+foreach {filename command} {
+    clock_qor_summary.rpt {report_clock_qor -type summary}
+    clock_qor_latency.rpt {report_clock_qor -type latency}
+    utilization.rpt {report_utilization}
+    clock_options.rpt {report_clock_tree_options}
+} {
+    if {[catch {redirect -file [file join $RPT $filename] $command} report_err]} {
+        puts "AVISO: no se genero $filename: $report_err"
+    }
+}
+# Se guarda un checkpoint separado incluso si un reporte contiene
+# violaciones: el objetivo es poder diagnosticar la etapa sin repetir CTS.
+# El marcador solo confirma ejecucion y guardado, no signoff.
+save_block -as $OUT_BLOCK
+Information: Saving 'alu_m31.nlib:alu_place_pins.design' to 'alu_m31.nlib:alu_cts_build.design'. (DES-028)
+1
+save_lib
+Saving library 'alu_m31.nlib'
+1
+puts "ALU_CTS_BUILD_EJECUTADO: $OUT_BLOCK"
+ALU_CTS_BUILD_EJECUTADO: alu_cts_build
+puts "REVISAR: $RPT/qor.rpt, clock_qor_summary.rpt, setup.rpt, hold.rpt, legality.rpt y pg_connectivity.rpt"
+REVISAR: /home/worellana/parcial_3/reports/icc2/cts_build/qor.rpt, clock_qor_summary.rpt, setup.rpt, hold.rpt, legality.rpt y pg_connectivity.rpt
+Information: 214 out of 224 POW-080 messages were not printed due to limit 10  (MSG-3913)
+icc2_shell> exit
+Maximum memory usage for this session: 1435.79 MB
+Maximum memory usage for this session including child processes: 1435.79 MB
+CPU usage for this session:     40 seconds (  0.01 hours)
+Elapsed time for this session:     41 seconds (  0.01 hours)
+Thank you for using IC Compiler II.

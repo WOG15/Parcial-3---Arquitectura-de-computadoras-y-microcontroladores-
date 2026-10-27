@@ -1,0 +1,103 @@
+
+
+
+                              IC Compiler II (TM)
+
+                Version Y-2026.03-SP2 for linux64 - Sep 01, 2026
+                           Base build date 6/22/2026.
+
+                    Copyright (c) 1988 - 2026 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+      Inc.  This software may only be used in accordance with the terms and
+  conditions of a written license agreement with Synopsys, Inc.  All other use,
+   reproduction, or distribution of this software is strictly prohibited.  By
+   installing, accessing, using, or executing this software, you agree that it
+  will reside on, operate within, and have access to the computers and networks
+    where such software is used ("Host System"), and that Synopsys may access
+     components and data of the Host System as necessary for it to function
+ properly, to authenticate and validate license keys, to verify that it is used
+ only in conformity with the applicable license restrictions, and to communicate
+                 error messages and associated data to Synopsys.
+
+ 
+Invocation: /usr/synopsys/icc2/Y-2026.03-SP2/linux64/nwtn/bin/icc2_exec
+Execution time: Mon Oct 26 16:22:49 2026
+Host: synopsys-unis (1 x 2999.991 MHz Intel(R) Xeon(R) D-2123IT CPU @ 2.20GHz)
+Working directory: /home/worellana/parcial_3
+
+# ALU+ / M31: inspeccion de capas y celdas TAP, sin modificar el diseno.
+# Ejecutar desde ~/parcial_3:
+# icc2_shell -f scripts/icc2/inspeccionar_m31_pg.tcl |& tee reports/icc2/inspeccionar_m31_pg.log
+set ROOT [file normalize [pwd]]
+/home/worellana/parcial_3
+set LIB [file join $ROOT outputs icc2 alu_import_35ns alu_m31.nlib]
+/home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib
+set REPORT_DIR [file join $ROOT reports icc2]
+/home/worellana/parcial_3/reports/icc2
+file mkdir $REPORT_DIR
+if {![file exists $LIB]} { error "No existe biblioteca ICC2: $LIB" }
+open_lib $LIB
+Information: Loading library file '/home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib' (FILE-007)
+Information: Loading library file '/home/worellana/parcial_3/technology/m31/ndm/m31_3m1t_11k.ndm' (FILE-007)
+{alu_m31.nlib}
+open_block alu_pg_rieles
+Information: User units loaded from library 'm31_3m1t_11k' (LNK-040)
+Opening block 'alu_m31.nlib:alu_pg_rieles.design' in edit mode
+{alu_m31.nlib:alu_pg_rieles.design}
+set lines [list "=== DIAGNOSTICO PG M31 ==="]
+{=== DIAGNOSTICO PG M31 ===}
+foreach layer {METAL1 METAL2 METAL3} {
+    set obj [get_layers $layer]
+    set parts [list "CAPA $layer"]
+    foreach attr {routing_direction min_width pitch} {
+        if {[catch {get_attribute $obj $attr} value]} {
+            set value "no disponible (consultar techfile)"
+        }
+        lappend parts "$attr=$value"
+    }
+    lappend lines [join $parts " | "]
+}
+Information: The returned value for layer 'METAL1' is the design specific attribute override defined within the current block 'alu_pg_rieles'. (ATTR-11)
+Information: The returned value for layer 'METAL2' is the design specific attribute override defined within the current block 'alu_pg_rieles'. (ATTR-11)
+Information: The returned value for layer 'METAL3' is the design specific attribute override defined within the current block 'alu_pg_rieles'. (ATTR-11)
+if {[catch {get_attribute [get_core_area] bbox} core_box]} {
+    set core_box "no disponible"
+}
+lappend lines "CORE BBOX: $core_box"
+{=== DIAGNOSTICO PG M31 ===} {CAPA METAL1 | routing_direction=horizontal | min_width=0.1960 | pitch=0.4800} {CAPA METAL2 | routing_direction=vertical | min_width=0.2400 | pitch=0.4800} {CAPA METAL3 | routing_direction=horizontal | min_width=0.4400 | pitch=0.9000} {CORE BBOX: {6.0000 6.0000} {183.1200 180.7200}}
+set tap_names "no detectadas por patron */TAP*"
+no detectadas por patron */TAP*
+if {![catch {get_lib_cells -quiet */TAP*} tap_cells]} {
+    if {[sizeof_collection $tap_cells] > 0} {
+        set tap_names [get_object_name $tap_cells]
+    }
+}
+m31_3m1t_11k/TAP01TAS7
+lappend lines "CELDAS TAP: $tap_names"
+{=== DIAGNOSTICO PG M31 ===} {CAPA METAL1 | routing_direction=horizontal | min_width=0.1960 | pitch=0.4800} {CAPA METAL2 | routing_direction=vertical | min_width=0.2400 | pitch=0.4800} {CAPA METAL3 | routing_direction=horizontal | min_width=0.4400 | pitch=0.9000} {CORE BBOX: {6.0000 6.0000} {183.1200 180.7200}} {CELDAS TAP: m31_3m1t_11k/TAP01TAS7}
+lappend lines "NOTA: No se han creado nuevas vias ni straps; esta sesion solo inspecciona."
+{=== DIAGNOSTICO PG M31 ===} {CAPA METAL1 | routing_direction=horizontal | min_width=0.1960 | pitch=0.4800} {CAPA METAL2 | routing_direction=vertical | min_width=0.2400 | pitch=0.4800} {CAPA METAL3 | routing_direction=horizontal | min_width=0.4400 | pitch=0.9000} {CORE BBOX: {6.0000 6.0000} {183.1200 180.7200}} {CELDAS TAP: m31_3m1t_11k/TAP01TAS7} {NOTA: No se han creado nuevas vias ni straps; esta sesion solo inspecciona.}
+set OUT [file join $REPORT_DIR inspeccionar_m31_pg.rpt]
+/home/worellana/parcial_3/reports/icc2/inspeccionar_m31_pg.rpt
+set fh [open $OUT w]
+file25
+foreach line $lines {
+    puts $line
+    puts $fh $line
+}
+=== DIAGNOSTICO PG M31 ===
+CAPA METAL1 | routing_direction=horizontal | min_width=0.1960 | pitch=0.4800
+CAPA METAL2 | routing_direction=vertical | min_width=0.2400 | pitch=0.4800
+CAPA METAL3 | routing_direction=horizontal | min_width=0.4400 | pitch=0.9000
+CORE BBOX: {6.0000 6.0000} {183.1200 180.7200}
+CELDAS TAP: m31_3m1t_11k/TAP01TAS7
+NOTA: No se han creado nuevas vias ni straps; esta sesion solo inspecciona.
+close $fh
+puts "DIAGNOSTICO_PG_OK: $OUT"
+DIAGNOSTICO_PG_OK: /home/worellana/parcial_3/reports/icc2/inspeccionar_m31_pg.rpt
+icc2_shell> exit
+Maximum memory usage for this session: 515.16 MB
+Maximum memory usage for this session including child processes: 515.16 MB
+CPU usage for this session:     13 seconds (  0.00 hours)
+Elapsed time for this session:     48 seconds (  0.01 hours)
+Thank you for using IC Compiler II.

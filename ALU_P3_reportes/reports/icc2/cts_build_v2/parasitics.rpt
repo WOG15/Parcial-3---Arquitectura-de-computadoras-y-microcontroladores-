@@ -1,0 +1,12 @@
+
+ mapping =  
+
+
+Corner: m31_initial
+ early_spec = m31_academic_rc
+ m31_academic_rc = /home/worellana/parcial_3/technology/m31/rc_academico/m31_rc_academico.tluplus 
+ late_spec = m31_academic_rc
+ m31_academic_rc = /home/worellana/parcial_3/technology/m31/rc_academico/m31_rc_academico.tluplus 
+
+library = alu_m31.nlib 
+1

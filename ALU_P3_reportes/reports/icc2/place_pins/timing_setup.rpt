@@ -1,0 +1,600 @@
+****************************************
+Report : timing
+        -path_type full
+        -delay_type max
+        -max_paths 10
+        -report_by design
+Design : alu_sync_top
+Version: Y-2026.03-SP2
+Date   : Mon Oct 26 19:46:45 2026
+****************************************
+
+  Startpoint: B_reg_reg[1] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: NZCV_reg[2] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: clk
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  B_reg_reg[1]/CK (DFFQX4TAS7)                     0.00      0.00 r
+  B_reg_reg[1]/Q (DFFQX4TAS7)                      3.12      3.12 r
+  U177/O (CLKINVX1TAS7)                            1.39      4.52 f
+  ctmTdsLR_1_560/O (OR3X1TAS7)                     2.11      6.62 f
+  U179/O (NAND2X1TAS7)                             0.94      7.56 r
+  ctmTdsLR_2_489/O (AOI12X2TAS7)                   0.71      8.27 f
+  U265/O (AOI12X2TAS7)                             1.19      9.47 r
+  U266/O (XNOR2X1TAS7)                             1.62     11.09 f
+  U269/O (NOR2X2TAS7)                              1.13     12.21 r
+  U319/O (OAI12X1TAS7)                             0.57     12.78 f
+  ctmTdsLR_2_60/O (NAND2B1X1TAS7)                  0.93     13.71 f
+  ctmTdsLR_3_61/O (INVX2TAS7)                      0.76     14.47 r
+  U59/O (CLKINVX2TAS7)                             0.58     15.05 f
+  U564/O (XNOR2X1TAS7)                             1.39     16.44 f
+  U568/O (OR2X1TAS7)                               1.29     17.72 f
+  ctmTdsLR_1_51/O (NAND3B1X1TAS7)                  0.82     18.54 r
+  ctmTdsLR_3_53/O (NAND3X2TAS7)                    0.86     19.41 f
+  ctmTdsLR_1_88/O (NAND2X1TAS7)                    0.86     20.26 r
+  ctmTdsLR_3_90/O (NAND2X1TAS7)                    0.55     20.81 f
+  ctmTdsLR_4_91/O (CLKINVX3TAS7)                   0.62     21.43 r
+  U784/O (INVX1TAS7)                               0.46     21.89 f
+  U785/O (AOI12X1TAS7)                             1.23     23.12 r
+  ctmTdsLR_2_568/O (XNOR2X2TAS7)                   2.38     25.50 r
+  U821/O (NAND2X1TAS7)                             0.90     26.40 f
+  U823/O (OAI12X1TAS7)                             1.51     27.91 r
+  U824/O (AOI12X2TAS7)                             0.57     28.49 f
+  U833/O (OAI12X2TAS7)                             1.73     30.22 r
+  ctmTdsLR_2_103/O (NAND2B1X1TAS7)                 0.73     30.95 f
+  ctmTdsLR_3_104/O (OAI112X2TAS7)                  1.18     32.12 r
+  ctmTdsLR_2_155/O (NAND4X2TAS7)                   1.05     33.18 f
+  ZINV_4_inst_666/O (CLKINVX2TAS7)                 0.53     33.71 r
+  NZCV_reg[2]/D (DFFQX1TAS7)                       0.00     33.71 r
+  data arrival time                                         33.71
+
+  clock clk (rise edge)                           35.00     35.00
+  clock network delay (ideal)                      0.16     35.16
+  NZCV_reg[2]/CK (DFFQX1TAS7)                      0.00     35.16 r
+  clock uncertainty                               -0.50     34.66
+  library setup time                              -0.92     33.74
+  data required time                                        33.74
+  ------------------------------------------------------------------------
+  data required time                                        33.74
+  data arrival time                                        -33.71
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.04
+
+
+
+  Startpoint: B_reg_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: Result_reg[14] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: clk
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  B_reg_reg[0]/CK (DFFQX4TAS7)                     0.00      0.00 r
+  B_reg_reg[0]/Q (DFFQX4TAS7)                      3.49      3.49 r
+  U182/O (NAND2X1TAS7)                             1.41      4.90 f
+  U188/O (OR2X1TAS7)                               1.61      6.51 f
+  U68/O (NAND2X1TAS7)                              0.81      7.32 r
+  U192/O (NAND2B1X2TAS7)                           1.00      8.32 r
+  U193/O (AOI12X4TAS7)                             0.36      8.68 f
+  U199/O (AOI12X2TAS7)                             1.70     10.38 r
+  U202/O (INVX1TAS7)                               0.47     10.85 f
+  U205/O (AOI12X1TAS7)                             2.10     12.95 r
+  U222/O (OAI22X1TAS7)                             1.25     14.20 f
+  U228/O (NAND2X1TAS7)                             1.25     15.45 r
+  ctmTdsLR_3_526/O (NOR2B1X1TAS7)                  1.54     17.00 r
+  U66/O (OR2X1TAS7)                                1.18     18.18 r
+  U580/O (NAND2X1TAS7)                             0.58     18.76 f
+  U581/O (XOR2X1TAS7)                              1.73     20.49 f
+  U585/O (OR2X1TAS7)                               1.31     21.80 f
+  ctmTdsLR_1_569/O (NAND3B1X1TAS7)                 0.76     22.56 r
+  ctmTdsLR_4_108/O (NAND3X2TAS7)                   0.93     23.49 f
+  ctmTdsLR_1_129/O (OAI12B2X1TAS7)                 1.32     24.80 f
+  ctmTdsLR_3_131/O (NAND2X1TAS7)                   0.91     25.72 r
+  ctmTdsLR_4_132/O (OAI12X2TAS7)                   0.70     26.42 f
+  U831/O (NOR2X1TAS7)                              1.64     28.06 r
+  ctmTdsLR_1_654/O (NAND2B1X1TAS7)                 1.20     29.26 r
+  ctmTdsLR_3_492/O (NAND2X1TAS7)                   0.51     29.77 f
+  ctmTdsLR_4_493/O (OAI12X1TAS7)                   0.67     30.44 r
+  ctmTdsLR_5_494/O (CLKINVX2TAS7)                  1.01     31.45 f
+  U1176/O (OAI112X2TAS7)                           1.32     32.77 r
+  ZINV_4_inst_481/O (INVX1TAS7)                    0.46     33.23 f
+  Result_reg[14]/D (DFFQX1TAS7)                    0.00     33.23 f
+  data arrival time                                         33.23
+
+  clock clk (rise edge)                           35.00     35.00
+  clock network delay (ideal)                      0.16     35.16
+  Result_reg[14]/CK (DFFQX1TAS7)                   0.00     35.16 r
+  clock uncertainty                               -0.50     34.66
+  library setup time                              -1.20     33.46
+  data required time                                        33.46
+  ------------------------------------------------------------------------
+  data required time                                        33.46
+  data arrival time                                        -33.23
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.23
+
+
+
+  Startpoint: B_reg_reg[1] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: Result_reg[15] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: clk
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  B_reg_reg[1]/CK (DFFQX4TAS7)                     0.00      0.00 r
+  B_reg_reg[1]/Q (DFFQX4TAS7)                      3.12      3.12 r
+  U177/O (CLKINVX1TAS7)                            1.39      4.52 f
+  ctmTdsLR_1_560/O (OR3X1TAS7)                     2.11      6.62 f
+  U179/O (NAND2X1TAS7)                             0.94      7.56 r
+  ctmTdsLR_2_489/O (AOI12X2TAS7)                   0.71      8.27 f
+  U265/O (AOI12X2TAS7)                             1.19      9.47 r
+  U266/O (XNOR2X1TAS7)                             1.62     11.09 f
+  U269/O (NOR2X2TAS7)                              1.13     12.21 r
+  U319/O (OAI12X1TAS7)                             0.57     12.78 f
+  ctmTdsLR_2_60/O (NAND2B1X1TAS7)                  0.93     13.71 f
+  ctmTdsLR_3_61/O (INVX2TAS7)                      0.76     14.47 r
+  U59/O (CLKINVX2TAS7)                             0.58     15.05 f
+  U564/O (XNOR2X1TAS7)                             1.39     16.44 f
+  U568/O (OR2X1TAS7)                               1.29     17.72 f
+  ctmTdsLR_1_51/O (NAND3B1X1TAS7)                  0.82     18.54 r
+  ctmTdsLR_3_53/O (NAND3X2TAS7)                    0.86     19.41 f
+  ctmTdsLR_1_88/O (NAND2X1TAS7)                    0.86     20.26 r
+  ctmTdsLR_3_90/O (NAND2X1TAS7)                    0.55     20.81 f
+  ctmTdsLR_4_91/O (CLKINVX3TAS7)                   0.62     21.43 r
+  U784/O (INVX1TAS7)                               0.46     21.89 f
+  U785/O (AOI12X1TAS7)                             1.23     23.12 r
+  ctmTdsLR_2_568/O (XNOR2X2TAS7)                   2.38     25.50 r
+  U821/O (NAND2X1TAS7)                             0.90     26.40 f
+  U823/O (OAI12X1TAS7)                             1.51     27.91 r
+  U824/O (AOI12X2TAS7)                             0.57     28.49 f
+  U833/O (OAI12X2TAS7)                             1.73     30.22 r
+  ctmTdsLR_2_103/O (NAND2B1X1TAS7)                 0.73     30.95 f
+  ctmTdsLR_3_104/O (OAI112X2TAS7)                  1.18     32.12 r
+  ctmTdsLR_2_68/O (AOI12X2TAS7)                    0.92     33.04 f
+  Result_reg[15]/D (DFFQX1TAS7)                    0.00     33.04 f
+  data arrival time                                         33.04
+
+  clock clk (rise edge)                           35.00     35.00
+  clock network delay (ideal)                      0.16     35.16
+  Result_reg[15]/CK (DFFQX1TAS7)                   0.00     35.16 r
+  clock uncertainty                               -0.50     34.66
+  library setup time                              -1.36     33.30
+  data required time                                        33.30
+  ------------------------------------------------------------------------
+  data required time                                        33.30
+  data arrival time                                        -33.04
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.26
+
+
+
+  Startpoint: B_reg_reg[1] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: NZCV_reg[3] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: clk
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  B_reg_reg[1]/CK (DFFQX4TAS7)                     0.00      0.00 r
+  B_reg_reg[1]/Q (DFFQX4TAS7)                      3.12      3.12 r
+  U177/O (CLKINVX1TAS7)                            1.39      4.52 f
+  ctmTdsLR_1_560/O (OR3X1TAS7)                     2.11      6.62 f
+  U179/O (NAND2X1TAS7)                             0.94      7.56 r
+  ctmTdsLR_2_489/O (AOI12X2TAS7)                   0.71      8.27 f
+  U265/O (AOI12X2TAS7)                             1.19      9.47 r
+  U266/O (XNOR2X1TAS7)                             1.62     11.09 f
+  U269/O (NOR2X2TAS7)                              1.13     12.21 r
+  U319/O (OAI12X1TAS7)                             0.57     12.78 f
+  ctmTdsLR_2_60/O (NAND2B1X1TAS7)                  0.93     13.71 f
+  ctmTdsLR_3_61/O (INVX2TAS7)                      0.76     14.47 r
+  U59/O (CLKINVX2TAS7)                             0.58     15.05 f
+  U564/O (XNOR2X1TAS7)                             1.39     16.44 f
+  U568/O (OR2X1TAS7)                               1.29     17.72 f
+  ctmTdsLR_1_51/O (NAND3B1X1TAS7)                  0.82     18.54 r
+  ctmTdsLR_3_53/O (NAND3X2TAS7)                    0.86     19.41 f
+  ctmTdsLR_1_88/O (NAND2X1TAS7)                    0.86     20.26 r
+  ctmTdsLR_3_90/O (NAND2X1TAS7)                    0.55     20.81 f
+  ctmTdsLR_4_91/O (CLKINVX3TAS7)                   0.62     21.43 r
+  U784/O (INVX1TAS7)                               0.46     21.89 f
+  U785/O (AOI12X1TAS7)                             1.23     23.12 r
+  ctmTdsLR_2_568/O (XNOR2X2TAS7)                   2.38     25.50 r
+  U821/O (NAND2X1TAS7)                             0.90     26.40 f
+  U823/O (OAI12X1TAS7)                             1.51     27.91 r
+  U824/O (AOI12X2TAS7)                             0.57     28.49 f
+  U833/O (OAI12X2TAS7)                             1.73     30.22 r
+  ctmTdsLR_2_103/O (NAND2B1X1TAS7)                 0.73     30.95 f
+  ctmTdsLR_3_104/O (OAI112X2TAS7)                  1.18     32.12 r
+  ctmTdsLR_2_68/O (AOI12X2TAS7)                    0.92     33.04 f
+  NZCV_reg[3]/D (DFFQX1TAS7)                       0.00     33.04 f
+  data arrival time                                         33.04
+
+  clock clk (rise edge)                           35.00     35.00
+  clock network delay (ideal)                      0.16     35.16
+  NZCV_reg[3]/CK (DFFQX1TAS7)                      0.00     35.16 r
+  clock uncertainty                               -0.50     34.66
+  library setup time                              -1.36     33.30
+  data required time                                        33.30
+  ------------------------------------------------------------------------
+  data required time                                        33.30
+  data arrival time                                        -33.04
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.26
+
+
+
+  Startpoint: B_reg_reg[1] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: Result_reg[13] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: clk
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  B_reg_reg[1]/CK (DFFQX4TAS7)                     0.00      0.00 r
+  B_reg_reg[1]/Q (DFFQX4TAS7)                      3.12      3.12 r
+  U177/O (CLKINVX1TAS7)                            1.39      4.52 f
+  ctmTdsLR_1_560/O (OR3X1TAS7)                     2.11      6.62 f
+  U179/O (NAND2X1TAS7)                             0.94      7.56 r
+  ctmTdsLR_2_489/O (AOI12X2TAS7)                   0.71      8.27 f
+  U265/O (AOI12X2TAS7)                             1.19      9.47 r
+  U266/O (XNOR2X1TAS7)                             1.62     11.09 f
+  U269/O (NOR2X2TAS7)                              1.13     12.21 r
+  U319/O (OAI12X1TAS7)                             0.57     12.78 f
+  ctmTdsLR_2_60/O (NAND2B1X1TAS7)                  0.93     13.71 f
+  ctmTdsLR_3_61/O (INVX2TAS7)                      0.76     14.47 r
+  U59/O (CLKINVX2TAS7)                             0.58     15.05 f
+  ctmTdsLR_1_46/O (OAI12B2X1TAS7)                  1.03     16.08 f
+  ctmTdsLR_1_605/O (OR2X1TAS7)                     1.26     17.34 f
+  ctmTdsLR_5_50/O (OAI12B2X2TAS7)                  0.57     17.91 r
+  U576/O (NAND2X1TAS7)                             0.77     18.68 f
+  U578/O (OAI12X1TAS7)                             1.23     19.91 r
+  ctmTdsLR_2_89/O (CLKINVX1TAS7)                   0.52     20.43 f
+  ctmTdsLR_3_90/O (NAND2X1TAS7)                    0.78     21.21 r
+  ctmTdsLR_4_91/O (CLKINVX3TAS7)                   0.54     21.74 f
+  U784/O (INVX1TAS7)                               0.90     22.64 r
+  U815/O (XOR2X1TAS7)                              2.43     25.07 r
+  U818/O (NOR2X1TAS7)                              0.73     25.80 f
+  U820/O (OAI12X2TAS7)                             1.50     27.30 r
+  U925/O (INVX1TAS7)                               0.62     27.92 f
+  U1028/O (OAI12X1TAS7)                            1.38     29.30 r
+  ctmTdsLR_2_523/OB (MUX2BX1TAS7)                  1.35     30.64 r
+  U1038/O (AOI12X1TAS7)                            0.89     31.53 f
+  U1084/O (NOR2X1TAS7)                             1.50     33.03 r
+  Result_reg[13]/D (DFFQX1TAS7)                    0.00     33.03 r
+  data arrival time                                         33.03
+
+  clock clk (rise edge)                           35.00     35.00
+  clock network delay (ideal)                      0.16     35.16
+  Result_reg[13]/CK (DFFQX1TAS7)                   0.00     35.16 r
+  clock uncertainty                               -0.50     34.66
+  library setup time                              -1.14     33.52
+  data required time                                        33.52
+  ------------------------------------------------------------------------
+  data required time                                        33.52
+  data arrival time                                        -33.03
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.49
+
+
+
+  Startpoint: B_reg_reg[1] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: MulOverflow_reg (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: clk
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  B_reg_reg[1]/CK (DFFQX4TAS7)                     0.00      0.00 r
+  B_reg_reg[1]/Q (DFFQX4TAS7)                      3.12      3.12 r
+  U177/O (CLKINVX1TAS7)                            1.39      4.52 f
+  ctmTdsLR_1_560/O (OR3X1TAS7)                     2.11      6.62 f
+  U179/O (NAND2X1TAS7)                             0.94      7.56 r
+  ctmTdsLR_2_489/O (AOI12X2TAS7)                   0.71      8.27 f
+  U193/O (AOI12X4TAS7)                             1.31      9.59 r
+  U199/O (AOI12X2TAS7)                             0.85     10.44 f
+  U200/O (NAND2X1TAS7)                             1.02     11.46 r
+  U201/O (OAI12X1TAS7)                             0.79     12.25 f
+  U222/O (OAI22X1TAS7)                             1.81     14.06 r
+  U228/O (NAND2X1TAS7)                             1.15     15.21 f
+  U345/O (OAI12X2TAS7)                             1.89     17.10 r
+  U346/O (XNOR3X1TAS7)                             2.04     19.14 f
+  U347/O (OR2X1TAS7)                               1.30     20.44 f
+  U349/O (NAND2X1TAS7)                             0.65     21.09 r
+  U350/O (XOR2X1TAS7)                              1.84     22.93 f
+  U505/O (NOR2X1TAS7)                              1.28     24.21 r
+  U599/O (OAI12X1TAS7)                             0.75     24.96 f
+  U600/O (AOI12X1TAS7)                             1.84     26.80 r
+  U601/O (CLKINVX1TAS7)                            0.87     27.66 f
+  ctmTdsLR_1_610/O (NAND2B1X1TAS7)                 0.74     28.41 r
+  ctmTdsLR_1_624/O (NAND2B1X1TAS7)                 0.42     28.83 f
+  ctmTdsLR_2_640/O (NAND4B1X1TAS7)                 0.90     29.72 r
+  U1167/O (OAI112X1TAS7)                           0.94     30.67 f
+  U1168/O (NOR2X2TAS7)                             1.94     32.61 r
+  MulOverflow_reg/D (DFFQX1TAS7)                   0.00     32.61 r
+  data arrival time                                         32.61
+
+  clock clk (rise edge)                           35.00     35.00
+  clock network delay (ideal)                      0.16     35.16
+  MulOverflow_reg/CK (DFFQX1TAS7)                  0.00     35.16 r
+  clock uncertainty                               -0.50     34.66
+  library setup time                              -1.19     33.47
+  data required time                                        33.47
+  ------------------------------------------------------------------------
+  data required time                                        33.47
+  data arrival time                                        -32.61
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.86
+
+
+
+  Startpoint: B_reg_reg[1] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: Result_reg[11] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: clk
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  B_reg_reg[1]/CK (DFFQX4TAS7)                     0.00      0.00 r
+  B_reg_reg[1]/Q (DFFQX4TAS7)                      3.12      3.12 r
+  U177/O (CLKINVX1TAS7)                            1.39      4.52 f
+  ctmTdsLR_1_560/O (OR3X1TAS7)                     2.11      6.62 f
+  U179/O (NAND2X1TAS7)                             0.94      7.56 r
+  ctmTdsLR_2_489/O (AOI12X2TAS7)                   0.71      8.27 f
+  U265/O (AOI12X2TAS7)                             1.19      9.47 r
+  U266/O (XNOR2X1TAS7)                             1.62     11.09 f
+  U269/O (NOR2X2TAS7)                              1.13     12.21 r
+  U319/O (OAI12X1TAS7)                             0.57     12.78 f
+  ctmTdsLR_2_60/O (NAND2B1X1TAS7)                  0.93     13.71 f
+  ctmTdsLR_3_61/O (INVX2TAS7)                      0.76     14.47 r
+  U59/O (CLKINVX2TAS7)                             0.58     15.05 f
+  ctmTdsLR_1_46/O (OAI12B2X1TAS7)                  1.03     16.08 f
+  ctmTdsLR_1_605/O (OR2X1TAS7)                     1.26     17.34 f
+  ctmTdsLR_5_50/O (OAI12B2X2TAS7)                  0.57     17.91 r
+  U576/O (NAND2X1TAS7)                             0.77     18.68 f
+  U578/O (OAI12X1TAS7)                             1.23     19.91 r
+  ctmTdsLR_2_89/O (CLKINVX1TAS7)                   0.52     20.43 f
+  ctmTdsLR_3_90/O (NAND2X1TAS7)                    0.78     21.21 r
+  ctmTdsLR_4_91/O (CLKINVX3TAS7)                   0.54     21.74 f
+  U784/O (INVX1TAS7)                               0.90     22.64 r
+  U815/O (XOR2X1TAS7)                              2.13     24.77 f
+  U818/O (NOR2X1TAS7)                              1.76     26.53 r
+  ctmTdsLR_1_601/O (NAND2B1X1TAS7)                 1.10     27.63 r
+  U79/O (XOR2X1TAS7)                               1.46     29.09 r
+  U1020/O (AOI12X1TAS7)                            0.59     29.68 f
+  U1172/O (NOR2X1TAS7)                             2.33     32.02 r
+  Result_reg[11]/D (DFFQX1TAS7)                    0.00     32.02 r
+  data arrival time                                         32.02
+
+  clock clk (rise edge)                           35.00     35.00
+  clock network delay (ideal)                      0.16     35.16
+  Result_reg[11]/CK (DFFQX1TAS7)                   0.00     35.16 r
+  clock uncertainty                               -0.50     34.66
+  library setup time                              -1.27     33.39
+  data required time                                        33.39
+  ------------------------------------------------------------------------
+  data required time                                        33.39
+  data arrival time                                        -32.02
+  ------------------------------------------------------------------------
+  slack (MET)                                                1.38
+
+
+
+  Startpoint: B_reg_reg[1] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: Result_reg[12] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: clk
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  B_reg_reg[1]/CK (DFFQX4TAS7)                     0.00      0.00 r
+  B_reg_reg[1]/Q (DFFQX4TAS7)                      3.12      3.12 r
+  U177/O (CLKINVX1TAS7)                            1.39      4.52 f
+  ctmTdsLR_1_560/O (OR3X1TAS7)                     2.11      6.62 f
+  U179/O (NAND2X1TAS7)                             0.94      7.56 r
+  ctmTdsLR_2_489/O (AOI12X2TAS7)                   0.71      8.27 f
+  U265/O (AOI12X2TAS7)                             1.19      9.47 r
+  U266/O (XNOR2X1TAS7)                             1.62     11.09 f
+  U269/O (NOR2X2TAS7)                              1.13     12.21 r
+  U319/O (OAI12X1TAS7)                             0.57     12.78 f
+  ctmTdsLR_2_60/O (NAND2B1X1TAS7)                  0.93     13.71 f
+  ctmTdsLR_3_61/O (INVX2TAS7)                      0.76     14.47 r
+  U59/O (CLKINVX2TAS7)                             0.58     15.05 f
+  ctmTdsLR_1_46/O (OAI12B2X1TAS7)                  1.03     16.08 f
+  ctmTdsLR_1_605/O (OR2X1TAS7)                     1.26     17.34 f
+  ctmTdsLR_5_50/O (OAI12B2X2TAS7)                  0.57     17.91 r
+  U576/O (NAND2X1TAS7)                             0.77     18.68 f
+  U578/O (OAI12X1TAS7)                             1.23     19.91 r
+  ctmTdsLR_2_89/O (CLKINVX1TAS7)                   0.52     20.43 f
+  ctmTdsLR_3_90/O (NAND2X1TAS7)                    0.78     21.21 r
+  ctmTdsLR_4_91/O (CLKINVX3TAS7)                   0.54     21.74 f
+  U784/O (INVX1TAS7)                               0.90     22.64 r
+  U815/O (XOR2X1TAS7)                              2.13     24.77 f
+  U818/O (NOR2X1TAS7)                              1.76     26.53 r
+  U820/O (OAI12X2TAS7)                             0.87     27.41 f
+  U925/O (INVX1TAS7)                               0.88     28.29 r
+  ctmTdsLR_2_140/O (XNOR2X1TAS7)                   1.76     30.05 r
+  U931/O (AOI12X2TAS7)                             0.52     30.57 f
+  U1173/O (NOR2X1TAS7)                             1.31     31.88 r
+  Result_reg[12]/D (DFFQX1TAS7)                    0.00     31.88 r
+  data arrival time                                         31.88
+
+  clock clk (rise edge)                           35.00     35.00
+  clock network delay (ideal)                      0.16     35.16
+  Result_reg[12]/CK (DFFQX1TAS7)                   0.00     35.16 r
+  clock uncertainty                               -0.50     34.66
+  library setup time                              -1.13     33.53
+  data required time                                        33.53
+  ------------------------------------------------------------------------
+  data required time                                        33.53
+  data arrival time                                        -31.88
+  ------------------------------------------------------------------------
+  slack (MET)                                                1.65
+
+
+
+  Startpoint: ALUControl_reg_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: NZCV_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: clk
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  ALUControl_reg_reg[0]/CK (DFFQX4TAS7)            0.00      0.00 r
+  ALUControl_reg_reg[0]/Q (DFFQX4TAS7)             3.06      3.06 r
+  U850/O (XNOR2X1TAS7)                             2.33      5.39 f
+  U854/O (INVX1TAS7)                               1.07      6.46 r
+  U859/O (OAI12X1TAS7)                             0.61      7.07 f
+  U860/O (OAI112X1TAS7)                            0.66      7.73 r
+  U862/O (NAND2X1TAS7)                             0.77      8.50 f
+  U863/O (OAI112X1TAS7)                            0.92      9.42 r
+  ctmTdsLR_1_37/O (OAI12B2X2TAS7)                  0.75     10.18 f
+  ctmTdsLR_1_645/O (NAND2B1X1TAS7)                 1.10     11.28 f
+  ctmTdsLR_1_658/O (OAI112X1TAS7)                  1.01     12.29 r
+  ctmTdsLR_3_66/O (OAI12B2X2TAS7)                  0.84     13.13 f
+  ctmTdsLR_1_532/O (NAND2B1X1TAS7)                 1.14     14.27 f
+  ctmTdsLR_2_166/O (NAND3B1X1TAS7)                 0.99     15.26 r
+  ctmTdsLR_1_24/O (OAI12B2X2TAS7)                  0.62     15.88 f
+  ctmTdsLR_1_595/O (NAND2B1X1TAS7)                 1.04     16.92 f
+  U890/O (OAI112X1TAS7)                            1.05     17.97 r
+  ctmTdsLR_1_621/O (OAI12B2X2TAS7)                 0.95     18.92 f
+  ctmTdsLR_1_652/O (NAND2B1X1TAS7)                 1.19     20.11 f
+  U899/O (OAI112X1TAS7)                            1.27     21.37 r
+  ctmTdsLR_1_54/O (OAI12B2X2TAS7)                  0.92     22.29 f
+  ctmTdsLR_1_534/O (NAND2B1X1TAS7)                 1.17     23.46 f
+  ctmTdsLR_2_15/O (NAND3X1TAS7)                    1.06     24.52 r
+  ctmTdsLR_3_16/O (OAI12B2X1TAS7)                  0.83     25.35 f
+  U78/O (OAI12X1TAS7)                              1.09     26.44 r
+  U1041/O (NAND2X1TAS7)                            1.08     27.52 f
+  U1050/O (XOR2X1TAS7)                             1.59     29.11 r
+  U1051/O (AND3X1TAS7)                             1.24     30.35 r
+  NZCV_reg[0]/D (DFFQX1TAS7)                       0.00     30.35 r
+  data arrival time                                         30.35
+
+  clock clk (rise edge)                           35.00     35.00
+  clock network delay (ideal)                      0.16     35.16
+  NZCV_reg[0]/CK (DFFQX1TAS7)                      0.00     35.16 r
+  clock uncertainty                               -0.50     34.66
+  library setup time                              -1.02     33.64
+  data required time                                        33.64
+  ------------------------------------------------------------------------
+  data required time                                        33.64
+  data arrival time                                        -30.35
+  ------------------------------------------------------------------------
+  slack (MET)                                                3.28
+
+
+
+  Startpoint: ALUControl_reg_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: NZCV_reg[1] (rising edge-triggered flip-flop clocked by clk)
+  Mode: functional
+  Corner: m31_initial
+  Scenario: functional_initial
+  Path Group: clk
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  ALUControl_reg_reg[0]/CK (DFFQX4TAS7)            0.00      0.00 r
+  ALUControl_reg_reg[0]/Q (DFFQX4TAS7)             3.06      3.06 r
+  U850/O (XNOR2X1TAS7)                             2.33      5.39 f
+  U854/O (INVX1TAS7)                               1.07      6.46 r
+  U859/O (OAI12X1TAS7)                             0.61      7.07 f
+  U860/O (OAI112X1TAS7)                            0.66      7.73 r
+  U862/O (NAND2X1TAS7)                             0.77      8.50 f
+  U863/O (OAI112X1TAS7)                            0.92      9.42 r
+  ctmTdsLR_1_37/O (OAI12B2X2TAS7)                  0.75     10.18 f
+  ctmTdsLR_1_645/O (NAND2B1X1TAS7)                 1.10     11.28 f
+  ctmTdsLR_1_658/O (OAI112X1TAS7)                  1.01     12.29 r
+  ctmTdsLR_3_66/O (OAI12B2X2TAS7)                  0.84     13.13 f
+  ctmTdsLR_1_532/O (NAND2B1X1TAS7)                 1.14     14.27 f
+  ctmTdsLR_2_166/O (NAND3B1X1TAS7)                 0.99     15.26 r
+  ctmTdsLR_1_24/O (OAI12B2X2TAS7)                  0.62     15.88 f
+  ctmTdsLR_1_595/O (NAND2B1X1TAS7)                 1.04     16.92 f
+  U890/O (OAI112X1TAS7)                            1.05     17.97 r
+  ctmTdsLR_1_621/O (OAI12B2X2TAS7)                 0.95     18.92 f
+  ctmTdsLR_1_652/O (NAND2B1X1TAS7)                 1.19     20.11 f
+  U899/O (OAI112X1TAS7)                            1.27     21.37 r
+  ctmTdsLR_1_54/O (OAI12B2X2TAS7)                  0.92     22.29 f
+  ctmTdsLR_1_534/O (NAND2B1X1TAS7)                 1.17     23.46 f
+  ctmTdsLR_2_15/O (NAND3X1TAS7)                    1.06     24.52 r
+  ctmTdsLR_3_16/O (OAI12B2X1TAS7)                  0.83     25.35 f
+  U78/O (OAI12X1TAS7)                              1.09     26.44 r
+  U1041/O (NAND2X1TAS7)                            1.08     27.52 f
+  U1045/O (OAI22X1TAS7)                            1.15     28.67 r
+  U1047/O (AND2X1TAS7)                             0.97     29.65 r
+  NZCV_reg[1]/D (DFFQX1TAS7)                       0.00     29.65 r
+  data arrival time                                         29.65
+
+  clock clk (rise edge)                           35.00     35.00
+  clock network delay (ideal)                      0.16     35.16
+  NZCV_reg[1]/CK (DFFQX1TAS7)                      0.00     35.16 r
+  clock uncertainty                               -0.50     34.66
+  library setup time                              -0.94     33.72
+  data required time                                        33.72
+  ------------------------------------------------------------------------
+  data required time                                        33.72
+  data arrival time                                        -29.65
+  ------------------------------------------------------------------------
+  slack (MET)                                                4.07
+
+
+1

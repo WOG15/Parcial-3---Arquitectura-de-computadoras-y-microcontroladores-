@@ -1,0 +1,145 @@
+Buffers e inversores habilitados para CTS; atributos efectivos:
+LIBCELL: m31_3m1t_11k/CLKBUFX1TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX1TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX1TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX1TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX1TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization
+LIBCELL: m31_3m1t_11k/CLKBUFX12TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX12TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX12TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX12TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX12TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization
+LIBCELL: m31_3m1t_11k/CLKBUFX16TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX16TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX16TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX16TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX16TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization
+LIBCELL: m31_3m1t_11k/CLKBUFX2TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX2TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX2TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX2TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX2TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization
+LIBCELL: m31_3m1t_11k/CLKBUFX20TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX20TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX20TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX20TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX20TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization
+LIBCELL: m31_3m1t_11k/CLKBUFX3TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX3TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX3TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX3TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX3TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization
+LIBCELL: m31_3m1t_11k/CLKBUFX4TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX4TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX4TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX4TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX4TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization
+LIBCELL: m31_3m1t_11k/CLKBUFX8TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX8TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX8TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX8TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKBUFX8TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization
+LIBCELL: m31_3m1t_11k/CLKINVX1TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX1TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX1TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX1TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX1TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization
+LIBCELL: m31_3m1t_11k/CLKINVX12TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX12TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX12TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX12TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX12TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization
+LIBCELL: m31_3m1t_11k/CLKINVX16TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX16TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX16TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX16TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX16TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization
+LIBCELL: m31_3m1t_11k/CLKINVX2TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX2TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX2TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX2TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX2TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization
+LIBCELL: m31_3m1t_11k/CLKINVX20TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX20TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX20TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX20TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX20TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization
+LIBCELL: m31_3m1t_11k/CLKINVX3TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX3TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX3TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX3TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX3TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization
+LIBCELL: m31_3m1t_11k/CLKINVX4TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX4TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX4TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX4TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX4TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization
+LIBCELL: m31_3m1t_11k/CLKINVX8TAS7
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX8TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  dont_use: false
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX8TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  included_purposes: all
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX8TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  excluded_purposes: 
+Information: The returned value for lib_cell 'm31_3m1t_11k:CLKINVX8TAS7.timing' is the design specific attribute override defined within the current block 'alu_place_pins'. (ATTR-11)
+  valid_purposes: power hold cts optimization

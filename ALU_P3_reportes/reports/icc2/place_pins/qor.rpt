@@ -1,0 +1,134 @@
+Information: Timer using 4 threads
+Timing Update Started(Full_timing_update) : updateCount: 1 / Mem-peak : 598 MB / Date: Mon Oct 26 19:46:45 2026
+
+Timing Update Completed: Mem-peak: 598 MB / Date: Mon Oct 26 19:46:45 2026
+
+****************************************
+Report : qor
+Design : alu_sync_top
+Version: Y-2026.03-SP2
+Date   : Mon Oct 26 19:46:45 2026
+****************************************
+Information: Corner m31_initial: no PVT mismatches. (PVT-032)
+Information: The stitching and editing of coupling caps is turned OFF for design 'alu_m31.nlib:alu_place_opt.design'. (TIM-125)
+Information: Design Average RC for design alu_place_opt  (NEX-011)
+Information: r = 0.105499 ohm/um, via_r = 0.413223 ohm/cut, c = 0.197942 ff/um, cc = 0.000000 ff/um (X dir) (NEX-017)
+Information: r = 0.250000 ohm/um, via_r = 0.413223 ohm/cut, c = 0.235449 ff/um, cc = 0.000000 ff/um (Y dir) (NEX-017)
+Information: The RC mode used is VR for design 'alu_sync_top'. (NEX-022)
+Information: Pin/Port with maximum arrivals in mode: 'functional',  'MulOverflow_reg/D'   : '2'. (TIM-134)
+Information: Average arrivals per pin/port in mode: 'functional' : '1'. (TIM-136)
+Information: Update timing completed net estimation for all the timing graph nets (TIM-111)
+Information: Net estimation statistics: timing graph nets = 1175, routed nets = 0, across physical hierarchy nets = 0, parasitics cached nets = 1175, delay annotated nets = 0, parasitics annotated nets = 0, multi-voltage nets = 0. (TIM-112)
+************************************************************
+Timer Settings:
+Delay Calculation Style:                   auto
+Signal Integrity Analysis:                 disabled
+Timing Window Analysis:                    disabled
+Advanced Waveform Propagation:             disabled
+Variation Type:                            fixed_derate
+Clock Reconvergence Pessimism Removal:     disabled
+Advanced Receiver Model:                   disabled
+LLE:                                       disabled
+ML Acceleration:                           off
+Smart Arc Optimization:                    disabled
+************************************************************
+
+
+Scenario           'functional_initial'
+Timing Path Group  '**in2reg_default**'
+----------------------------------------
+Levels of Logic:                      9
+Critical Path Length:             14.80
+Critical Path Slack:              18.94
+Critical Path Clk Period:         35.00
+Total Negative Slack:              0.00
+No. of Violating Paths:               0
+Worst Hold Violation:              0.00
+Total Hold Violation:              0.00
+No. of Hold Violations:               0
+----------------------------------------
+
+Scenario           'functional_initial'
+Timing Path Group  '**reg2out_default**'
+----------------------------------------
+Levels of Logic:                      0
+Critical Path Length:              2.00
+Critical Path Slack:              30.34
+Critical Path Clk Period:         35.00
+Total Negative Slack:              0.00
+No. of Violating Paths:               0
+Worst Hold Violation:              0.00
+Total Hold Violation:              0.00
+No. of Hold Violations:               0
+----------------------------------------
+
+Scenario           'functional_initial'
+Timing Path Group  'clk'
+----------------------------------------
+Levels of Logic:                     29
+Critical Path Length:             33.71
+Critical Path Slack:               0.04
+Critical Path Clk Period:         35.00
+Total Negative Slack:              0.00
+No. of Violating Paths:               0
+Worst Hold Violation:              0.00
+Total Hold Violation:              0.00
+No. of Hold Violations:               0
+----------------------------------------
+
+
+Cell Count
+----------------------------------------
+Hierarchical Cell Count:              0
+Hierarchical Port Count:              0
+Leaf Cell Count:                   1138
+Buf/Inv Cell Count:                 129
+Buf Cell Count:                       3
+Inv Cell Count:                     126
+Combinational Cell Count:          1082
+   Single-bit Isolation Cell Count:                        0
+   Multi-bit Isolation Cell Count:                         0
+   Isolation Cell Banking Ratio:                           0.00%
+   Single-bit Level Shifter Cell Count:                    0
+   Multi-bit Level Shifter Cell Count:                     0
+   Level Shifter Cell Banking Ratio:                       0.00%
+   Single-bit ELS Cell Count:                              0
+   Multi-bit ELS Cell Count:                               0
+   ELS Cell Banking Ratio:                                 0.00%
+Sequential Cell Count:               56
+   Integrated Clock-Gating Cell Count:                     0
+   Sequential Macro Cell Count:                            0
+   Single-bit Sequential Cell Count:                       56
+   Multi-bit Sequential Cell Count:                        0
+   Sequential Cell Banking Ratio:                          0.00%
+   BitsPerflop:                                            1.00
+Macro Count:                          0
+----------------------------------------
+
+
+Area
+----------------------------------------
+Combinational Area:            15082.91
+Noncombinational Area:          2493.39
+Buf/Inv Area:                    880.59
+Total Buffer Area:                32.26
+Total Inverter Area:             848.33
+Macro/Black Box Area:              0.00
+Net Area:                             0
+Net XLength:                   13677.16
+Net YLength:                   15012.58
+----------------------------------------
+Cell Area (netlist):                          17576.29
+Cell Area (netlist and physical only):        19143.94
+Net Length:                    28689.73
+
+
+Design Rules
+----------------------------------------
+Total Number of Nets:              1177
+Nets with Violations:                 0
+Max Trans Violations:                 0
+Max Cap Violations:                   0
+----------------------------------------
+
+1

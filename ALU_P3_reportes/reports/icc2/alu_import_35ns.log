@@ -1,0 +1,145 @@
+
+
+
+                              IC Compiler II (TM)
+
+                Version Y-2026.03-SP2 for linux64 - Sep 01, 2026
+                           Base build date 6/22/2026.
+
+                    Copyright (c) 1988 - 2026 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+      Inc.  This software may only be used in accordance with the terms and
+  conditions of a written license agreement with Synopsys, Inc.  All other use,
+   reproduction, or distribution of this software is strictly prohibited.  By
+   installing, accessing, using, or executing this software, you agree that it
+  will reside on, operate within, and have access to the computers and networks
+    where such software is used ("Host System"), and that Synopsys may access
+     components and data of the Host System as necessary for it to function
+ properly, to authenticate and validate license keys, to verify that it is used
+ only in conformity with the applicable license restrictions, and to communicate
+                 error messages and associated data to Synopsys.
+
+ 
+Invocation: /usr/synopsys/icc2/Y-2026.03-SP2/linux64/nwtn/bin/icc2_exec
+Execution time: Sun Oct 25 17:55:53 2026
+Host: synopsys-unis (1 x 2700.218 MHz Intel(R) Xeon(R) D-2123IT CPU @ 2.20GHz)
+Working directory: /home/worellana/parcial_3
+
+# ============================================================================
+# initial_alu_m31.tcl
+# Importacion inicial de la ALU sintetizada en DC (30 ns), evaluada a 35 ns.
+# NO corre floorplan, PG, placement, CTS ni routing.
+# Ejecutar desde ~/parcial_3: icc2_shell -f scripts/icc2/initial_alu_m31.tcl
+# ============================================================================
+source ./scripts/icc2/setup_alu_m31.tcl
+FOUND: Biblioteca de referencia NDM -> /home/worellana/parcial_3/technology/m31/ndm/m31_3m1t_11k.ndm
+FOUND: Archivo de tecnologia M31 -> /home/worellana/parcial_3/technology/m31/physical/milkyway_techfiles/M31LLSC750GL150MS.0.01/milkyway_techfiles/tech/GL150M_3M1T_11K.tf
+Information: Loading technology file '/home/worellana/parcial_3/technology/m31/physical/milkyway_techfiles/M31LLSC750GL150MS.0.01/milkyway_techfiles/tech/GL150M_3M1T_11K.tf' (FILE-007)
+OK: ICC2 design library creada: /home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib
+set NETLIST_FILE [file join $PROJECT_ROOT experiments 30mapped_35clock alu_sync_netlist.v]
+/home/worellana/parcial_3/experiments/30mapped_35clock/alu_sync_netlist.v
+set SDC_FILE     [file join $PROJECT_ROOT experiments 30mapped_35clock alu_sync.sdc]
+/home/worellana/parcial_3/experiments/30mapped_35clock/alu_sync.sdc
+foreach {description path} [list \
+    "Netlist sintetizada" $NETLIST_FILE \
+    "Restricciones SDC" $SDC_FILE] {
+    if {![file exists $path]} {
+        error "Falta $description: $path"
+    }
+    puts "FOUND: $description -> $path"
+}
+FOUND: Netlist sintetizada -> /home/worellana/parcial_3/experiments/30mapped_35clock/alu_sync_netlist.v
+FOUND: Restricciones SDC -> /home/worellana/parcial_3/experiments/30mapped_35clock/alu_sync.sdc
+# La NDM M31 ya contiene las bibliotecas logicas y las vistas fisicas.
+# Importamos solamente la netlist, NO los modulos RTL de la ALU ni testbenches.
+read_verilog -top $TOP_DESIGN $NETLIST_FILE
+Information: Reading Verilog into new design 'alu_sync_top' in library 'alu_m31.nlib'. (VR-012)
+Loading verilog file '/home/worellana/parcial_3/experiments/30mapped_35clock/alu_sync_netlist.v'
+Information: tri converted to a wire with no special attributes
+            	at line 129 in /home/worellana/parcial_3/experiments/30mapped_35clock/alu_sync_netlist.v (SVR-21)
+Information: tri converted to a wire with no special attributes
+            	at line 130 in /home/worellana/parcial_3/experiments/30mapped_35clock/alu_sync_netlist.v (SVR-21)
+Number of modules read: 1
+Top level ports: 58
+Total ports in all modules: 58
+Total nets in all modules: 1262
+Total instances in all modules: 1225
+Elapsed = 00:00:00.04, CPU = 00:00:00.02
+1
+link_block
+Using libraries: alu_m31.nlib m31_3m1t_11k
+Linking block alu_m31.nlib:alu_sync_top.design
+Information: User units loaded from library 'm31_3m1t_11k' (LNK-040)
+Design 'alu_sync_top' was successfully linked.
+1
+# Guardar diagnosticos de enlace. Las celdas sin referencia son un bloqueo.
+redirect -file [file join $REPORT_DIR design_mismatch.rpt] {
+    report_design_mismatch -verbose
+}
+set UNBOUND [get_cells -hierarchical -filter "is_unbound == true" -quiet]
+if {[sizeof_collection $UNBOUND] > 0} {
+    error "Existen [sizeof_collection $UNBOUND] celdas sin vincular; revisa design_mismatch.rpt."
+}
+# Un unico escenario preliminar. Todavia NO se configuraron modelos RC M31
+# (no reutilizar TLUPlus, UPF, voltajes ni layers de SKY130).
+create_mode functional
+1
+create_corner m31_initial
+1
+create_scenario -mode functional -corner m31_initial -name functional_initial
+Created scenario functional_initial for mode functional and corner m31_initial
+All analysis types are activated.
+{functional_initial}
+current_scenario functional_initial
+{functional_initial}
+read_sdc $SDC_FILE
+Information: Loading SDC version 2.2 file '/home/worellana/parcial_3/experiments/30mapped_35clock/alu_sync.sdc' (FILE-007)
+Information: Timer using 4 threads
+Timing Update Started(Full_timing_update) : updateCount: 1 / Mem-peak : 547 MB / Date: Sun Oct 25 17:55:55 2026
+
+Timing Update Completed: Mem-peak: 547 MB / Date: Sun Oct 25 17:55:55 2026
+
+1
+set CLK [get_clocks clk -quiet]
+{clk}
+if {[sizeof_collection $CLK] == 0} {
+    error "No aparece el reloj clk despues de read_sdc; revisa el SDC importado."
+}
+redirect -file [file join $REPORT_DIR clocks.rpt] {
+    report_clocks
+}
+redirect -file [file join $REPORT_DIR scenarios.rpt] {
+    report_scenarios
+}
+redirect -file [file join $REPORT_DIR netlist_check.rpt] {
+    check_netlist
+}
+# Los resultados de timing NO equivalen todavia al analisis fisico final:
+# faltan RC, ubicacion, reloj distribuido y routing.
+save_block -as alu_imported
+Information: Saving 'alu_m31.nlib:alu_sync_top.design' to 'alu_m31.nlib:alu_imported.design'. (DES-028)
+1
+save_lib
+Saving library 'alu_m31.nlib'
+1
+puts "=================================================="
+==================================================
+puts "ALU_IMPORTED_OK: TOP=$TOP_DESIGN"
+ALU_IMPORTED_OK: TOP=alu_sync_top
+puts "Biblioteca: $DESIGN_LIB"
+Biblioteca: /home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib
+puts "SDC: $SDC_FILE"
+SDC: /home/worellana/parcial_3/experiments/30mapped_35clock/alu_sync.sdc
+puts "Reportes: $REPORT_DIR"
+Reportes: /home/worellana/parcial_3/reports/icc2/alu_import_35ns
+puts "Siguiente etapa: revisar informes, despues floorplan M31."
+Siguiente etapa: revisar informes, despues floorplan M31.
+puts "=================================================="
+==================================================
+icc2_shell> 
+icc2_shell> exit
+Maximum memory usage for this session: 547.41 MB
+Maximum memory usage for this session including child processes: 547.41 MB
+CPU usage for this session:     14 seconds (  0.00 hours)
+Elapsed time for this session:     77 seconds (  0.02 hours)
+Thank you for using IC Compiler II.

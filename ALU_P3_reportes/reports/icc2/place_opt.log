@@ -1,0 +1,117 @@
+
+
+
+                              IC Compiler II (TM)
+
+                Version Y-2026.03-SP2 for linux64 - Sep 01, 2026
+                           Base build date 6/22/2026.
+
+                    Copyright (c) 1988 - 2026 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+      Inc.  This software may only be used in accordance with the terms and
+  conditions of a written license agreement with Synopsys, Inc.  All other use,
+   reproduction, or distribution of this software is strictly prohibited.  By
+   installing, accessing, using, or executing this software, you agree that it
+  will reside on, operate within, and have access to the computers and networks
+    where such software is used ("Host System"), and that Synopsys may access
+     components and data of the Host System as necessary for it to function
+ properly, to authenticate and validate license keys, to verify that it is used
+ only in conformity with the applicable license restrictions, and to communicate
+                 error messages and associated data to Synopsys.
+
+ 
+Invocation: /usr/synopsys/icc2/Y-2026.03-SP2/linux64/nwtn/bin/icc2_exec
+Execution time: Mon Oct 26 17:24:24 2026
+Host: synopsys-unis (1 x 3000.000 MHz Intel(R) Xeon(R) D-2123IT CPU @ 2.20GHz)
+Working directory: /home/worellana/parcial_3
+
+# ALU+ / ICC2 / M31
+# Etapa: placement optimizado (place_opt).
+# Ejecutar desde /home/worellana/parcial_3
+# Entrada: alu_pg_con_taps
+# Salida : alu_place_opt
+# No altera el checkpoint de entrada.
+set ROOT [file normalize [pwd]]
+/home/worellana/parcial_3
+set LIB [file join $ROOT outputs icc2 alu_import_35ns alu_m31.nlib]
+/home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib
+set RPT [file join $ROOT reports icc2 place_opt]
+/home/worellana/parcial_3/reports/icc2/place_opt
+set IN_BLOCK alu_pg_con_taps
+alu_pg_con_taps
+set OUT_BLOCK alu_place_opt
+alu_place_opt
+if {![file exists $LIB]} {
+    error "No se encuentra la biblioteca: $LIB. Ejecuta desde ~/parcial_3."
+}
+file mkdir $RPT
+set_host_options -max_cores 4
+1
+open_lib $LIB
+Information: Loading library file '/home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib' (FILE-007)
+Information: Loading library file '/home/worellana/parcial_3/technology/m31/ndm/m31_3m1t_11k.ndm' (FILE-007)
+{alu_m31.nlib}
+open_block $IN_BLOCK
+Information: User units loaded from library 'm31_3m1t_11k' (LNK-040)
+Opening block 'alu_m31.nlib:alu_pg_con_taps.design' in edit mode
+{alu_m31.nlib:alu_pg_con_taps.design}
+current_design alu_sync_top
+{alu_m31.nlib:alu_pg_con_taps.design}
+if {[sizeof_collection [get_clocks -quiet clk]] == 0} {
+    error "No se encontro el reloj clk en el bloque importado. Verificar SDC antes de place_opt."
+}
+Using libraries: alu_m31.nlib m31_3m1t_11k
+Visiting block alu_m31.nlib:alu_pg_con_taps.design
+Design 'alu_sync_top' was successfully linked.
+puts "ALU PLACE_OPT: comprobacion de reloj previo al placement"
+ALU PLACE_OPT: comprobacion de reloj previo al placement
+redirect -file [file join $RPT clocks_antes.rpt] { report_clocks }
+puts "ALU PLACE_OPT: ejecutando optimizacion de placement"
+ALU PLACE_OPT: ejecutando optimizacion de placement
+# ICC2 ejecuta initial_place, initial_drc, initial_opto,
+# final_place y final_opto, salvo configuracion especifica del flujo.
+place_opt
+Information: Timer using 4 threads
+Information: Starting 'place_opt' (FLW-8000)
+Information: Time: 2026-10-26 17:24:27 / Session:  00:00:14 / Command:  00:00:00 / CPU:  00:00:00 / Memory: 532 MB (FLW-8100)
+INFO: place_opt is running in balanced flow mode
+Warning: no valid parasitic for m31_initial corner(LATE) (NEX-018)
+Warning: no valid parasitic for m31_initial corner(EARLY) (NEX-018)
+Warning: no valid parasitic for (all corners) corner((both specs)) (NEX-018)
+Error: No corner has valid parasitic. Please provide valid parasitic for at least one corner.
+Warning: Cannot find any default max transition constraint on the design. (OPT-070)
+Information: Running auto PG connection. (NDM-099)
+
+Information: Runtime Summary (All Commands) (FLW-9000)
+----------------------------------------------------------------------------
+    Elapse (Hrs)   Elapse (%)       CPU/Elapse       Category
+----------------------------------------------------------------------------
+      0.00          100.0%             1.0           Other 
+----------------------------------------------------------------------------
+      0.00          100.0%             1.0           Total 
+----------------------------------------------------------------------------
+
+Host Options:
+-------------
+Max cores: 4
+
+Machine Spec:
+-------------
+Intel(R) Xeon(R) D-2123IT CPU @ 2.20GHz / 8 CPUs  
+Sockets: 1, Cores: 4, HT/SMT, not-VM
+----------------------------------------------------------------------------
+
+Information: Running auto PG connection. (NDM-099)
+Information: Ending   'place_opt' (FLW-8001)
+Information: Time: 2026-10-26 17:24:27 / Session:  00:00:15 / Command:  00:00:00 / CPU:  00:00:00 / Memory: 596 MB (FLW-8100)
+Error: 0
+      	Use error_info for more info. (CMD-013)
+Information: script '/home/worellana/parcial_3/scripts/icc2/place_opt_alu_m31.tcl'
+            	stopped at line 33 due to error. (CMD-081)
+Extended error info:
+0
+    while executing
+"place_opt"
+    (file "/home/worellana/parcial_3/scripts/icc2/place_opt_alu_m31.tcl" line 33)
+ -- End Extended Error Info
+icc2_shell> 

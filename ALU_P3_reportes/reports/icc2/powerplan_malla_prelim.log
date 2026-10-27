@@ -1,0 +1,238 @@
+
+
+
+                              IC Compiler II (TM)
+
+                Version Y-2026.03-SP2 for linux64 - Sep 01, 2026
+                           Base build date 6/22/2026.
+
+                    Copyright (c) 1988 - 2026 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+      Inc.  This software may only be used in accordance with the terms and
+  conditions of a written license agreement with Synopsys, Inc.  All other use,
+   reproduction, or distribution of this software is strictly prohibited.  By
+   installing, accessing, using, or executing this software, you agree that it
+  will reside on, operate within, and have access to the computers and networks
+    where such software is used ("Host System"), and that Synopsys may access
+     components and data of the Host System as necessary for it to function
+ properly, to authenticate and validate license keys, to verify that it is used
+ only in conformity with the applicable license restrictions, and to communicate
+                 error messages and associated data to Synopsys.
+
+ 
+Invocation: /usr/synopsys/icc2/Y-2026.03-SP2/linux64/nwtn/bin/icc2_exec
+Execution time: Mon Oct 26 16:30:10 2026
+Host: synopsys-unis (1 x 2699.979 MHz Intel(R) Xeon(R) D-2123IT CPU @ 2.20GHz)
+Working directory: /home/worellana/parcial_3
+
+# ==========================================================================
+# ALU+ / M31 - Malla PRELIMINAR de alimentacion en METAL2 / METAL3.
+#
+# Ejecutar desde ~/parcial_3 con la biblioteca cerrada en otras sesiones:
+#   icc2_shell -f scripts/icc2/powerplan_alu_m31_malla_prelim.tcl \
+#       |& tee reports/icc2/powerplan_malla_prelim.log
+#
+# Entrada:  alu_pg_rieles    (checkpoint anterior, SIN modificarlo)
+# Salida:   alu_pg_malla_prelim (nuevo checkpoint; NO es PG final)
+# Esquinas: M31 3M1T_11K. Pines: VCCK y GNDK.
+# Geometria observada: METAL1 horizontal, METAL2 vertical, METAL3 horizontal.
+# PRECAUCION: anchos/pitches son candidatos iniciales para validacion, NO
+#             cumplen necesariamente reglas completas de fabricacion/IR drop.
+#             TAP cells y terminales PG externos quedan pendientes.
+# ==========================================================================
+set ROOT [file normalize [pwd]]
+/home/worellana/parcial_3
+set LIB [file join $ROOT outputs icc2 alu_import_35ns alu_m31.nlib]
+/home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib
+set RPT [file join $ROOT reports icc2 powerplan_malla_prelim]
+/home/worellana/parcial_3/reports/icc2/powerplan_malla_prelim
+set IN_BLOCK  alu_pg_rieles
+alu_pg_rieles
+set OUT_BLOCK alu_pg_malla_prelim
+alu_pg_malla_prelim
+if {![file exists $LIB]} {
+    error "No existe la biblioteca ICC2: $LIB. Ejecuta desde ~/parcial_3"
+}
+file mkdir $RPT
+open_lib $LIB
+Information: Loading library file '/home/worellana/parcial_3/outputs/icc2/alu_import_35ns/alu_m31.nlib' (FILE-007)
+Information: Loading library file '/home/worellana/parcial_3/technology/m31/ndm/m31_3m1t_11k.ndm' (FILE-007)
+{alu_m31.nlib}
+open_block $IN_BLOCK
+Information: User units loaded from library 'm31_3m1t_11k' (LNK-040)
+Opening block 'alu_m31.nlib:alu_pg_rieles.design' in edit mode
+{alu_m31.nlib:alu_pg_rieles.design}
+foreach layer {METAL1 METAL2 METAL3} {
+    if {[sizeof_collection [get_layers -quiet $layer]] == 0} {
+        error "La biblioteca no contiene la capa $layer"
+    }
+}
+foreach net {VCCK GNDK} {
+    if {[sizeof_collection [get_nets -quiet $net]] == 0} {
+        error "Falta la red PG $net; revisa la etapa de rieles"
+    }
+}
+Using libraries: alu_m31.nlib m31_3m1t_11k
+Visiting block alu_m31.nlib:alu_pg_rieles.design
+Design 'alu_sync_top' was successfully linked.
+# 1) Malla bidireccional. METAL2 conecta rieles METAL1; METAL3
+#    une las tiras METAL2. Anchuras superiores al minimo de la libreria,
+#    con espaciamientos y pitch de prueba (ICC2 verificara DRC).
+create_pg_mesh_pattern alu_m31_mesh_pat \
+    -layers { \
+        {{vertical_layer: METAL2} \
+         {width: 0.48} {spacing: interleaving} \
+         {pitch: 12.0} {offset: 1.44} {trim: true}} \
+        {{horizontal_layer: METAL3} \
+         {width: 0.90} {spacing: interleaving} \
+         {pitch: 18.0} {offset: 2.70} {trim: true}} \
+    } \
+    -via_rule { \
+        {{layers: METAL2} {layers: METAL3} {via_master: default}} \
+    }
+Successfully create mesh pattern alu_m31_mesh_pat.
+1
+set_pg_strategy alu_m31_mesh_strategy \
+    -core \
+    -pattern {{pattern: alu_m31_mesh_pat} {nets: {VCCK GNDK}}}
+Successfully set PG strategy alu_m31_mesh_strategy.
+# 2) Intentar conectar la malla y las estructuras PG existentes.
+#    Algunas versiones/tecnologias exigen reglas de vias mas especificas.
+set_pg_strategy_via_rule alu_m31_mesh_via_rule \
+    -via_rule {{intersection: all}{via_master: default}}
+Successfully set strategy via rule alu_m31_mesh_via_rule.
+compile_pg -strategies {alu_m31_mesh_strategy} \
+    -via_rule {alu_m31_mesh_via_rule}
+Sanity check for inputs.
+Automatic PG net connection through connect_pg_net is disabled.
+Updating PG strategies.
+Updating strategy alu_m31_mesh_strategy.
+Loading library and design information.
+Number of Standard Cells: 1225
+Number of Hard Macros: 0
+Number of Pads: 0
+Creating straps and vias in power plan.
+Creating wire shapes for strategies alu_m31_mesh_strategy.
+Creating wire shapes runtime: 0 seconds
+Blockage cutting and DRC fixing for wire shapes for strategies alu_m31_mesh_strategy.
+Check and fix DRC for 50 wires for strategy alu_m31_mesh_strategy.
+Number of threads: 1
+Number of partitions: 3
+Direction of partitions: vertical
+Number of wires: 30
+Checking DRC for 30 wires: 0% 100%
+Number of threads: 1
+Number of partitions: 2
+Direction of partitions: horizontal
+Number of wires: 20
+Checking DRC for 20 wires: 0% 100%
+Creating 50 wires after DRC fixing.
+Wire DRC checking runtime 0.00 seconds.
+Creating via shapes for strategies alu_m31_mesh_strategy.
+Working on strategy alu_m31_mesh_strategy.
+Number of detected intersections: 300
+Total runtime of via shapes creation: 0 seconds
+Check and fix DRC for 300 stacked vias for strategy alu_m31_mesh_strategy.
+Number of threads: 1
+Number of partitions: 2
+Direction of partitions: horizontal
+Number of vias: 300
+Checking DRC for 300 stacked vias:: 0% 100%
+Runtime of via DRC checking for strategy alu_m31_mesh_strategy: 0.00 seconds.
+Creating via connection between strategies and existing shapes.
+Check and fix DRCs for 795 stacked vias.
+Number of threads: 1
+Number of partitions: 5
+Direction of partitions: horizontal
+Number of vias: 795
+Checking DRC for 795 stacked vias:: 0% 100%
+Via DRC checking runtime 0.00 seconds.
+via connection runtime: 0 seconds.
+Removing dangling/floating wire/vias after DRC check.
+Start iteration 1:
+Checking potential dangling/floating power plan wires.
+Checking dangling/floating vias inside strategy alu_m31_mesh_strategy.
+Checking 300 stacked vias: 0% 100%
+Checking dangling/floating vias between strategies and existing shapes.
+Checking 795 stacked vias: 0% 100%
+Finish removing all dangling or floating wires and vias.
+Commiting wires and vias.
+Committing wires takes 0.00 seconds.
+Committing vias takes 0.00 seconds.
+Committed 50 wires.
+Committed 1095 vias.
+Committed 0 wires for via creation.
+Overall PG creation runtime: 0 seconds.
+Successfully compiled PG.
+Overall runtime: 0 seconds.
+1
+# 3) Intentar completar vias entre capas adyacentes para las mismas nets.
+#    ICC2 debe respetar los vias legales de la tecnologia y los DRC.
+create_pg_vias -nets {VCCK GNDK} \
+    -from_layers METAL1 -to_layers METAL2
+Initializing drc engine runtime: 0 seconds.
+Design loading runtime: 0 seconds.
+Net load_neting runtime: 0 seconds.
+Query intersections and create vias.
+Object query runtime: 0 seconds.
+Determining intersections for 83 shapes starts
+Determining intersections for 83 shapes: 0% 100%
+Intersection detection runtime: 1 seconds.
+Instantiating vias for 0 intersections starts
+Via instantiation runtime: 0 seconds.
+Committed 0 vias.
+Error: Existing vias prevented new vias to be inserted. (PGR-050)
+Overall runtime: 1 seconds.
+Failed to create PG vias.
+create_pg_vias -nets {VCCK GNDK} \
+    -from_layers METAL2 -to_layers METAL3
+Initializing drc engine runtime: 0 seconds.
+Design loading runtime: 0 seconds.
+Net load_neting runtime: 0 seconds.
+Query intersections and create vias.
+Object query runtime: 0 seconds.
+Determining intersections for 50 shapes starts
+Determining intersections for 50 shapes: 0% 100%
+Intersection detection runtime: 0 seconds.
+Instantiating vias for 0 intersections starts
+Via instantiation runtime: 0 seconds.
+Committed 0 vias.
+Error: Existing vias prevented new vias to be inserted. (PGR-050)
+Overall runtime: 0 seconds.
+Failed to create PG vias.
+# 4) Guardar reportes de VERIFICACION. Requieren inspeccion humana:
+#    un comando que termina no prueba conectividad ni ausencia de DRC.
+redirect -file [file join $RPT pg_drc.rpt] {
+    check_pg_drc -nets {VCCK GNDK}
+}
+redirect -file [file join $RPT pg_connectivity.rpt] {
+    check_pg_connectivity
+}
+redirect -file [file join $RPT pg_missing_vias.rpt] {
+    check_pg_missing_vias
+}
+redirect -file [file join $RPT legality.rpt] {
+    check_legality
+}
+# 5) El checkpoint es PRELIMINAR aun si los comandos anteriores terminan:
+#    falta revisar resultados, TAPs y accesos externos VCCK/GNDK.
+save_block -as $OUT_BLOCK
+Information: Saving 'alu_m31.nlib:alu_pg_rieles.design' to 'alu_m31.nlib:alu_pg_malla_prelim.design'. (DES-028)
+1
+save_lib
+Saving library 'alu_m31.nlib'
+1
+puts "ALU_PG_MALLA_PRELIM_OK: $OUT_BLOCK"
+ALU_PG_MALLA_PRELIM_OK: alu_pg_malla_prelim
+puts "ATENCION: inspeccionar pg_drc.rpt, pg_connectivity.rpt, pg_missing_vias.rpt y legality.rpt"
+ATENCION: inspeccionar pg_drc.rpt, pg_connectivity.rpt, pg_missing_vias.rpt y legality.rpt
+puts "PENDIENTE: celdas TAP, terminales externos PG, validacion de reglas y captura de pantalla"
+PENDIENTE: celdas TAP, terminales externos PG, validacion de reglas y captura de pantalla
+puts "Reportes: $RPT"
+Reportes: /home/worellana/parcial_3/reports/icc2/powerplan_malla_prelim
+icc2_shell> cat reports/icc2/powerplan_malla_prelim/pg_drc.rpt[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kexit
+Maximum memory usage for this session: 562.69 MB
+Maximum memory usage for this session including child processes: 562.69 MB
+CPU usage for this session:     15 seconds (  0.00 hours)
+Elapsed time for this session:     67 seconds (  0.02 hours)
+Thank you for using IC Compiler II.
