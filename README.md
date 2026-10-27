@@ -4,11 +4,10 @@
 
 **SystemVerilog · VCS / Verdi · Design Compiler · IC Compiler II**
 
-[📄 Reporte PDF](Reporte_ALU_Parcial3.pdf) · [🎬 Video de demostración](https://youtu.be/NKW57ncdnsY)
+[📄 Reporte PDF](Reporte_ALU_Parcial3.pdf) · [🎬 Video ](https://youtu.be/NKW57ncdnsY)
 
 </div>
 
-![Diseño físico final de la ALU+](img/routing_final.png)
 
 ## Proyecto
 
