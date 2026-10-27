@@ -26,6 +26,4 @@ ALU parametrizable de **8, 16 y 32 bits** con AND, OR, suma y resta mediante **C
 
 ## Archivos
 
-[RTL](rtl/) · [Testbenches](testbench/) · [Scripts ICC2](scripts/icc2/) · [Reportes](reports/) · [Capturas](img/) · [Informe](Reporte_ALU_Parcial3.pdf)
-
 **Flujo:** RTL → Síntesis → Floorplan → Power Planning → Placement → CTS → Routing → GDSII.
